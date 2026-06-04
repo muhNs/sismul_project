@@ -100,37 +100,37 @@ export const quizQuestions = {
   reading: [
     {
       id: 1,
-      question: "Apa makanan kesukaan burung hantu?",
-      image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCu3szECAhoZo74vcppT8pe-G0WHz8BDLPGOa21iI392pI8V3fN5VXqrxXXXOkW5vr5aAOMbj8mqL39Kq9j8UmdznKNKc43UGpndghNMaAAs2HeAK5M0gYwTwYbkPB7DvgRkh4qJI8bjYGyoKqk-rDvPobOPNuXfTPxX--KZE8rlwnIxsfsODplJac869hEAGBcJM9rwAexn-zvlg2I34oSmiTA7HhrC5_rXw2ykjwYwikrzg5xWwb7iBhwzj4rSbH-G5SEmKMfC8A",
-      textContext: "Burung hantu adalah hewan yang sangat cerdas. Mereka aktif di malam hari dan memiliki pendengaran yang luar biasa tajam untuk mencari makan seperti tikus atau serangga.",
+      question: "Apa arti dari kalimat 'The cat is sleeping on the sofa'?",
+      image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD30A-CsMsJs5ASw4s-5QvvbymzzCbEYiOiRSv7F7ld-5CJwG-aWRBc_qa00bQIAYzKTVviNfSZuHh6ZpUeE9reGsLtyegJ_2RdQx55ju00q3f687k5KYvbZffp8QlaE-qMC-mlSW8gtjxO60sDOZxcFoDZxKUEqMZCu78StSUomSo3WCCSDIooby2XUNk4dB_DD7KFiDW-5JesbUV2oBg8D35PQATItzMnR3hLCpfK1xt9XzRgSeSY_CX20_qe-FHCUjO9F28hhTA",
+      textContext: "Look at the picture! The cat is very lazy today. The cat is sleeping on the sofa.",
       options: [
-        { id: "A", label: "A", text: "Buah-buahan" },
-        { id: "B", label: "B", text: "Tikus dan serangga" },
-        { id: "C", label: "C", text: "Sayuran hijau" },
-        { id: "D", label: "D", text: "Ikan laut" },
+        { id: "A", label: "A", text: "Kucing itu sedang makan di sofa" },
+        { id: "B", label: "B", text: "Kucing itu sedang tidur di sofa" },
+        { id: "C", label: "C", text: "Kucing itu sedang melompat" },
+        { id: "D", label: "D", text: "Anjing itu sedang tidur" },
       ],
       correctAnswer: "B"
     },
     {
       id: 2,
-      question: "Kapan burung hantu biasanya mencari makan?",
-      textContext: "Karena tergolong hewan nokturnal, burung hantu akan tidur di siang hari dan baru mulai berburu mangsa ketika hari sudah gelap.",
+      question: "Kata mana yang berarti 'malas' dalam teks di atas?",
+      textContext: "Look at the picture! The cat is very lazy today. The cat is sleeping on the sofa.",
       options: [
-        { id: "A", label: "A", text: "Pagi Hari" },
-        { id: "B", label: "B", text: "Siang Hari" },
-        { id: "C", label: "C", text: "Malam Hari" },
-        { id: "D", label: "D", text: "Sore Hari" },
+        { id: "A", label: "A", text: "Look" },
+        { id: "B", label: "B", text: "Picture" },
+        { id: "C", label: "C", text: "Lazy" },
+        { id: "D", label: "D", text: "Today" },
       ],
       correctAnswer: "C"
     },
     {
       id: 3,
-      question: "Apa kelebihan utama burung hantu?",
+      question: "Pilih jawaban yang benar: The cat ___ very lazy today.",
       options: [
-        { id: "A", label: "A", text: "Bisa berenang" },
-        { id: "B", label: "B", text: "Berlari sangat cepat" },
-        { id: "C", label: "C", text: "Pendengaran dan penglihatan tajam" },
-        { id: "D", label: "D", text: "Bisa meniru suara manusia" },
+        { id: "A", label: "A", text: "am" },
+        { id: "B", label: "B", text: "are" },
+        { id: "C", label: "C", text: "is" },
+        { id: "D", label: "D", text: "were" },
       ],
       correctAnswer: "C"
     }
