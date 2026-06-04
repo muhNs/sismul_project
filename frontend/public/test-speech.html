@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Speech API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover { background: #5568d3; }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Web Speech API Test</h1>
+        
+        <div id="browserCheck" class="status"></div>
+        
+        <button id="startBtn" onclick="startRecording()">Start Recording</button>
+        <button id="stopBtn" onclick="stopRecording()" disabled>Stop Recording</button>
+        
+        <h3>Result:</h3>
+        <div id="output">Press "Start Recording" and speak...</div>
+        
+        <h3>Transcript History:</h3>
+        <div id="history"></div>
+    </div>
+
+    <script>
+        let recognition;
+        let isRecording = false;
+
+        // Check browser support
+        window.onload = function() {
+            const browserCheck = document.getElementById('browserCheck');
+            
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                browserCheck.className = 'status success';
+                browserCheck.textContent = '✅ Your browser supports Web Speech API!';
+                
+                // Initialize Speech Recognition
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                // Event handlers
+                recognition.onstart = function() {
+                    console.log('Speech recognition started');
+                    document.getElementById('output').innerHTML = '<strong style="color: green;">🎤 Listening...</strong>';
+                };
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    const confidence = event.results[0][0].confidence;
+                    
+                    document.getElementById('output').innerHTML = `
+                        <strong>Transcript:</strong> ${transcript}<br>
+                        <strong>Confidence:</strong> ${(confidence * 100).toFixed(2)}%
+                    `;
+                    
+                    // Add to history
+                    const history = document.getElementById('history');
+                    const timestamp = new Date().toLocaleTimeString();
+                    history.innerHTML = `
+                        <div style="padding: 10px; margin: 5px 0; background: #e7f3ff; border-left: 3px solid #2196F3;">
+                            <strong>[${timestamp}]</strong> ${transcript} (${(confidence * 100).toFixed(0)}%)
+                        </div>
+                    ` + history.innerHTML;
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    let errorMessage = '';
+                    
+                    switch(event.error) {
+                        case 'no-speech':
+                            errorMessage = '❌ No speech detected. Please try again.';
+                            break;
+                        case 'not-allowed':
+                            errorMessage = '❌ Microphone access denied. Please allow microphone access.';
+                            break;
+                        case 'network':
+                            errorMessage = '❌ Network error. Please check your connection.';
+                            break;
+                        default:
+                            errorMessage = `❌ Error: ${event.error}`;
+                    }
+                    
+                    document.getElementById('output').innerHTML = `<strong style="color: red;">${errorMessage}</strong>`;
+                };
+
+                recognition.onend = function() {
+                    console.log('Speech recognition ended');
+                    isRecording = false;
+                    document.getElementById('startBtn').disabled = false;
+                    document.getElementById('stopBtn').disabled = true;
+                };
+                
+            } else {
+                browserCheck.className = 'status error';
+                browserCheck.textContent = '❌ Your browser does not support Web Speech API. Please use Chrome or Edge.';
+                document.getElementById('startBtn').disabled = true;
+            }
+        };
+
+        function startRecording() {
+            if (recognition && !isRecording) {
+                recognition.start();
+                isRecording = true;
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+            }
+        }
+
+        function stopRecording() {
+            if (recognition && isRecording) {
+                recognition.stop();
+            }
+        }
+    </script>
+</body>
+</html>
