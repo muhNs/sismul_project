@@ -1,2 +1,3 @@
-export { default } from "@/features/chapter/pages/ChooseChapterPage";
+export { default } from "@/features/pages/materials/ChooseChapterPage";
+
 

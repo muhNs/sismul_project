@@ -1,2 +1,3 @@
-export { default } from "@/features/shop/pages/ShopPage";
+export { default } from "@/features/pages/shop/ShopPage";
+
 

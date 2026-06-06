@@ -1,2 +1,3 @@
-export { default } from "@/features/vocabulary/pages/VocabularyPage";
+export { default } from "@/features/pages/vocabularies/VocabularyPage";
+
 

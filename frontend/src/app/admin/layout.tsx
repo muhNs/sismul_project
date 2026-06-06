@@ -1,5 +1,5 @@
 import React from "react";
-import { AdminLayout as LayoutWrapper } from "@/features/admin/components/layout/AdminLayout";
+import { AdminLayout as LayoutWrapper } from "@/features/pages/admin/components/layout/AdminLayout";
 
 export default function AdminLayout({
   children,
@@ -8,3 +8,4 @@ export default function AdminLayout({
 }) {
   return <LayoutWrapper>{children}</LayoutWrapper>;
 }
+

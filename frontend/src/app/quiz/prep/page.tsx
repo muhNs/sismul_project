@@ -1,2 +1,3 @@
-export { default } from "@/features/quiz/pages/PrepPage";
+export { default } from "@/features/pages/quizzes/PrepPage";
+
 

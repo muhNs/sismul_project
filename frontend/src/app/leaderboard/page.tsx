@@ -1,2 +1,3 @@
-export { default } from "@/features/leaderboard/pages/LeaderboardPage";
+export { default } from "@/features/pages/scores/LeaderboardPage";
+
 

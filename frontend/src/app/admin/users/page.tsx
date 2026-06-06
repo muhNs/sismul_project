@@ -1,4 +1,4 @@
-import { UsersPage } from "@/features/admin/pages/UsersPage";
+import { UsersPage } from "@/features/pages/admin/UsersPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,3 +8,4 @@ export const metadata: Metadata = {
 export default function Page() {
   return <UsersPage />;
 }
+

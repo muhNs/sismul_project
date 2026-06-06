@@ -1,2 +1,3 @@
-export { default } from "@/features/auth/pages/RegisterPage";
+export { default } from "@/features/pages/auth/RegisterPage";
+
 

@@ -1,1 +1,2 @@
-export { default } from "@/features/admin/auth/pages/AdminLoginPage";
+export { default } from "@/features/pages/admin/auth/pages/AdminLoginPage";
+
