@@ -38,7 +38,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
       />
       
       {/* Modal Content */}
-      <div className="bg-surface-container-low border border-outline-variant/50 rounded-3xl w-full max-w-md shadow-2xl relative z-10 overflow-hidden transform scale-100 transition-all duration-300 flex flex-col max-h-[90vh]">
+      <div className="bg-surface-container-low border border-outline-variant/50 rounded-3xl min-w-[320px] w-full sm:w-[448px] shadow-2xl relative z-10 overflow-hidden transform scale-100 transition-all duration-300 flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-outline-variant/30">
           <h3 className="text-lg font-black text-on-surface tracking-tight">{title}</h3>

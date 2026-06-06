@@ -7,6 +7,10 @@ export const AdminSidebar = () => {
   const navItems = [
     { name: "Dashboard", href: "/admin", icon: "dashboard" },
     { name: "Manajemen User", href: "/admin/users", icon: "group" },
+    { name: "Kelola Kosakata", href: "/admin/vocabularies", icon: "menu_book" },
+    { name: "Kelola Materi", href: "/admin/materials", icon: "auto_stories" },
+    { name: "Kelola Kuis", href: "/admin/quizzes", icon: "quiz" },
+    { name: "Laporan Nilai", href: "/admin/scores", icon: "bar_chart" },
   ];
 
   return (
