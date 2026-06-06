@@ -81,20 +81,6 @@ export const AdminSidebar = ({ isOpen, setIsOpen }: AdminSidebarProps) => {
           })}
         </nav>
 
-        <div className="p-4 border-t border-outline-variant mt-auto">
-          <button
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                localStorage.removeItem("userRole");
-              }
-              router.push("/");
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-error hover:bg-error-container rounded-xl transition-colors font-medium"
-          >
-            <span className="material-symbols-outlined">logout</span>
-            Keluar
-          </button>
-        </div>
       </aside>
     </>
   );
