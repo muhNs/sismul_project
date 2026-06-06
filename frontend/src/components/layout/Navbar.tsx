@@ -26,12 +26,6 @@ export const Navbar: React.FC = () => {
       href: "/shop",
       activeIconFill: false,
     },
-    {
-      label: "Profile",
-      icon: "person",
-      href: "/profile",
-      activeIconFill: true,
-    },
   ];
 
   return (

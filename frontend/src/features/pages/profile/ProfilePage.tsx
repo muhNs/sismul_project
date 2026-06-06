@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/Header";
 import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/Button";
 import { ProfileHeader } from "./components/ProfileHeader";
-import { AccountSettings } from "./components/AccountSettings";
+import { ProfileForm } from "@/features/users/components/ProfileForm";
 import { ReportCard } from "./components/ReportCard";
 
 export default function ProfilePage() {
@@ -17,10 +17,9 @@ export default function ProfilePage() {
       <Header title="Learnly" showBack={false} />
       <main className="pt-24 pb-28 px-margin-mobile max-w-[800px] mx-auto w-full flex-grow">
         <ProfileHeader />
-        <AccountSettings />
+        <ProfileForm />
         <ReportCard />
 
-        {/* Danger Zone */}
         <section>
           <Button
             onClick={() => router.push("/login")}

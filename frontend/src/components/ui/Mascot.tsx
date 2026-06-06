@@ -48,7 +48,7 @@ export const Mascot: React.FC<MascotProps> = ({
       <div className={`relative ${sizeClasses[size]} animate-float select-none ${expression === "grad" ? "rounded-full overflow-hidden border-4 border-surface-container-highest shadow-xl" : ""}`}>
         <img
           alt={`Learnly Mascot ${expression}`}
-          className="w-full h-full object-contain"
+          className="w-full h-full object-contain mix-blend-multiply"
           src={expressionUrls[expression]}
         />
       </div>
