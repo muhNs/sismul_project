@@ -1,0 +1,110 @@
+=======================================================================
+DOKUMENTASI UI/UX FRONTEND - STUDENT (APLIKASI BELAJAR)
+=======================================================================
+PENDEKATAN DESAIN (DESIGN APPROACH):
+- Mobile-First Design: Tampilan optimal untuk HP dan Tablet.
+- Gamifikasi: Penggunaan warna cerah, ikon besar, tombol membulat (rounded), dan animasi pop-up (Benar/Salah).
+- Navigasi Utama: Menggunakan Bottom Navigation Bar (Home, Kamus, Rapor, Profil).
+
+=======================================================================
+ALUR BELAJAR UTAMA (USER JOURNEY)
+=======================================================================
+Home -> Pilih Kelas -> Pilih Skill -> Pilih Chapter -> Preparation Page -> Kuis 10 Soal -> Score Page.
+
+=======================================================================
+DETAIL HALAMAN & FITUR UI
+=======================================================================
+
+1. HALAMAN AUTENTIKASI (Login & Register)
+	- Tipe UI: Full Screen Form
+	- Register: Input Nama, Email, Password. Tombol "Daftar".
+	- Login: Input Email, Password. Tombol "Masuk".
+	- Catatan UX: Tambahkan mata/icon untuk 'Show/Hide Password'. Jika error (email salah), munculkan toast notification berwarna merah.
+
+2. HALAMAN UTAMA / HOME (/home)
+	- Top Bar: Avatar Murid, Nama Panggilan, dan Total Poin/Bintang (jika ada).
+	- Konten Utama:
+		- Banner "Ayo Belajar Hari Ini!"
+		- Section "Pilih Kelas Kamu": 4 Card/Tombol besar berjejer (Kelas 3, Kelas 4, Kelas 5, Kelas 6).
+	- Bottom Navigation: Aktif di tab 'Home'.
+
+3. HALAMAN PILIH SKILL (/materials?grade={id})
+	- Header: "Kelas [X] - Pilih Kemampuan" + Tombol Back (<)
+	- Konten Utama (4 Tombol Raksasa dengan Ikon Menarik):
+		- 📖 READING (Membaca)
+		- 🎧 LISTENING (Mendengarkan)
+		- ✍️ WRITING (Menulis)
+		- 🗣️ SPEAKING (Berbicara)
+
+4. HALAMAN PILIH CHAPTER (/materials?grade={id}&skill={id})
+	- Header: "Kelas [X] - [SKILL]" + Tombol Back (<)
+	- Konten Utama: List Card memanjang ke bawah.
+		- Contoh Card: "Chapter 1: Family", "Chapter 2: Animals".
+	- Interaksi: Klik salah satu Card akan pindah ke Preparation Page.
+
+5. HALAMAN PERSIAPAN (Preparation Page)
+	- Tipe UI: Layar fokus (Tanpa Bottom Nav).
+	- Konten Utama:
+		- Judul Materi (Contoh: "Chapter 1: Family - Reading")
+		- Deskripsi/Instruksi singkat: "Baca teks dengan teliti dan jawab 10 pertanyaan ya!"
+		- Tombol Aksi Utama: [Mulai Kuis] (Besar dan berwarna hijau/biru mencolok).
+
+6. HALAMAN KUIS / MENGERJAKAN SOAL (CORE FEATURE)
+	- Header: Progress Bar (Contoh: Kotak terisi 3 dari 10) & Tombol Keluar (X).
+	- Konten Dinamis (Berdasarkan `questionType`):
+		- JIKA MCQ (Reading/Listening): 
+			- Teks Pertanyaan. (Tombol Play Audio jika Listening).
+			- 3 Tombol Opsi (A, B, C) yang bisa di-tap (berubah warna saat dipilih).
+		- JIKA WRITING:
+			- Kalimat dengan satu kotak input kosong (Text Input) di tengahnya.
+		- JIKA SPEAKING:
+			- Teks kalimat besar di tengah layar.
+			- Tombol Mikrofon raksasa (Tekan & Tahan untuk bicara).
+			- Indikator gelombang suara (Visualizer) saat merekam.
+	
+	- ALGORITMA TOMBOL & INSTANT FEEDBACK (Hybrid Validation):
+		- Kondisi Awal: Tombol bawah bertuliskan [Cek Jawaban] (Disable jika belum diisi).
+		- Saat di-klik:
+			- Frontend me-decode properti `correctAnswer` (Base64 -> Teks Asli).
+			- Pencocokan: Input Siswa == Teks Asli.
+			- Muncul Pop-up Bawah:
+				- HIJAU (Benar): Animasi centang + suara 'Ting-tong'.
+				- MERAH (Salah): Animasi silang + suara 'Telolet' + Teks "Jawaban benar: [Teks]".
+			- Tombol bawah berubah warna & teksnya menjadi [Lanjut].
+		- Saat "Lanjut" di-klik: Pindah ke index soal berikutnya.
+		- Di Soal ke-10: Saat di-klik lanjut, tampilkan loading screen "Menghitung Nilai..." -> tembak API Submit Score -> Lempar ke Score Page.
+
+7. HALAMAN HASIL / SCORE PAGE
+	- Tipe UI: Layar penuh, perayaan (Confetti animation).
+	- Konten Utama:
+		- Teks: "Kerja Bagus!" atau "Ayo Semangat Lagi!"
+		- Lingkaran Skor Raksasa: Menampilkan nilai (Contoh: 80 / 100).
+		- Bintang/Piala (Berdasarkan nilai: 100 = 3 bintang, 80 = 2 bintang).
+	- Tombol Aksi Bawah:
+		- [Ulangi Kuis] (Retake)
+		- [Kembali ke Home]
+
+8. HALAMAN KAMUS / VOCABULARY (/vocabularies)
+	- Diakses dari Bottom Navigation 'Kamus'.
+	- Header: "Kamus Pintar" + Filter Dropdown Kelas.
+	- Konten: 
+		- Search Bar (Cari bahasa inggris / indonesia).
+		- List Kosakata (List-tile):
+			- Teks Inggris (Bold) & Teks Indonesia.
+			- Ikon Speaker (Klik untuk memutar pronunciation audio).
+
+9. HALAMAN RAPOR & PROFIL (/history & /profile)
+	- Diakses dari Bottom Navigation 'Profil/Rapor'.
+	- Header: Info Profil Singkat (Nama, Kelas, Total Kuis Selesai).
+	- Tombol [Edit Profil] (Ganti Nama/Password).
+	- Konten Bawah (History Tab):
+		- Daftar riwayat materi yang sudah dikerjakan.
+		- Menampilkan Nama Chapter, Tanggal, dan Skor Tertinggi (Highest Score).
+	- Tombol Paling Bawah: [Logout] berwarna merah.
+
+=======================================================================
+CATATAN KHUSUS FRONTEND DEVELOPER:
+=======================================================================
+- Manajemen State Kuis: Gunakan `useState` atau Zustand di React/Next.js untuk menyimpan array jawaban sementara `[{quiz_id, answer}]` selama kuis berlangsung.
+- Audio: Siapkan fungsi `new Audio('sound.mp3').play()` untuk feedback Benar/Salah agar lebih menyenangkan bagi anak-anak.
+- Keamanan: Jangan render jawaban yang di-decode ke dalam DOM HTML (kecuali saat state 'Salah' muncul). Simpan perhitungan di balik layar (memori JS).

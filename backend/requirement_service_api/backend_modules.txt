@@ -1,0 +1,89 @@
+=======================================================================
+DOKUMENTASI API BACKEND MODULES
+=======================================================================
+ATURAN GLOBAL (GOLDEN RULES):
+1. Base URL: /api/v1
+2. Soft Delete: Semua GET request untuk Student wajib filter `deleted_at: null`.
+3. Keamanan: Autentikasi menggunakan JWT Token & HttpOnly Cookie.
+
+=======================================================================
+MODULES
+=======================================================================
+
+- AUTH SERVICE (Table Include: user, refresh_token)
+	Service (Logic):
+	- register student (Default role: STUDENT)
+	- login (Generate JWT & Refresh Token, simpan ke Cookie)
+	- logout (Hapus token dari DB & clear Cookie)
+	- refresh token (Validasi token lama, generate Access Token baru)
+	Middleware:
+	- verifyToken (Cek validitas JWT)
+	- authorization (Cek akses Role: ADMIN / TEACHER / STUDENT)
+	- authenticate (Gatekeeper endpoint)
+
+- USERS SERVICE (Table Include: user, student_score)
+	Service:
+	- view all users (Admin only)
+	- create user (Admin only - Opsional untuk tambah guru/CS/Admin lain)
+	- update user (Admin only - Opsional untuk reset password/edit profil murid)
+	- getMe (Student Profile berdasarkan decoded JWT)
+	- update profile (Student)
+	- delete user (Admin only - Soft delete)
+
+- VOCABULARY SERVICE (Table Include: vocabulary)
+	Service:
+	- view student vocabularies (Filter by gradeLevel)
+	- view all vocabularies (Admin only - Untuk Data Table CMS)
+	- create vocabulary 
+	- update vocabulary
+	- delete vocabulary (Soft delete)
+
+- MATERIAL SERVICE (Table Include: material)
+	Service:
+	- view student materials (Filter by gradeLevel & skillCategory)
+	- view all materials (Admin only - Untuk Data Table CMS)
+	- view detail material (Return content & mediaUrl)
+	- create material
+	- update material
+	- delete material (Soft delete)
+
+- QUIZZES SERVICE (Table Include: quiz_question, material)
+	Service:
+	- view admin quizzes by material (Admin only: Tampilkan semua soal suatu materi tanpa limit, tanpa acak, tanpa enkripsi base64)
+	- create quiz question (Admin only)
+	- update quiz question (Admin only)
+	- delete quiz question (Admin only - Soft delete)
+	
+	- get student quiz (by material_id)
+		ALGORITMA:
+		Tujuan: Memberikan soal acak dan mendukung "Instant Feedback" di Frontend dengan aman.
+		Logika:
+		1. Tarik semua baris soal di DB berdasarkan `material_id`.
+		2. Lakukan pengacakan urutan array (Array Shuffle).
+		3. AMBIL 10 SOAL ACAK: Potong array (Slice) untuk mengambil maksimal 10 soal pertama saja.
+		4. ENKRIPSI JAWABAN: Lakukan perulangan, ubah teks asli pada properti `correctAnswer` menjadi format Base64. 
+		   (Contoh: `cat` di-encode menjadi `Y2F0`).
+		5. Return array 10 soal tersebut ke Frontend.
+
+- SCORE SERVICE (Table Include: student_score, user, material, quiz_question)
+	Service:
+	- view student score history (Student - Riwayat nilai pribadi)
+	- view admin score report (Admin only - Tabel rapor semua siswa)
+
+	- submit quiz score
+		ALGORITMA:
+		Tujuan: Mencegah murid memanipulasi nilai akhir (Anti-Cheat).
+		Logika:
+		1. Menerima payload dari Frontend berupa Array Jawaban. 
+		   (Format: `[{ quiz_id: 1, answer: "cat" }, { quiz_id: 2, answer: "A" }]`).
+		2. Looping array tersebut: Tarik data `correctAnswer` asli dari DB berdasarkan `quiz_id`.
+		3. Pencocokan Data (Backend Recount):
+		   - Bandingkan jawaban murid dengan jawaban asli DB (ubah semua ke huruf kecil/lowercase agar case-insensitive).
+		   - Jika Speaking: Gunakan algoritma kemiripan teks (Opsional/Bisa menggunakan exact match sementara).
+		4. Hitung persentase benar: (Jumlah Benar / Jumlah Soal) * 100. (Contoh dapat: 80).
+		5. UPSERT Database: 
+		   - Cek tabel `student_score`. 
+		   - Jika belum ada nilai di materi ini -> Lakukan `INSERT`.
+		   - Jika sudah ada & nilai baru > nilai lama -> Lakukan `UPDATE`.
+		   - Jika sudah ada & nilai baru < nilai lama -> ABAIKAN (Tetap simpan highest score).
+		6. Return hasil nilai final (Angka 80) ke Frontend.

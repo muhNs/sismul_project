@@ -1,0 +1,84 @@
+=======================================================================
+FRONTEND: FEATURE-BASED STRUCTURE (DETAILED)
+=======================================================================
+
+src/features/
+│
+├── auth/
+│   ├── api/
+│   │   ├── loginUser.ts
+│   │   ├── loginAdmin.ts
+│   │   └── registerUser.ts
+│   ├── components/
+│   │   ├── StudentLoginForm.tsx
+│   │   ├── AdminLoginForm.ts
+│   │   └── RegisterForm.tsx
+│   ├── hooks/
+│   │   ├── useStudentAuth.ts
+│   │   ├── useAdminAuth.ts
+│   │   └── useRegisterUser.ts
+│   ├── schemas/
+│   │   ├── adminAuth.schema.ts
+│   │   └── studentAuth.schema.ts        // Zod schema untuk form login & register
+│   └──  types/
+│       └── auth.type.ts          // Type JWT payload, LoginResponse    
+│
+├── materials/
+│   ├── api/
+│   │   ├── getStudentMaterials.ts
+│   │   └── getAdminMaterials.ts
+│   ├── components/
+│   │   ├── StudentMaterialCard.tsx
+│   │   ├── AdminMaterialTable.tsx
+│   │   └── AdminMaterialForm.tsx
+│   ├── hooks/
+│   │   ├── useMaterials.ts
+│   │   └── useCreateMaterial.ts
+│   ├── schemas/
+│   │   └── material.schema.ts
+│   ├── types/
+│   │   └── material.type.ts
+│   └── constants/
+│       └── material.constant.ts  // Enum SkillCategory (READING, LISTENING, dll)
+│
+├── quizzes/ (Paling Kompleks)
+│   ├── api/
+│   │   ├── getStudentQuiz.ts
+│   │   └── adminQuizApi.ts
+│   ├── components/
+│   │   ├── StudentQuizEngine.tsx // UI Kuis Hybrid (Instant Feedback)
+│   │   ├── AdminQuizTable.tsx
+│   │   └── AdminQuizForm.tsx     // Form dinamis (MCQ/Writing/Speaking)
+│   ├── hooks/
+│   │   ├── useStudentQuiz.ts
+│   │   └── useAdminQuiz.ts
+│   ├── schemas/
+│   │   └── quiz.schema.ts        // Validasi form tambah soal admin
+│   ├── types/
+│   │   └── quiz.type.ts
+│   └── constants/
+│       └── quiz.constant.ts      // Enum QuestionType
+│
+├── scores/
+│   ├── api/
+│   │   ├── submitScore.ts
+│   │   └── getScoreHistory.ts
+│   ├── components/
+│   │   ├── ScoreResultBoard.tsx
+│   │   └── AdminScoreTable.tsx
+│   ├── hooks/
+│   │   ├── useSubmitScore.ts
+│   │   └── useScoreHistory.ts
+│   ├── schemas/
+│   │   └── score.schema.ts
+│   ├── types/
+│   │   └── score.type.ts
+│   └── constants/
+│
+└── vocabularies/
+    ├── api/
+    ├── components/
+    ├── hooks/
+    ├── schemas/
+    ├── types/
+    └── constants/

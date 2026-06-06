@@ -1,0 +1,80 @@
+=======================================================================
+DOKUMENTASI UI/UX FRONTEND - ADMIN CMS (DASHBOARD GURU)
+=======================================================================
+GLOBAL LAYOUT (TATA LETAK UTAMA):
+- Header : Menampilkan Nama Admin/Guru yang login & Breadcrumbs (contoh: Admin > Materi > Kuis).
+- Sidebar: 
+	- Dashboard
+	- Kelola Pengguna
+	- Kelola Kosakata
+	- Kelola Materi Pelajaran
+	- Laporan Nilai
+	- Logout
+
+=======================================================================
+DETAIL HALAMAN & FITUR UI
+=======================================================================
+
+1. HALAMAN KELOLA PENGGUNA (/admin/users)
+	- Tipe UI: Data Table
+	- Fitur Utama:
+		- Search bar (pencarian berdasarkan Nama / Email).
+		- Tabel Kolom: ID, Nama, Email, Role, Tanggal Daftar, Aksi.
+	- Interaksi Aksi:
+		- Tombol [Hapus]: Memunculkan Pop-up/Modal konfirmasi sebelum soft delete.
+
+2. HALAMAN KELOLA KOSAKATA (/admin/vocabularies)
+	- Tipe UI: Data Table
+	- Fitur Utama:
+		- Filter Dropdown: Berdasarkan Grade (3, 4, 5, 6).
+		- Tabel Kolom: English, Indonesian, Grade, Audio/Image, Aksi.
+		- Tombol [Tambah Kosakata]: Membuka Modal Form (input teks & upload file).
+	- Interaksi Aksi:
+		- Tombol [Edit]: Membuka Modal Form dengan data lama (Pre-filled).
+		- Tombol [Hapus]: Pop-up konfirmasi hapus.
+
+3. HALAMAN KELOLA MATERI (/admin/materials)
+	- Tipe UI: Data Table
+	- Fitur Utama:
+		- Filter Dropdown: Grade (3, 4, 5, 6) & Skill (Reading, Listening, Writing, Speaking).
+		- Tabel Kolom: Judul Chapter, Grade, Skill, Aksi.
+		- Tombol [Tambah Materi]: Membuka Modal Form (input judul, grade, skill dropdown).
+	- Interaksi Aksi (Per Baris):
+		- Tombol [Edit]: Modal Form edit judul/skill.
+		- Tombol [Hapus]: Pop-up konfirmasi hapus.
+		- Tombol [Kelola Soal Kuis]: (PENTING) Redirect/Pindah ke halaman Kelola Kuis (/admin/materials/[id]/quizzes).
+
+4. HALAMAN KELOLA KUIS (/admin/materials/[id]/quizzes)
+	- Tipe UI: Data Table khusus 1 Materi
+	- Detail Header: Menampilkan informasi "Daftar Soal untuk Chapter: [Judul] - [Skill]"
+	- Fitur Utama:
+		- Tabel Kolom: Teks Soal, Tipe Soal, Aksi.
+		- Tombol [Tambah Soal Baru]: Membuka Modal Form Dinamis.
+	- Logika Modal Form Dinamis (Tergantung Skill Materi):
+		- Jika Reading / Listening (MCQ):
+			- Input: Pertanyaan
+			- Input: Opsi A, Opsi B, Opsi C
+			- Select Dropdown: Kunci Jawaban (A/B/C)
+		- Jika Writing (Isian Rumpang):
+			- Input: Kalimat Utuh (Contoh: I have a cat)
+			- Input: Kunci Jawaban / Kata yang dihilangkan (Contoh: cat)
+			- Input Number: Index kata ke-berapa? (Contoh: 4)
+		- Jika Speaking (Pengucapan):
+			- Input: Instruksi
+			- Input: Teks yang harus dibaca siswa (Sebagai Kunci Jawaban)
+	- Interaksi Aksi:
+		- Tombol [Edit Soal] & [Hapus Soal].
+
+5. HALAMAN LAPORAN NILAI (/admin/scores)
+	- Tipe UI: Data Table Rekapitulasi (Read Only)
+	- Fitur Utama:
+		- Filter Dropdown: Grade, Chapter Material, atau Cari Nama Siswa.
+		- Tabel Kolom: Nama Siswa, Judul Chapter, Skill, Skor Tertinggi, Tanggal Mengerjakan.
+		- Tombol [Export to Excel]: Download data tabel saat ini ke format .xlsx atau .csv untuk di-print guru.
+
+=======================================================================
+CATATAN KHUSUS FRONTEND DEVELOPER:
+=======================================================================
+- Proteksi Route: Semua route `/admin/*` wajib dilindungi Middleware Frontend. Jika Role = STUDENT mengakses, redirect ke `/home`.
+- Validasi Form: Wajib menggunakan Zod + React Hook Form di sisi klien sebelum submit API untuk mencegah request error ke Backend (Misal: Opsi A kosong tidak bisa di-submit).
+- UI Library: disarankan menggunakan Shadcn UI, Ant Design, atau MUI untuk komponen Tabel dan Modal agar cepat selesai.

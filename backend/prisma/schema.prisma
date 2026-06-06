@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ================= ENUMS =================
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum SkillCategory {
+  READING
+  SPEAKING
+  LISTENING
+  WRITING
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  WRITING
+  SPEAKING
+}
+
+// ================= MODELS =================
+
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  password      String
+  role          Role           @default(STUDENT)
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+  deleted_at    DateTime?      // Soft delete
+
+  refreshTokens RefreshToken[]
+  scores        StudentScore[]
+}
+
+model RefreshToken {
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  user          User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  refreshToken  String    @unique @db.Text
+  exp           DateTime
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  deleted_at    DateTime?
+}
+
+model Vocabulary {
+  id            Int       @id @default(autoincrement())
+  english       String
+  indonesian    String
+  gradeLevel    Int       // Contoh: 3, 4, 5, 6
+  voice_path    String?
+  image_path    String?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  deleted_at    DateTime?
+}
+
+model Material {
+  id            Int            @id @default(autoincrement())
+  chapter       Int
+  content       String?         @db.Text
+  mediaUrl      String?
+  skillCategory SkillCategory
+  gradeLevel    Int            // Contoh: 3, 4, 5, 6
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+  deleted_at    DateTime?
+
+  // Relasi
+  quizQuestions QuizQuestion[]
+  scores        StudentScore[]
+}
+
+// TABEL KUIS UNIVERSAL (Menggantikan MultipleChoice, McqOption, WritingTask, SpeakingTask)
+model QuizQuestion {
+  id               Int          @id @default(autoincrement())
+  material_id      Int
+  material         Material     @relation(fields: [material_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  mediaUrl        String?      // Opsional, bisa digunakan untuk soal yang memerlukan media (misal path untuk gambar atau audio)
+
+  questionType     QuestionType
+
+  // --- Kolom Umum ---
+  // Untuk MCQ: Berisi soal
+  // Untuk Writing: Berisi 'fullSentence'
+  // Untuk Speaking: Berisi 'text' untuk diucapkan
+  questionText     String       @db.Text 
+  
+  // Untuk MCQ: Jawaban benar (misal 'A' atau teks opsi)
+  // Untuk Writing: Kata yang benar
+  // Untuk Speaking: Teks referensi untuk speech-to-text
+  correctAnswer    String       
+
+  // --- Kolom Khusus Multiple Choice ---
+  optionA          String?
+  optionB          String?
+  optionC          String?
+  optionD          String?
+
+  // --- Kolom Khusus Writing (Lengkapi Kata) ---
+  missingWordIndex Int?         // Menyimpan index kata yang dihilangkan dari 'questionText'
+
+  created_at       DateTime     @default(now())
+  updated_at       DateTime     @updatedAt
+  deleted_at       DateTime?
+}
+
+// Tabel Pivot untuk Skor Siswa (Diperlukan berdasarkan relasi di Material)
+model StudentScore {
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  material_id Int
+  score       Float
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  material    Material  @relation(fields: [material_id], references: [id], onDelete: Cascade)
+}
