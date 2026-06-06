@@ -13,7 +13,7 @@ export function ClassCard() {
 
   const handleSelectClass = (classId: string) => {
     setSelectedClassId(classId);
-    router.push("/choose-chapter");
+    router.push(`/materials/${classId}`);
   };
 
   return (

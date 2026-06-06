@@ -154,7 +154,7 @@ export default function CompletePage() {
           </Button>
           <div className="grid grid-cols-2 gap-4">
             <Button
-              onClick={() => router.push("/choose-chapter")}
+              onClick={() => router.push("/materials/kelas-3")}
               variant="outline"
               className="py-4"
             >
