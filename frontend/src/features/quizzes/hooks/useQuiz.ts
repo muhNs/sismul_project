@@ -64,7 +64,9 @@ export function useQuiz() {
   }, [currentQIndex, questions.length, router]);
 
   const handleClose = useCallback(() => {
-    router.push("/choose-chapter");
+    if (window.confirm("Yakin keluar dari sesi? Semua progress akan hilang.")) {
+      router.push("/quiz/prep");
+    }
   }, [router]);
 
   return {

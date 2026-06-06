@@ -59,7 +59,10 @@ export default function PrepPage() {
             <span className="material-symbols-outlined">arrow_forward</span>
           </Button>
           <p
-            onClick={() => router.push("/choose-chapter")}
+            onClick={() => {
+              const classId = useStore.getState().selectedClassId;
+              router.push(`/materials/${classId || "kelas-3"}`);
+            }}
             className="text-center text-sm font-label font-bold text-on-surface-variant cursor-pointer hover:text-primary transition-colors"
           >
             Nanti saja
