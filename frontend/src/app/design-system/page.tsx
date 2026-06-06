@@ -7,15 +7,15 @@ import { Card } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Mascot } from "@/components/ui/Mascot";
 
-import LoginPage from "../login/page";
-import HomePage from "../page";
-import ChooseChapterPage from "../choose-chapter/page";
-import QuizPrepPage from "../quiz/prep/page";
-import QuizArenaPage from "../quiz/arena/page";
-import QuizCompletePage from "../quiz/complete/page";
-import VocabularyPage from "../vocabulary/page";
-import ProfilePage from "../profile/page";
-import RegisterPage from "../register/page";
+import LoginPage from "@/features/pages/auth/LoginPage";
+import HomePage from "@/features/pages/home/HomePage";
+import ChooseChapterPage from "@/features/pages/materials/ChooseChapterPage";
+import QuizPrepPage from "@/features/pages/quizzes/PrepPage";
+import QuizArenaPage from "@/features/pages/quizzes/ArenaPage";
+import QuizCompletePage from "@/features/pages/quizzes/CompletePage";
+import VocabularyPage from "@/features/pages/vocabularies/VocabularyPage";
+import ProfilePage from "@/features/pages/profile/ProfilePage";
+import RegisterPage from "@/features/pages/auth/RegisterPage";
 
 interface MockupConfig {
   name: string;

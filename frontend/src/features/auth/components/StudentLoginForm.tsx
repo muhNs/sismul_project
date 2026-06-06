@@ -8,7 +8,6 @@ import { Card } from "@/components/ui/Card";
 
 export function LoginForm() {
   const router = useRouter();
-  const [authType, setAuthType] = useState<"login" | "register">("login");
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -31,132 +30,69 @@ export function LoginForm() {
 
       {/* Auth Container Card */}
       <Card variant="surface" className="w-full p-6 bg-white shadow-[0_4px_0_#e3e2e2] border-2 border-surface-container-highest">
-        {/* Toggle Tabs */}
-        <div className="flex p-1 bg-surface-container rounded-lg mb-6">
-          <button
-            type="button"
-            className={`flex-1 py-2 font-label text-sm font-bold rounded-lg transition-all cursor-pointer ${
-              authType === "login" ? "bg-white text-primary shadow-sm" : "text-on-surface-variant"
-            }`}
-            onClick={() => setAuthType("login")}
-          >
-            Masuk
-          </button>
-          <button
-            type="button"
-            className={`flex-1 py-2 font-label text-sm font-bold rounded-lg transition-all cursor-pointer ${
-              authType === "register" ? "bg-white text-primary shadow-sm" : "text-on-surface-variant"
-            }`}
-            onClick={() => setAuthType("register")}
-          >
-            Daftar
-          </button>
-        </div>
-
-        {authType === "login" ? (
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-              <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
-                Email atau Username
-              </label>
-              <div
-                className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${
-                  focusedField === "email"
-                    ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
-                    : "border-surface-container-highest"
-                }`}
-              >
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
-                  person
-                </span>
-                <input
-                  type="text"
-                  name="username"
-                  required
-                  placeholder="Masukkan namamu..."
-                  onFocus={() => setFocusedField("email")}
-                  onBlur={() => setFocusedField(null)}
-                  className="w-full pl-12 pr-4 py-4 font-sans text-sm bg-transparent outline-none border-none focus:ring-0"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
-                Kata Sandi
-              </label>
-              <div
-                className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${
-                  focusedField === "password"
-                    ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
-                    : "border-surface-container-highest"
-                }`}
-              >
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
-                  lock
-                </span>
-                <input
-                  type="password"
-                  name="password"
-                  required
-                  placeholder="Rahasia ssttt..."
-                  onFocus={() => setFocusedField("password")}
-                  onBlur={() => setFocusedField(null)}
-                  className="w-full pl-12 pr-12 py-4 font-sans text-sm bg-transparent outline-none border-none focus:ring-0"
-                />
-                <button
-                  type="button"
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors cursor-pointer"
-                >
-                  <span className="material-symbols-outlined">visibility</span>
-                </button>
-              </div>
-            </div>
-
-            <Button type="submit" variant="primary" className="mt-4">
-              Masuk
-            </Button>
-          </form>
-        ) : (
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-              <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
-                Nama Lengkap
-              </label>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="space-y-2">
+            <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
+              Email atau Username
+            </label>
+            <div
+              className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${
+                focusedField === "email"
+                  ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
+                  : "border-surface-container-highest"
+              }`}
+            >
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
+                person
+              </span>
               <input
                 type="text"
+                name="username"
                 required
-                placeholder="Siapa namamu?"
-                className="w-full px-4 py-4 rounded-xl border-2 border-surface-container-highest focus:border-secondary transition-all font-sans text-sm bg-surface-container-low outline-none"
+                placeholder="Masukkan namamu..."
+                onFocus={() => setFocusedField("email")}
+                onBlur={() => setFocusedField(null)}
+                className="w-full pl-12 pr-4 py-4 font-sans text-sm bg-transparent outline-none border-none focus:ring-0"
               />
             </div>
-            <div className="space-y-2">
-              <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
-                Email Orang Tua
-              </label>
-              <input
-                type="email"
-                required
-                placeholder="ayah_ibu@email.com"
-                className="w-full px-4 py-4 rounded-xl border-2 border-surface-container-highest focus:border-secondary transition-all font-sans text-sm bg-surface-container-low outline-none"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
-                Kata Sandi Baru
-              </label>
+          </div>
+
+          <div className="space-y-2">
+            <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
+              Kata Sandi
+            </label>
+            <div
+              className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${
+                focusedField === "password"
+                  ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
+                  : "border-surface-container-highest"
+              }`}
+            >
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
+                lock
+              </span>
               <input
                 type="password"
+                name="password"
                 required
-                placeholder="Buat sandi yang kuat!"
-                className="w-full px-4 py-4 rounded-xl border-2 border-surface-container-highest focus:border-secondary transition-all font-sans text-sm bg-surface-container-low outline-none"
+                placeholder="Rahasia ssttt..."
+                onFocus={() => setFocusedField("password")}
+                onBlur={() => setFocusedField(null)}
+                className="w-full pl-12 pr-12 py-4 font-sans text-sm bg-transparent outline-none border-none focus:ring-0"
               />
+              <button
+                type="button"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined">visibility</span>
+              </button>
             </div>
-            <Button type="submit" variant="secondary" className="mt-4">
-              Ayo Mulai!
-            </Button>
-          </form>
-        )}
+          </div>
+
+          <Button type="submit" variant="primary" className="mt-4">
+            Masuk
+          </Button>
+        </form>
 
         {/* Social Logins */}
         <div className="text-center space-y-3 pt-6 mt-4 border-t border-surface-container">
@@ -182,8 +118,21 @@ export function LoginForm() {
         </div>
       </Card>
 
-      {/* Forgot Password */}
+      {/* Register Link */}
       <div className="mt-6 text-center">
+        <p className="font-label text-sm font-bold text-on-surface-variant">
+          Belum punya akun?{" "}
+          <span
+            onClick={() => router.push("/register")}
+            className="text-primary hover:underline cursor-pointer font-extrabold"
+          >
+            Daftar di sini
+          </span>
+        </p>
+      </div>
+
+      {/* Forgot Password */}
+      <div className="mt-2 text-center">
         <p className="font-label text-xs font-bold text-outline">
           Lupa kata sandi?{" "}
           <a className="text-secondary hover:underline cursor-pointer">Klik di sini</a>
