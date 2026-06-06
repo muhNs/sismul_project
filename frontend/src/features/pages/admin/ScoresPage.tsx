@@ -191,7 +191,7 @@ export const ScoresPage = () => {
       </div>
 
       {/* Action Bar */}
-      <div className="flex flex-col md:flex-row items-center gap-4 bg-surface p-4 rounded-2xl border border-outline-variant shadow-sm flex-wrap">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 bg-surface p-4 rounded-2xl border border-outline-variant shadow-sm w-full">
         <div className="flex-1 w-full relative min-w-[200px]">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
           <input
@@ -203,8 +203,8 @@ export const ScoresPage = () => {
           />
         </div>
         
-        <div className="w-full md:w-auto flex flex-col sm:flex-row gap-4">
-          <div className="relative min-w-[140px]">
+        <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-4">
+          <div className="relative w-full sm:min-w-[140px]">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant z-10 text-[18px]">school</span>
             <select
               value={filterGrade}
@@ -220,7 +220,7 @@ export const ScoresPage = () => {
             <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
           </div>
 
-          <div className="relative min-w-[160px]">
+          <div className="relative w-full sm:min-w-[160px]">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant z-10 text-[18px]">auto_stories</span>
             <select
               value={filterChapter}
@@ -235,7 +235,7 @@ export const ScoresPage = () => {
             <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
           </div>
 
-          <div className="relative min-w-[140px]">
+          <div className="relative w-full sm:min-w-[140px]">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant z-10 text-[18px]">psychology</span>
             <select
               value={filterSkill}

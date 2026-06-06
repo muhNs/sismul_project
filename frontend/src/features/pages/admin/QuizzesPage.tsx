@@ -279,7 +279,7 @@ export const QuizzesPage = () => {
       </div>
 
       {/* Action Bar */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 bg-surface p-4 rounded-2xl border border-outline-variant shadow-sm">
+      <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 bg-surface p-4 rounded-2xl border border-outline-variant shadow-sm w-full">
         <div className="flex-1 w-full relative">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
           <input
@@ -290,7 +290,7 @@ export const QuizzesPage = () => {
             className="w-full pl-10 pr-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
           />
         </div>
-        <div className="w-full sm:w-auto relative min-w-[200px]">
+        <div className="w-full md:w-auto relative min-w-[200px]">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant z-10">filter_list</span>
           <select
             value={filterGrade}
@@ -464,11 +464,11 @@ export const QuizzesPage = () => {
             </>
           )}
 
-          <div className="pt-4 flex justify-end gap-3 border-t border-outline-variant/30 mt-6">
-            <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
+          <div className="pt-4 flex flex-col sm:flex-row justify-end gap-3 border-t border-outline-variant/30 mt-6">
+            <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
               Batal
             </Button>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" className="w-full sm:w-auto">
               {editingId ? "Update Soal" : "Simpan Soal"}
             </Button>
           </div>
@@ -483,13 +483,13 @@ export const QuizzesPage = () => {
       >
         <div className="space-y-6">
           <p className="text-on-surface-variant">Soal yang dihapus tidak dapat dikembalikan.</p>
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+          <div className="flex flex-col sm:flex-row justify-end gap-3">
+            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)} className="w-full sm:w-auto">
               Batal
             </Button>
             <button
               onClick={confirmDelete}
-              className="px-6 py-2.5 rounded-xl font-bold transition-all duration-200 bg-error text-on-error hover:bg-error/90 active:scale-95 shadow-sm"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold transition-all duration-200 bg-error text-on-error hover:bg-error/90 active:scale-95 shadow-sm"
             >
               Ya, Hapus
             </button>

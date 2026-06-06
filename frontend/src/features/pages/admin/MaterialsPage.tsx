@@ -34,6 +34,17 @@ export const MaterialsPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => setToastMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
+
+  const showToast = (message: string) => setToastMessage(message);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -76,12 +87,14 @@ export const MaterialsPage = () => {
   const onSubmit = (data: FormValues) => {
     if (editingId) {
       setMaterials(prev => prev.map(m => m.id === editingId ? { ...m, ...data } : m));
+      showToast("Berhasil mengubah materi");
     } else {
       const newMaterial: AdminMaterial = {
         id: `MAT-${Date.now()}`,
         ...data,
       };
       setMaterials(prev => [...prev, newMaterial]);
+      showToast("Berhasil menambahkan materi");
     }
     setIsModalOpen(false);
   };
@@ -89,12 +102,21 @@ export const MaterialsPage = () => {
   const confirmDelete = () => {
     if (deletingId) {
       setMaterials(prev => prev.filter(m => m.id !== deletingId));
+      showToast("Berhasil menghapus materi");
     }
     setIsDeleteModalOpen(false);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] bg-surface-container-high text-on-surface px-6 py-3 rounded-full shadow-lg border border-outline-variant flex items-center gap-2 animate-in fade-in slide-in-from-top-4">
+          <span className="material-symbols-outlined text-primary">check_circle</span>
+          <span className="font-semibold text-sm">{toastMessage}</span>
+        </div>
+      )}
+
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -110,7 +132,7 @@ export const MaterialsPage = () => {
       </div>
 
       {/* Action Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 items-center bg-surface p-4 rounded-2xl border border-outline-variant shadow-sm">
+      <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center bg-surface p-4 rounded-2xl border border-outline-variant shadow-sm w-full">
         <div className="flex-1 w-full relative">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
           <input
@@ -121,33 +143,35 @@ export const MaterialsPage = () => {
             className="w-full pl-10 pr-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
           />
         </div>
-        <div className="w-full sm:w-48 relative flex-shrink-0">
-          <select
-            value={filterGrade}
-            onChange={(e) => setFilterGrade(e.target.value)}
-            className="w-full pl-4 pr-10 py-2 appearance-none rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-          >
-            <option value="Semua Grade">Semua Grade</option>
-            <option value="Grade 3">Grade 3</option>
-            <option value="Grade 4">Grade 4</option>
-            <option value="Grade 5">Grade 5</option>
-            <option value="Grade 6">Grade 6</option>
-          </select>
-          <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
-        </div>
-        <div className="w-full sm:w-48 relative flex-shrink-0">
-          <select
-            value={filterSkill}
-            onChange={(e) => setFilterSkill(e.target.value)}
-            className="w-full pl-4 pr-10 py-2 appearance-none rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-          >
-            <option value="Semua Skill">Semua Skill</option>
-            <option value="Reading">Reading</option>
-            <option value="Listening">Listening</option>
-            <option value="Writing">Writing</option>
-            <option value="Speaking">Speaking</option>
-          </select>
-          <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+          <div className="w-full sm:w-48 relative flex-shrink-0">
+            <select
+              value={filterGrade}
+              onChange={(e) => setFilterGrade(e.target.value)}
+              className="w-full pl-4 pr-10 py-2 appearance-none rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            >
+              <option value="Semua Grade">Semua Grade</option>
+              <option value="Grade 3">Grade 3</option>
+              <option value="Grade 4">Grade 4</option>
+              <option value="Grade 5">Grade 5</option>
+              <option value="Grade 6">Grade 6</option>
+            </select>
+            <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+          </div>
+          <div className="w-full sm:w-48 relative flex-shrink-0">
+            <select
+              value={filterSkill}
+              onChange={(e) => setFilterSkill(e.target.value)}
+              className="w-full pl-4 pr-10 py-2 appearance-none rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            >
+              <option value="Semua Skill">Semua Skill</option>
+              <option value="Reading">Reading</option>
+              <option value="Listening">Listening</option>
+              <option value="Writing">Writing</option>
+              <option value="Speaking">Speaking</option>
+            </select>
+            <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+          </div>
         </div>
       </div>
 
@@ -177,43 +201,45 @@ export const MaterialsPage = () => {
             )}
           </div>
 
-          <div className="space-y-1">
-            <label className="text-sm font-semibold text-on-surface">Grade</label>
-            <select
-              {...form.register("grade")}
-              className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-            >
-              <option value="Grade 3">Grade 3</option>
-              <option value="Grade 4">Grade 4</option>
-              <option value="Grade 5">Grade 5</option>
-              <option value="Grade 6">Grade 6</option>
-            </select>
-            {form.formState.errors.grade && (
-              <p className="text-error text-xs">{form.formState.errors.grade.message}</p>
-            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-sm font-semibold text-on-surface">Grade</label>
+              <select
+                {...form.register("grade")}
+                className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+              >
+                <option value="Grade 3">Grade 3</option>
+                <option value="Grade 4">Grade 4</option>
+                <option value="Grade 5">Grade 5</option>
+                <option value="Grade 6">Grade 6</option>
+              </select>
+              {form.formState.errors.grade && (
+                <p className="text-error text-xs">{form.formState.errors.grade.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-semibold text-on-surface">Skill</label>
+              <select
+                {...form.register("skill")}
+                className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+              >
+                <option value="Reading">Reading</option>
+                <option value="Listening">Listening</option>
+                <option value="Writing">Writing</option>
+                <option value="Speaking">Speaking</option>
+              </select>
+              {form.formState.errors.skill && (
+                <p className="text-error text-xs">{form.formState.errors.skill.message}</p>
+              )}
+            </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-sm font-semibold text-on-surface">Skill</label>
-            <select
-              {...form.register("skill")}
-              className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-            >
-              <option value="Reading">Reading</option>
-              <option value="Listening">Listening</option>
-              <option value="Writing">Writing</option>
-              <option value="Speaking">Speaking</option>
-            </select>
-            {form.formState.errors.skill && (
-              <p className="text-error text-xs">{form.formState.errors.skill.message}</p>
-            )}
-          </div>
-
-          <div className="pt-4 flex justify-end gap-3 border-t border-outline-variant/30 mt-6">
-            <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
+          <div className="pt-4 flex flex-col sm:flex-row justify-end gap-3 border-t border-outline-variant/30 mt-6">
+            <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
               Batal
             </Button>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" className="w-full sm:w-auto">
               {editingId ? "Update Materi" : "Simpan Materi"}
             </Button>
           </div>
@@ -228,13 +254,13 @@ export const MaterialsPage = () => {
       >
         <div className="space-y-6">
           <p className="text-on-surface-variant">Materi yang dihapus tidak dapat dikembalikan.</p>
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+          <div className="flex flex-col sm:flex-row justify-end gap-3">
+            <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)} className="w-full sm:w-auto">
               Batal
             </Button>
             <button
               onClick={confirmDelete}
-              className="px-6 py-2.5 rounded-xl font-bold transition-all duration-200 bg-error text-on-error hover:bg-error/90 active:scale-95 shadow-sm"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold transition-all duration-200 bg-error text-on-error hover:bg-error/90 active:scale-95 shadow-sm"
             >
               Ya, Hapus
             </button>

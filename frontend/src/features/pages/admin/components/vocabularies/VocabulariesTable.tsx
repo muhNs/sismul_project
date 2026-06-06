@@ -130,38 +130,89 @@ export const VocabulariesTable: React.FC<VocabulariesTableProps> = ({
           <p className="text-on-surface-variant mb-6">Mulai tambahkan kosakata bahasa Inggris untuk siswa Anda.</p>
         </Card>
       ) : (
-        <Card className="overflow-hidden p-0 rounded-2xl border border-outline-variant bg-surface shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-surface-container-lowest text-on-surface-variant uppercase font-semibold text-xs border-b border-outline-variant">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <th key={header.id} className="px-6 py-4">
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody className="divide-y divide-outline-variant">
-                {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className="hover:bg-surface-container-low transition-colors group">
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="px-6 py-4 text-on-surface">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <>
+          {/* Desktop Table View */}
+          <Card className="hidden md:block overflow-hidden p-0 rounded-2xl border border-outline-variant bg-surface shadow-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-surface-container-lowest text-on-surface-variant uppercase font-semibold text-xs border-b border-outline-variant">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <th key={header.id} className="px-6 py-4">
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody className="divide-y divide-outline-variant">
+                  {table.getRowModel().rows.map((row) => (
+                    <tr key={row.id} className="hover:bg-surface-container-low transition-colors group">
+                      {row.getVisibleCells().map((cell) => (
+                        <td key={cell.id} className="px-6 py-4 text-on-surface">
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+
+          {/* Mobile Card List View */}
+          <div className="md:hidden space-y-4">
+            {table.getRowModel().rows.map((row) => {
+              const vocab = row.original;
+              let bgClass = "bg-primary-container text-primary";
+              if (vocab.grade === "Grade 4") bgClass = "bg-blue-100 text-blue-700";
+              if (vocab.grade === "Grade 5") bgClass = "bg-green-100 text-green-700";
+              if (vocab.grade === "Grade 6") bgClass = "bg-orange-100 text-orange-700";
+
+              return (
+                <Card key={vocab.id} className="p-4 rounded-2xl border border-outline-variant bg-surface shadow-sm space-y-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-semibold text-on-surface text-lg">{vocab.english}</h4>
+                      <p className="text-sm text-on-surface-variant mt-0.5">{vocab.indonesian}</p>
+                    </div>
+                    <span className={`px-2 py-1 rounded-md text-[10px] font-bold ${bgClass}`}>
+                      {vocab.grade}
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-on-surface-variant mr-2">Media:</span>
+                    {vocab.image && <span className="material-symbols-outlined text-[16px] text-primary">image</span>}
+                    {vocab.audio && <span className="material-symbols-outlined text-[16px] text-primary">volume_up</span>}
+                    {!vocab.image && !vocab.audio && <span className="text-xs text-on-surface-variant">-</span>}
+                  </div>
+
+                  <div className="flex gap-2 pt-3 border-t border-outline-variant/30">
+                    <button 
+                      onClick={() => onEdit?.(vocab)}
+                      className="flex-1 py-2 rounded-xl bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2 text-sm font-semibold"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">edit</span> Edit
+                    </button>
+                    <button 
+                      onClick={() => onDelete?.(vocab.id)}
+                      className="flex-1 py-2 rounded-xl bg-error-container text-error hover:opacity-80 transition-opacity flex items-center justify-center gap-2 text-sm font-semibold"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">delete</span> Hapus
+                    </button>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
+
           {/* Pagination Controls could be added here */}
           <div className="p-4 border-t border-outline-variant flex justify-between items-center bg-surface-container-lowest text-sm text-on-surface-variant">
             <div>
@@ -184,7 +235,7 @@ export const VocabulariesTable: React.FC<VocabulariesTableProps> = ({
               </button>
             </div>
           </div>
-        </Card>
+        </>
       )}
     </div>
   );

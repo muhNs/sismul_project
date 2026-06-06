@@ -116,7 +116,7 @@ export const ScoresTable: React.FC<ScoresTableProps> = ({ scores }) => {
   return (
     <>
       {/* Desktop & Tablet Table */}
-      <Card className="hidden sm:block overflow-hidden p-0 rounded-2xl border border-outline-variant bg-surface shadow-sm">
+      <Card className="hidden md:block overflow-hidden p-0 rounded-2xl border border-outline-variant bg-surface shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-surface-container-lowest text-on-surface-variant uppercase font-semibold text-xs border-b border-outline-variant">
@@ -151,7 +151,7 @@ export const ScoresTable: React.FC<ScoresTableProps> = ({ scores }) => {
       </Card>
 
       {/* Mobile Card List */}
-      <div className="sm:hidden flex flex-col gap-4">
+      <div className="md:hidden flex flex-col gap-4">
         {scores.map((score) => {
           let label = "Needs Improvement";
           let color = "bg-red-100 text-red-700";
