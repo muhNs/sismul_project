@@ -1,3 +1,5 @@
-export { default } from "@/features/pages/vocabularies/VocabularyPage";
+import VocabularyPage from "@/features/pages/vocabularies/VocabularyPage";
+export default VocabularyPage;
+
 
 

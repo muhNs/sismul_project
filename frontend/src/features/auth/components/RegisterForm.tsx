@@ -52,16 +52,8 @@ export function RegisterForm() {
 
       <div style={{ width: "100%", maxWidth: 400, position: "relative", zIndex: 1 }}>
         {/* Mascot */}
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
-          <div style={{ position: "relative", width: 160, height: 160 }}>
-            <div
-              style={{
-                position: "absolute", inset: 0, background: "#2fb8ff",
-                borderRadius: "50%", opacity: 0.25, transform: "scale(0.9)",
-              }}
-            />
-            <Mascot expression="grad" size="lg" className="drop-shadow-xl animate-bounce" />
-          </div>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: -16, marginTop: 16 }}>
+          <Mascot expression="grad" size="xl" className="drop-shadow-xl" />
         </div>
 
         {/* Heading */}

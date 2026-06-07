@@ -1,3 +1,5 @@
-export { default } from "@/features/pages/shop/ShopPage";
+import ShopPage from "@/features/pages/shop/ShopPage";
+export default ShopPage;
+
 
 

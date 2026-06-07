@@ -24,7 +24,7 @@ export function useQuiz() {
   const [currentScore, setCurrentScore] = useState(0);
 
   const currentQuestion = questions[currentQIndex];
-  const progressPercent = (currentQIndex / questions.length) * 100;
+  const progressPercent = ((currentQIndex + 1) / questions.length) * 100;
   const totalPoints = dummyUser.points + currentScore;
 
   const handleSelectOption = useCallback(

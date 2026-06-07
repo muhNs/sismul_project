@@ -49,19 +49,6 @@ export default function CompletePage() {
           ))}
         </div>
 
-        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-        <style jsx global>{`
-          @keyframes confetti {
-            0% {
-              transform: translateY(0) rotate(0deg);
-              opacity: 1;
-            }
-            100% {
-              transform: translateY(100vh) rotate(360deg);
-              opacity: 0;
-            }
-          }
-        `}</style>
 
         {/* Header */}
         <div className="text-center mb-8 space-y-2">
@@ -154,7 +141,7 @@ export default function CompletePage() {
           </Button>
           <div className="grid grid-cols-2 gap-4">
             <Button
-              onClick={() => router.push("/materials/kelas-3")}
+              onClick={() => router.push("/materials/3")}
               variant="outline"
               className="py-4"
             >
