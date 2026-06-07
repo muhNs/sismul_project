@@ -4,12 +4,13 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { useStore } from "@/lib/store";
-import { classesData, dummyUser } from "@/lib/dummy-data";
+import { classesData } from "@/lib/dummy-data";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 
 export function ClassCard() {
   const router = useRouter();
   const setSelectedClassId = useStore((state) => state.setSelectedClassId);
+  const user = useStore((state) => state.user);
 
   const handleSelectClass = (classId: string) => {
     setSelectedClassId(classId);
@@ -21,7 +22,7 @@ export function ClassCard() {
       {/* Greeting */}
       <div className="mb-8">
         <h1 className="font-display text-3xl font-extrabold text-on-surface mb-2">
-          Halo, {dummyUser.name.split(" ")[0]}! 👋
+          Halo, {user?.name ? user.name.split(" ")[0] : "Siswa"}! 👋
         </h1>
         <p className="font-sans text-sm font-medium text-on-surface-variant">
           Pilih kelasmu untuk mulai belajar hari ini

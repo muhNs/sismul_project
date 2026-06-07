@@ -20,6 +20,8 @@ export default function ArenaPage() {
     handleCheckAnswer,
     handleNext,
     handleClose,
+    loading,
+    error,
   } = useQuiz();
 
   useEffect(() => {
@@ -35,7 +37,21 @@ export default function ArenaPage() {
       />
 
       <main className="flex-1 w-full max-w-[800px] mx-auto px-margin-mobile py-8 flex flex-col relative">
-        {/* Score Popup */}
+        {loading && (
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-lg font-bold text-on-surface-variant">Memuat soal...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-lg font-bold text-error">{error}</p>
+          </div>
+        )}
+
+        {!loading && !error && currentQuestion && (
+          <>
+            {/* Score Popup */}
         {showScorePopup && (
           <div
             id="score-popup"
@@ -55,6 +71,8 @@ export default function ArenaPage() {
           checked={checked}
           onSelect={handleSelectOption}
         />
+        </>
+        )}
         <div className="h-32" />
       </main>
 

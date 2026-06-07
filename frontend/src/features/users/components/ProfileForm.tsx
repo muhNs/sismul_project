@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { dummyUser } from "@/lib/dummy-data";
+import { useStore } from "@/lib/store";
 
 export function ProfileForm() {
-  const [name, setName] = useState(dummyUser.name);
+  const user = useStore((state) => state.user);
+  const [name, setName] = useState(user?.name || "");
   const [password, setPassword] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
@@ -43,7 +44,7 @@ export function ProfileForm() {
           Email
         </label>
         <div className="flex justify-between items-center group">
-          <span className="font-sans text-sm font-bold text-on-surface">{dummyUser.email}</span>
+          <span className="font-sans text-sm font-bold text-on-surface">{user?.email}</span>
           <span className="material-symbols-outlined text-on-surface-variant">
             lock
           </span>

@@ -4,7 +4,6 @@ import React from "react";
 import { Card } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { useStore } from "@/lib/store";
-import { dummyUser } from "@/lib/dummy-data";
 
 const reportCard = [
   { subject: "Reading Comprehension", points: 100, percentage: 100, stars: 5 },
@@ -14,6 +13,7 @@ const reportCard = [
 
 export function ReportCard() {
   const quizScore = useStore((state) => state.quizScore);
+  const user = useStore((state) => state.user);
 
   return (
     <section className="mb-8">
@@ -37,7 +37,7 @@ export function ReportCard() {
             <div className="flex justify-between items-start">
               <div>
                 <span className="font-label text-[10px] font-bold text-secondary uppercase tracking-wider">
-                  Kelas {dummyUser.level}
+                  Kelas {user?.level || 3}
                 </span>
                 <h3 className="font-display text-base font-bold text-on-surface">{item.subject}</h3>
               </div>

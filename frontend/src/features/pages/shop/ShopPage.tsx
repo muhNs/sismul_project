@@ -4,13 +4,13 @@ import React from "react";
 import { Header } from "@/components/layout/Header";
 import { Navbar } from "@/components/layout/Navbar";
 import { useStore } from "@/lib/store";
-import { dummyUser } from "@/lib/dummy-data";
 import { ShopItem } from "./components/ShopItem";
 import { shopItemsData } from "./constants/shopItems";
 
 export default function ShopPage() {
   const quizScore = useStore((state) => state.quizScore);
-  const totalPoints = dummyUser.points + quizScore;
+  const user = useStore((state) => state.user);
+  const totalPoints = (user?.points || 0) + quizScore;
 
   return (
     <>

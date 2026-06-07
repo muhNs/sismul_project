@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Mascot } from "@/components/ui/Mascot";
 import { AuthField } from "./AuthField";
+import { registerUser } from "@/features/auth/api/registerUser";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -11,13 +12,27 @@ export function RegisterForm() {
   const [submitState, setSubmitState] = useState<"idle" | "processing" | "success">("idle");
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
     setSubmitState("processing");
-    setTimeout(() => {
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const name = formData.get("full_name") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      await registerUser({ name, email, password });
       setSubmitState("success");
-      setTimeout(() => router.push("/"), 1000);
-    }, 1500);
+      setTimeout(() => router.push("/login"), 1000);
+    } catch (err: any) {
+      console.error(err);
+      setErrorMsg(err.response?.data?.message || "Pendaftaran gagal. Silakan coba lagi.");
+      setSubmitState("idle");
+    }
   };
 
   return (
@@ -84,6 +99,11 @@ export function RegisterForm() {
           }}
         >
           <form style={{ display: "flex", flexDirection: "column", gap: 16 }} onSubmit={handleSubmit}>
+            {errorMsg && (
+              <div style={{ color: "red", fontSize: 14, textAlign: "center", fontWeight: "bold" }}>
+                {errorMsg}
+              </div>
+            )}
             <AuthField
               id="full_name" label="Nama Lengkap" icon="person" type="text"
               placeholder="Masukkan nama lengkap" focused={focusedField === "fullName"}

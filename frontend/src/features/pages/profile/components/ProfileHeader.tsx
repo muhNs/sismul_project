@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { dummyUser } from "@/lib/dummy-data";
+import { useStore } from "@/lib/store";
 
 export function ProfileHeader() {
-  const dicebearUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${dummyUser.username}`;
+  const user = useStore((state) => state.user);
+  const dicebearUrl = user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || "User"}`;
 
   return (
     <section className="mb-8">
@@ -16,7 +17,7 @@ export function ProfileHeader() {
         </div>
         <div className="text-center">
           <h1 className="font-display text-2xl font-extrabold text-on-surface">
-            Halo, {dummyUser.name}!
+            Halo, {user?.name || "Siswa"}!
           </h1>
         </div>
       </div>

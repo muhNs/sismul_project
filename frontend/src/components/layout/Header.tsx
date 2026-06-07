@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { dummyUser } from "@/lib/dummy-data";
+import { useStore } from "@/lib/store";
 
 interface HeaderProps {
   title?: string;
@@ -15,11 +15,16 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   title = "Learnly",
   showBack = false,
-  points = 1240,
-  avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${dummyUser.username}`,
-  userName = dummyUser.name,
+  points,
+  avatarUrl,
+  userName,
 }) => {
   const router = useRouter();
+  const user = useStore((state) => state.user);
+
+  const displayPoints = points !== undefined ? points : (user?.points || 0);
+  const displayName = userName !== undefined ? userName : (user?.name?.split(" ")[0] || "Siswa");
+  const displayAvatar = avatarUrl !== undefined ? avatarUrl : (user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${displayName}`);
 
   return (
     <header className="bg-background fixed top-0 w-full z-50 h-16 flex justify-between items-center px-margin-mobile border-b-4 border-surface-container-highest">
@@ -52,19 +57,19 @@ export const Header: React.FC<HeaderProps> = ({
       >
         <div className="flex flex-col items-end">
           <span className="font-label text-[10px] text-on-surface-variant font-bold leading-none mb-0.5">
-            {userName}
+            {displayName}
           </span>
           <div className="flex items-center gap-1">
             <span className="material-symbols-outlined text-tertiary-container text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
               stars
             </span>
             <span className="font-label text-xs font-bold text-on-surface leading-none">
-              {points.toLocaleString()} pts
+              {displayPoints.toLocaleString()} pts
             </span>
           </div>
         </div>
         <div className="w-8 h-8 rounded-full overflow-hidden bg-primary-container border border-surface-dim shrink-0">
-          <img alt="Avatar" className="w-full h-full object-cover" src={avatarUrl} />
+          <img alt="Avatar" className="w-full h-full object-cover" src={displayAvatar} />
         </div>
       </div>
     </header>

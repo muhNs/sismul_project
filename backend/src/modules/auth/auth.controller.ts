@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { loginService, refreshTokenService, registerService, logoutService } from './auth.service';
+import { loginService, refreshTokenService, registerService, logoutService, getMeService } from './auth.service';
 import { registerSchema, loginSchema } from './auth.schema';
 import { setAuthCookies, clearAuthCookies } from '../../shared/cookie.utils';
 
@@ -60,6 +60,15 @@ export class AuthController {
       res.status(200).json({ status: 'success', message: 'Logout berhasil' });
     } catch (error: any) {
       res.status(500).json({ status: 'error', message: 'Gagal melakukan logout' });
+    }
+  }
+
+  static async getMe(req: Request, res: Response) {
+    try {
+      const user = await getMeService(req.user.userId);
+      res.status(200).json({ status: 'success', data: user });
+    } catch (error: any) {
+      res.status(404).json({ status: 'error', message: error.message });
     }
   }
 }

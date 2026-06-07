@@ -3,13 +3,14 @@ import type { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
 import router from "./routes/routes";
 
 dotenv.config();
 
 const app = express();
 
-const allowedOrigins = ["http://localhost:5174", "http://localhost:5173", "http://localhost:5175", "http://localhost:5176", "http://localhost:5177"];
+const allowedOrigins = ["http://localhost:3000", "http://localhost:5174", "http://localhost:5173", "http://localhost:5175", "http://localhost:5176", "http://localhost:5177"];
 
 // configuration of CORS untuk mengizinkan origin tertentu dan mendukung credentials (cookies)
 app.use(
@@ -32,6 +33,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// serve static files
+app.use("/public", express.static(path.join(process.cwd(), "public")));
 
 // endpoint API versioning
 app.use("/api/v1", router);

@@ -4,7 +4,7 @@ import { Response, CookieOptions } from 'express';
 const cookieOptions: CookieOptions = {
   httpOnly: true, // Mencegah akses cookie dari JavaScript browser (Anti XSS)
   secure: process.env.NODE_ENV === 'production', // Wajib HTTPS di mode Production
-  sameSite: 'strict', // Mencegah serangan CSRF
+  sameSite: 'lax', // Mencegah serangan CSRF namun mengizinkan navigasi cross-origin
 };
 
 export const setAuthCookies = (res: Response, accessToken: string, refreshToken: string) => {

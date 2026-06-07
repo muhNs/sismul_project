@@ -98,3 +98,21 @@ export const logoutService = async (refreshToken: string) => {
     data: { deleted_at: new Date() },
   });
 };
+
+export const getMeService = async (userId: number) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      points: true,
+      diamonds: true,
+      avatar: true,
+    }
+  });
+
+  if (!user || user.deleted_at) throw new Error("User tidak ditemukan");
+  return user;
+};

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card } from "@/components/ui/Card";
-import { dummyUser } from "@/lib/dummy-data";
+import { useStore } from "@/lib/store";
 import { LeaderboardEntry } from "@/features/scores/constants/leaderboardData";
 
 interface LeaderboardRowProps {
@@ -11,6 +11,7 @@ interface LeaderboardRowProps {
 
 export function LeaderboardRow({ entry }: LeaderboardRowProps) {
   const isTop3 = entry.rank <= 3;
+  const user = useStore((state) => state.user);
 
   return (
     <Card
@@ -27,7 +28,7 @@ export function LeaderboardRow({ entry }: LeaderboardRowProps) {
 
       <div className="w-12 h-12 rounded-full bg-surface-container-highest overflow-hidden flex items-center justify-center flex-shrink-0 relative">
         {entry.isUser ? (
-          <img src={dummyUser.avatar} alt="Avatar" className="w-full h-full object-cover" />
+          <img src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || 'User'}`} alt="Avatar" className="w-full h-full object-cover" />
         ) : (
           <span className="material-symbols-outlined text-surface-dim">person</span>
         )}

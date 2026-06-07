@@ -5,14 +5,37 @@ import { useRouter } from "next/navigation";
 import { Mascot } from "@/components/ui/Mascot";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { loginUser } from "@/features/auth/api/loginUser";
+import { useStore } from "@/lib/store";
 
 export function LoginForm() {
   const router = useRouter();
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const setAuth = useStore((state) => state.setAuth);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/");
+    setErrorMsg(null);
+    const formData = new FormData(e.target as HTMLFormElement);
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      // In this system we support login with username/email and password
+      const response = await loginUser({ email: username, password });
+      
+      if (response.data) {
+        setAuth(response.data);
+        router.push("/home");
+      } else {
+        setErrorMsg("Gagal masuk. Silakan periksa kembali email dan password Anda.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      setErrorMsg(err.response?.data?.message || "Login gagal. Periksa kembali kredensial Anda.");
+    }
   };
 
   return (
@@ -88,6 +111,12 @@ export function LoginForm() {
               </button>
             </div>
           </div>
+
+          {errorMsg && (
+            <div className="text-error text-sm font-bold text-center mt-2">
+              {errorMsg}
+            </div>
+          )}
 
           <Button type="submit" variant="primary" className="mt-4">
             Masuk
