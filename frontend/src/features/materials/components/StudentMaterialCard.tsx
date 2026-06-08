@@ -40,10 +40,11 @@ export function ChapterCard() {
 
   const handleStartChapter = (chapterId: string) => {
     setSelectedChapterId(chapterId);
-    if (chapterId === "reading") {
-      router.push("/quiz/prep");
-    } else if (chapterId === "vocabulary") {
+    if (chapterId === "vocabulary") {
       router.push("/vocabulary");
+    } else {
+      // reading, listening, writing, speaking → semua ke quiz/prep
+      router.push("/quiz/prep");
     }
   };
 
