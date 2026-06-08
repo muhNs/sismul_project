@@ -1,3 +1,5 @@
-export { default } from "@/features/pages/quizzes/PrepPage";
+import PrepPage from "@/features/pages/quizzes/PrepPage";
+export default PrepPage;
+
 
 

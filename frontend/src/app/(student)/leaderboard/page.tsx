@@ -1,3 +1,5 @@
-export { default } from "@/features/pages/scores/LeaderboardPage";
+import LeaderboardPage from "@/features/pages/scores/LeaderboardPage";
+export default LeaderboardPage;
+
 
 

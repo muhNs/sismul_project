@@ -12,6 +12,10 @@ export function AdminLoginForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Set dummy session for frontend demonstration
+    if (typeof window !== "undefined") {
+      localStorage.setItem("userRole", "ADMIN");
+    }
     router.push("/admin");
   };
 

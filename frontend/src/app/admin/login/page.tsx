@@ -1,2 +1,4 @@
-export { default } from "@/features/pages/admin/auth/pages/AdminLoginPage";
+import AdminLoginPage from "@/features/pages/admin/auth/pages/AdminLoginPage";
+export default AdminLoginPage;
+
 

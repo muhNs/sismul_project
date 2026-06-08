@@ -61,11 +61,11 @@ export const AdminDashboardPage = () => {
                 <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center">
                   <span className="material-symbols-outlined text-[20px]">person</span>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-on-surface">Pengguna Baru Terdaftar</p>
-                  <p className="text-xs text-on-surface-variant">Budi Santoso menyelesaikan pendaftaran.</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-on-surface break-words">Pengguna Baru Terdaftar</p>
+                  <p className="text-xs text-on-surface-variant break-words">Budi Santoso menyelesaikan pendaftaran.</p>
                 </div>
-                <span className="text-xs text-on-surface-variant font-medium">{i * 2} jam yang lalu</span>
+                <span className="text-xs text-on-surface-variant font-medium flex-shrink-0 whitespace-nowrap">{i * 2} jam yang lalu</span>
               </div>
             ))}
           </div>

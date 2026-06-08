@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 export default function PrepPage() {
   const router = useRouter();
   const selectedChapterId = useStore((state) => state.selectedChapterId);
+  const selectedClassId = useStore((state) => state.selectedClassId);
   const chapter = chaptersData.find((c) => c.id === selectedChapterId) || chaptersData[0];
 
   return (
@@ -60,8 +61,7 @@ export default function PrepPage() {
           </Button>
           <p
             onClick={() => {
-              const classId = useStore.getState().selectedClassId;
-              router.push(`/materials/${classId || "kelas-3"}`);
+            router.push(`/materials/${selectedClassId || "3"}`);
             }}
             className="text-center text-sm font-label font-bold text-on-surface-variant cursor-pointer hover:text-primary transition-colors"
           >

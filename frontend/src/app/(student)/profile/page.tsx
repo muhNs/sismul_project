@@ -1,3 +1,5 @@
-export { default } from "@/features/pages/profile/ProfilePage";
+import ProfilePage from "@/features/pages/profile/ProfilePage";
+export default ProfilePage;
+
 
 
