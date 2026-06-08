@@ -59,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
               stars
             </span>
             <span className="font-label text-xs font-bold text-on-surface leading-none">
-              {points.toLocaleString()} pts
+              {points.toLocaleString('id-ID')} pts
             </span>
           </div>
         </div>
