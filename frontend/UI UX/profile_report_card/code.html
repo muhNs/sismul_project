@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Learnly - Profile &amp; Report Card</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&amp;family=Be+Vietnam+Pro:wght@700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-highest": "#e3e2e2",
+                "on-surface": "#1a1c1c",
+                "primary-fixed": "#87fe45",
+                "on-secondary-fixed-variant": "#004c6e",
+                "on-error": "#ffffff",
+                "on-tertiary-container": "#683a00",
+                "tertiary-fixed-dim": "#ffb872",
+                "error": "#ba1a1a",
+                "on-tertiary": "#ffffff",
+                "surface-container": "#eeeeed",
+                "on-error-container": "#93000a",
+                "primary-fixed-dim": "#6be026",
+                "secondary": "#006590",
+                "primary-container": "#58cc02",
+                "primary": "#2b6c00",
+                "on-surface-variant": "#3f4a36",
+                "inverse-surface": "#2f3131",
+                "on-secondary-fixed": "#001e2e",
+                "background": "#faf9f9",
+                "on-secondary": "#ffffff",
+                "surface-bright": "#faf9f9",
+                "surface": "#faf9f9",
+                "surface-dim": "#dadada",
+                "surface-container-high": "#e9e8e8",
+                "on-primary": "#ffffff",
+                "surface-tint": "#2b6c00",
+                "surface-container-lowest": "#ffffff",
+                "inverse-on-surface": "#f1f0f0",
+                "on-primary-fixed": "#082100",
+                "secondary-fixed-dim": "#88ceff",
+                "surface-variant": "#e3e2e2",
+                "error-container": "#ffdad6",
+                "surface-container-low": "#f4f3f3",
+                "on-tertiary-fixed": "#2d1600",
+                "secondary-container": "#2fb8ff",
+                "on-secondary-container": "#004666",
+                "on-primary-fixed-variant": "#1f5100",
+                "tertiary": "#8c5000",
+                "on-primary-container": "#1e5000",
+                "tertiary-fixed": "#ffdcbf",
+                "inverse-primary": "#6be026",
+                "outline-variant": "#becbb1",
+                "on-background": "#1a1c1c",
+                "outline": "#6f7b64",
+                "secondary-fixed": "#c8e6ff",
+                "tertiary-container": "#ff9c27",
+                "on-tertiary-fixed-variant": "#6a3b00"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "xl": "64px",
+                "gutter": "16px",
+                "md": "24px",
+                "sm": "12px",
+                "lg": "48px",
+                "margin-mobile": "20px",
+                "margin-desktop": "120px",
+                "base": "8px",
+                "xs": "4px"
+            },
+            "fontFamily": {
+                "headline-lg-mobile": ["Plus Jakarta Sans"],
+                "headline-md": ["Plus Jakarta Sans"],
+                "body-md": ["Plus Jakarta Sans"],
+                "label-bold": ["Be Vietnam Pro"],
+                "display": ["Plus Jakarta Sans"],
+                "headline-lg": ["Plus Jakarta Sans"],
+                "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "800"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}],
+                "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tactile-card {
+            box-shadow: 0 4px 0 0 #e3e2e2;
+        }
+        .tactile-button-primary {
+            box-shadow: 0 4px 0 0 #1e5000;
+        }
+        .tactile-button-primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 0 #1e5000;
+        }
+        .progress-recessed {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .progress-shine {
+            background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 50%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-background dark:bg-background border-b-4 border-surface-container-highest dark:border-surface-variant flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 z-50">
+<div class="flex items-center gap-base">
+<img alt="Avatar" class="w-10 h-10 rounded-full border-2 border-primary-container" data-alt="A friendly green owl mascot illustration for a children's educational app. The owl has large expressive eyes, a small orange beak, and wears bright orange headphones. The art style is clean vector with thick outlines and vibrant saturated colors, reflecting a playful and encouraging learning environment for kids." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbZr9AxN1aK_VjOqtxlFiA2wm8jbBh5eXn-CQVZLKLna4YBD2PFFqEgajuu5MW5DChjrdzGGNLVuZmjM-pbMeOpVZeFBvUAeqyLMRyV1UeUaJjHFsyeqYNXkyNblEajvd9X-i8gdC_LDUE-MzZTIWv2KDrLwRULMPbANQlfNqp4pAfrIMOqsGaYtbP6gepF8ADhALksSwh3ENVvQFLCkhhit63XhR0I1QvOBkCHlOnFVq-687VKsEwdmhZS2Q0lDPU5H0f_DPuXxE"/>
+<span class="font-headline-md text-headline-md text-primary font-black">Learnly</span>
+</div>
+<div class="bg-surface-container-low px-sm py-xs rounded-full border-2 border-surface-container-highest flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-bold text-label-bold text-primary">1,240 pts</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-24 pb-28 px-margin-mobile max-w-[800px] mx-auto w-full">
+<!-- Profile Header Section -->
+<section class="mb-lg">
+<div class="flex flex-col items-center gap-md">
+<div class="relative">
+<div class="w-32 h-32 rounded-full border-4 border-primary-container p-1 bg-white shadow-lg overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A high-quality 3D rendered avatar of a happy child with a bright smile and modern clothing. The character is set against a soft, colorful background with gentle studio lighting. The aesthetic is clean and friendly, specifically designed for a premium educational platform interface, using a cheerful color palette of greens and blues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfd91SRvex_sGh-Hfx1xtlxqL15yA43so6DV37dCcBentxDVJGKLEazMeSrK7N3k4HQHVo4HFpN8ikzy5it9cHO1GqiQjvI9_l5eRu4wTNC-EbVOEHz9WRrCdCiKB90zdUfzwqgmVJ6sORijFF5N14g56XEQqkT4siD3Y7GZXaGEbQAgMFc0wxtCB7pv_0SCDBBUyhdjS25GG8eXMDjY0yDwyQ4ne07hDshvRWgWHZIn3VPooN086RKBlbnUVgv_4F2SV2A1dGE88"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-secondary-container text-white p-2 rounded-full border-4 border-white shadow-md active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="text-center">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Halo, Petualang!</h1>
+<p class="text-on-surface-variant font-body-md">Siswa Kelas 3 • Bergabung sejak 2023</p>
+</div>
+</div>
+</section>
+<!-- Account Settings Bento -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-lg">
+<div class="bg-white p-md rounded-xl border-2 border-surface-container-highest tactile-card">
+<label class="font-label-bold text-label-bold text-on-surface-variant block mb-xs">NAMA PENGGUNA</label>
+<div class="flex justify-between items-center group">
+<span class="font-headline-md text-headline-md text-on-surface">kid_explorer_99</span>
+<span class="material-symbols-outlined text-primary-container opacity-0 group-hover:opacity-100 transition-opacity">chevron_right</span>
+</div>
+</div>
+<div class="bg-white p-md rounded-xl border-2 border-surface-container-highest tactile-card">
+<label class="font-label-bold text-label-bold text-on-surface-variant block mb-xs">EMAIL</label>
+<div class="flex justify-between items-center group">
+<span class="font-body-lg text-body-lg text-on-surface">parent@email.com</span>
+<span class="material-symbols-outlined text-primary-container opacity-0 group-hover:opacity-100 transition-opacity">lock</span>
+</div>
+</div>
+<div class="md:col-span-2 bg-white p-md rounded-xl border-2 border-surface-container-highest tactile-card flex justify-between items-center">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 bg-error-container/20 rounded-lg flex items-center justify-center border-2 border-error-container">
+<span class="material-symbols-outlined text-error" data-icon="key">key</span>
+</div>
+<div>
+<p class="font-label-bold text-label-bold text-on-surface">Kata Sandi</p>
+<p class="text-sm text-on-surface-variant">Terakhir diubah 2 bulan lalu</p>
+</div>
+</div>
+<button class="bg-surface-container-low hover:bg-surface-container px-md py-sm rounded-lg font-label-bold text-label-bold text-primary transition-colors">
+                    Ubah
+                </button>
+</div>
+</section>
+<!-- Report Card (Buku Rapor) -->
+<section>
+<div class="flex items-center justify-between mb-md">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary" data-icon="menu_book">menu_book</span>
+                    Buku Rapor
+                </h2>
+<span class="font-label-bold text-label-bold text-secondary">Lihat Semua</span>
+</div>
+<div class="space-y-gutter">
+<!-- Report Card Item 1 -->
+<div class="bg-white p-md rounded-xl border-2 border-surface-container-highest tactile-card flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<div>
+<span class="font-label-bold text-label-bold text-secondary uppercase tracking-wider">Kelas 3</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Reading Comprehension</h3>
+</div>
+<div class="text-right">
+<p class="font-display text-primary leading-none">100</p>
+<p class="font-label-bold text-label-bold text-on-surface-variant">Poin</p>
+</div>
+</div>
+<div class="relative w-full h-4 bg-surface-container progress-recessed rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-primary-container w-[100%] rounded-full">
+<div class="w-full h-full progress-shine"></div>
+</div>
+</div>
+<div class="flex gap-xs">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<!-- Report Card Item 2 -->
+<div class="bg-white p-md rounded-xl border-2 border-surface-container-highest tactile-card flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<div>
+<span class="font-label-bold text-label-bold text-secondary uppercase tracking-wider">Kelas 3</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Mental Math</h3>
+</div>
+<div class="text-right">
+<p class="font-display text-primary leading-none">85</p>
+<p class="font-label-bold text-label-bold text-on-surface-variant">Poin</p>
+</div>
+</div>
+<div class="relative w-full h-4 bg-surface-container progress-recessed rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-primary-container w-[85%] rounded-full">
+<div class="w-full h-full progress-shine"></div>
+</div>
+</div>
+<div class="flex gap-xs">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-surface-container-highest" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+<!-- Report Card Item 3 -->
+<div class="bg-white p-md rounded-xl border-2 border-surface-container-highest tactile-card flex flex-col gap-sm opacity-75">
+<div class="flex justify-between items-center">
+<div>
+<span class="font-label-bold text-label-bold text-secondary uppercase tracking-wider">Kelas 3</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Science Explorers</h3>
+</div>
+<div class="text-right">
+<p class="font-display text-primary leading-none">42</p>
+<p class="font-label-bold text-label-bold text-on-surface-variant">Poin</p>
+</div>
+</div>
+<div class="relative w-full h-4 bg-surface-container progress-recessed rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-primary-container w-[42%] rounded-full">
+<div class="w-full h-full progress-shine"></div>
+</div>
+</div>
+<div class="flex gap-xs">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-surface-container-highest" style="font-variation-settings: 'FILL' 0;">star</span>
+<span class="material-symbols-outlined text-surface-container-highest" style="font-variation-settings: 'FILL' 0;">star</span>
+<span class="material-symbols-outlined text-surface-container-highest" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Danger Zone -->
+<section class="mt-xl">
+<button class="w-full py-md border-2 border-error text-error font-label-bold text-label-bold rounded-xl hover:bg-error/5 transition-colors">
+                KELUAR AKUN
+            </button>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-surface-container-lowest dark:bg-surface-dim border-t-4 border-surface-container-highest dark:border-surface-variant z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-label-bold text-label-bold">Learn</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="emoji_events">emoji_events</span>
+<span class="font-label-bold text-label-bold">Leaderboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-label-bold text-label-bold">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim bg-primary-container/20 rounded-xl px-4 py-1 scale-95 transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-bold text-label-bold">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for tactile elements
+        document.querySelectorAll('.tactile-card').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'translateY(2px)';
+                card.style.boxShadow = '0 2px 0 0 #e3e2e2';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 4px 0 0 #e3e2e2';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 4px 0 0 #e3e2e2';
+            });
+        });
+    </script>
+</body></html>

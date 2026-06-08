@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Daftar Akun Baru - Learning App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#006590",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#c8e6ff",
+                        "surface-container-high": "#e9e8e8",
+                        "tertiary-fixed": "#ffdf92",
+                        "surface-container": "#eeeeed",
+                        "on-secondary-container": "#004666",
+                        "primary-container": "#58cc02",
+                        "surface-container-low": "#f4f3f3",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "inverse-primary": "#6be026",
+                        "surface": "#faf9f9",
+                        "secondary-container": "#2fb8ff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#3f4a36",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "on-primary-fixed-variant": "#1f5100",
+                        "on-primary-fixed": "#082100",
+                        "tertiary-fixed-dim": "#f4bf00",
+                        "background": "#faf9f9",
+                        "on-tertiary-container": "#574300",
+                        "on-secondary-fixed": "#001e2e",
+                        "surface-variant": "#e3e2e2",
+                        "secondary-fixed-dim": "#88ceff",
+                        "outline": "#6f7b64",
+                        "surface-bright": "#faf9f9",
+                        "tertiary": "#755b00",
+                        "surface-container-highest": "#e3e2e2",
+                        "surface-dim": "#dadada",
+                        "primary-fixed": "#87fe45",
+                        "surface-tint": "#2b6c00",
+                        "primary": "#2b6c00",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#6be026",
+                        "outline-variant": "#becbb1",
+                        "on-surface": "#1a1c1c",
+                        "on-primary-container": "#1e5000",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#ddad00",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f1f0f0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "gutter": "16px",
+                        "button-depth": "4px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chunky-button {
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .chunky-button:active {
+            transform: translateY(2px);
+            box-shadow: none !important;
+        }
+        .chunky-input {
+            border-bottom-width: 4px;
+        }
+        .chunky-input:focus {
+            border-bottom-width: 4px;
+            outline: none;
+        }
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(40px);
+            opacity: 0.4;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Ambient Background Elements -->
+<div class="floating-orb bg-primary-container w-64 h-64 top-[-50px] left-[-100px]"></div>
+<div class="floating-orb bg-secondary-container w-48 h-48 bottom-[10%] right-[-50px]"></div>
+<main class="w-full max-w-md px-margin-mobile py-10 flex flex-col items-center">
+<!-- Mascot Section -->
+<div class="relative w-48 h-48 mb-8 group">
+<div class="absolute inset-0 bg-secondary-container rounded-full scale-90 group-hover:scale-95 transition-transform duration-500"></div>
+<img alt="Mascot" class="relative z-10 w-full h-full object-contain drop-shadow-xl animate-bounce" data-alt="A friendly, chunky 3D animated owl mascot with big expressive eyes and a tiny graduation cap. The character is rendered in a vibrant lime green and soft white color palette with bold outlines. It sits in a playful, welcoming pose against a soft-focus classroom background. The lighting is bright and cheerful, matching a kid-friendly educational app aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpgFvT1y7_zrp1pBQWl0lthtYE7NmA2_EC_JN_gRJ1yby9GDBeaEhyPmrev9TlAp2ZO71_RGW_-KB49Jh2O4klwUuakfycqhnB4HICNx-LmRK7oYW7dsJOXvd-NiEiGaHdw2mStH7yoBS02_ExvJ3h-wOzK0auQqPeGwQhsMTBt-zLJneFsN0lUMMtB8t4pWfN8jldlxpxAzusi9ul1zotcHzcK3TeSIa3pG-ZUwHrjY6mjF2vO1A_pr0Ro6vv0WIIcetl29hnPb4o" style="animation-duration: 3s;"/>
+</div>
+<!-- Header -->
+<header class="text-center mb-10">
+<h1 class="font-display-lg text-display-lg text-primary mb-2">Daftar Akun Baru</h1>
+<p class="font-body-lg text-body-lg text-outline">Ayo mulai petualangan belajarmu sekarang!</p>
+</header>
+<!-- Registration Form -->
+<form class="w-full space-y-6" id="registrationForm">
+<!-- Nama Lengkap -->
+<div class="space-y-2">
+<label class="font-label-lg text-label-lg text-on-surface ml-1" for="full_name">Nama Lengkap</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">person</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-lowest border-2 border-surface-container-highest border-b-4 border-b-surface-variant rounded-xl font-body-md text-on-surface focus:border-primary focus:border-b-primary focus:ring-0 transition-all chunky-input" id="full_name" name="full_name" placeholder="Masukkan nama lengkap" type="text"/>
+</div>
+</div>
+<!-- Nama Pengguna -->
+<div class="space-y-2">
+<label class="font-label-lg text-label-lg text-on-surface ml-1" for="username">Nama Pengguna</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">alternate_email</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-lowest border-2 border-surface-container-highest border-b-4 border-b-surface-variant rounded-xl font-body-md text-on-surface focus:border-primary focus:border-b-primary focus:ring-0 transition-all chunky-input" id="username" name="username" placeholder="Pilih username unik" type="text"/>
+</div>
+</div>
+<!-- Email -->
+<div class="space-y-2">
+<label class="font-label-lg text-label-lg text-on-surface ml-1" for="email">Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">mail</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-lowest border-2 border-surface-container-highest border-b-4 border-b-surface-variant rounded-xl font-body-md text-on-surface focus:border-primary focus:border-b-primary focus:ring-0 transition-all chunky-input" id="email" name="email" placeholder="contoh@email.com" type="email"/>
+</div>
+</div>
+<!-- Kata Sandi -->
+<div class="space-y-2">
+<label class="font-label-lg text-label-lg text-on-surface ml-1" for="password">Kata Sandi</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock</span>
+<input class="w-full pl-12 pr-12 py-4 bg-surface-container-lowest border-2 border-surface-container-highest border-b-4 border-b-surface-variant rounded-xl font-body-md text-on-surface focus:border-primary focus:border-b-primary focus:ring-0 transition-all chunky-input" id="password" name="password" placeholder="Minimal 8 karakter" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined" id="passIcon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full py-4 px-6 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-2xl shadow-[0_4px_0_0_#46a302] hover:bg-opacity-90 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 chunky-button mt-4" type="submit">
+                Daftar Sekarang
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</form>
+<!-- Footer Link -->
+<footer class="mt-12 text-center">
+<p class="font-body-md text-body-md text-outline">
+                Sudah punya akun? 
+                <a class="text-primary font-bold hover:underline ml-1 inline-flex items-center gap-1 group" href="#">
+                    Masuk
+                    <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">login</span>
+</a>
+</p>
+</footer>
+<!-- Legal Disclaimer -->
+<div class="mt-10 px-4 text-center">
+<p class="font-label-md text-label-md text-outline-variant leading-relaxed">
+                Dengan mendaftar, kamu menyetujui <span class="underline cursor-pointer">Ketentuan Layanan</span> dan <span class="underline cursor-pointer">Kebijakan Privasi</span> kami.
+            </p>
+</div>
+</main>
+<script>
+        // Password Visibility Toggle
+        function togglePassword() {
+            const passInput = document.getElementById('password');
+            const passIcon = document.getElementById('passIcon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                passIcon.innerText = 'visibility_off';
+            } else {
+                passInput.type = 'password';
+                passIcon.innerText = 'visibility';
+            }
+        }
+
+        // Form Interaction Simulation
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Memproses...';
+            btn.classList.add('opacity-80');
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Berhasil!';
+                btn.classList.remove('bg-primary-container');
+                btn.classList.add('bg-secondary');
+                btn.style.boxShadow = '0 4px 0 0 #004c6e';
+                
+                // Show a simple success notification or redirect
+                console.log("Registration simulated successful");
+            }, 1500);
+        });
+
+        // Add depth effect to input borders on focus
+        const inputs = document.querySelectorAll('.chunky-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.parentElement.classList.add('scale-[1.01]');
+                input.parentElement.parentElement.style.transition = 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+    </script>
+</body></html>

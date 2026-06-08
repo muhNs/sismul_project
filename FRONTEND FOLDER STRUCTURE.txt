@@ -1,0 +1,56 @@
+=======================================================================
+FRONTEND FOLDER STRUCTURE
+=======================================================================
+
+project-sismul/
+├── public/                 # Aset statis publik (gambar ilustrasi, ikon maskot, audio MP3)
+│
+├── src/
+│   │
+│   ├── app/                # 1. NEXT.JS APP ROUTER (Hanya untuk URL & Layouting)
+│   │   ├── globals.css     # CSS Global (Tailwind base)
+│   │   ├── layout.tsx      # Root Layout (Tag HTML & Body)
+│   │   ├── page.tsx        # / (Landing page, redirect ke /login atau /home)
+│   │   │
+│   │   ├── (auth)/         # -> Route Group: Auth Siswa
+│   │   │   ├── login/page.tsx
+│   │   │   └── register/page.tsx
+│   │   │
+│   │   ├── (student)/      # -> Route Group: App Siswa (Dengan Bottom Navigation)
+│   │   │   ├── layout.tsx
+│   │   │   ├── home/page.tsx
+│   │   │   ├── vocabularies/page.tsx
+│   │   │   └── materials/[materialId]/page.tsx
+│   │   │
+│   │   ├── (fullscreen)/   # -> Route Group: Kuis Siswa (Tanpa Navigasi Bawah)
+│   │   │   ├── quiz/[materialId]/page.tsx
+│   │   │   └── score/page.tsx
+│   │   │
+│   │   └── admin/          # -> Prefix URL Admin
+│   │       ├── login/page.tsx
+│   │       └── (dashboard)/
+│   │           ├── layout.tsx
+│   │           ├── dashboard/page.tsx
+│   │           ├── users/page.tsx
+│   │           ├── materials/page.tsx
+│   │           └── materials/[materialId]/quizzes/page.tsx
+│   │
+│   ├── features/           # 2. FEATURE-BASED (Logika Bisnis & Komponen Inti)
+│   │   ├── auth/           # -> (api, components, hooks, schemas, types)
+│   │   ├── materials/      # -> (api, components, hooks, schemas, types)
+│   │   ├── quizzes/        # -> (api, components, hooks, schemas, types)
+│   │   ├── scores/         # -> (api, components, hooks, schemas, types)
+│   │   ├── users/          # -> (api, components, hooks, schemas, types)
+│   │   └── vocabularies/   # -> (api, components, hooks, schemas, types)
+│   │
+│   ├── components/         # 3. GLOBAL UI COMPONENTS (Dumb Components)
+│   │   ├── ui/             # -> button.tsx, input.tsx, table.tsx, modal.tsx
+│   │   └── layouts/        # -> BottomNav.tsx, AdminSidebar.tsx
+│   │
+│   └── lib/                # 4. GLOBAL UTILITIES
+│       ├── axios.ts        # -> Setup instance Axios
+│       └── utils.ts        # -> Fungsi helper (cn, format date, base64 decode)
+│
+├── middleware.ts           # Middleware Next.js (Proteksi rute)
+├── tailwind.config.ts      # Konfigurasi Tailwind CSS
+└── package.json            # Daftar dependencies

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#1f5100",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "inverse-on-surface": "#f1f0f0",
+                        "primary-fixed": "#87fe45",
+                        "outline": "#6f7b64",
+                        "tertiary-fixed": "#ffdf92",
+                        "secondary-container": "#2fb8ff",
+                        "secondary-fixed-dim": "#88ceff",
+                        "surface-variant": "#e3e2e2",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "surface-bright": "#faf9f9",
+                        "on-secondary-fixed": "#001e2e",
+                        "on-surface": "#1a1c1c",
+                        "surface-tint": "#2b6c00",
+                        "secondary": "#006590",
+                        "on-tertiary-container": "#574300",
+                        "surface-container-high": "#e9e8e8",
+                        "on-background": "#1a1c1c",
+                        "on-primary-container": "#1e5000",
+                        "inverse-primary": "#6be026",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#eeeeed",
+                        "on-surface-variant": "#3f4a36",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#c8e6ff",
+                        "surface-container-highest": "#e3e2e2",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#becbb1",
+                        "primary": "#2b6c00",
+                        "on-primary-fixed": "#082100",
+                        "tertiary-fixed-dim": "#f4bf00",
+                        "surface-dim": "#dadada",
+                        "tertiary-container": "#ddad00",
+                        "surface-container-low": "#f4f3f3",
+                        "surface": "#faf9f9",
+                        "on-secondary-container": "#004666",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "primary-fixed-dim": "#6be026",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#755b00",
+                        "primary-container": "#58cc02",
+                        "error": "#ba1a1a",
+                        "background": "#faf9f9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "button-depth": "4px",
+                        "unit": "8px",
+                        "margin-mobile": "20px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .chunky-button {
+            transition: all 0.1s ease;
+        }
+        .chunky-button:active {
+            transform: translateY(2px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #becbb1;
+            border-radius: 4px;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- Sidebar Navigation (Desktop) -->
+<aside class="hidden md:flex fixed top-0 left-0 h-screen w-72 bg-surface border-r-4 border-surface-container-highest flex-col z-50">
+<!-- Brand Header -->
+<div class="h-20 px-8 flex items-center gap-4 border-b-4 border-surface-container-highest">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center border-b-2 border-primary">
+<span class="material-symbols-outlined text-on-primary-container font-bold text-xl">school</span>
+</div>
+<h1 class="font-display-lg text-headline-lg font-black text-primary tracking-tight">ADMIN</h1>
+</div>
+<!-- Nav Links -->
+<nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
+<a class="flex items-center gap-4 px-4 py-3 text-outline hover:bg-surface-container-low hover:text-primary rounded-xl transition-all font-label-lg group" href="#">
+<span class="material-symbols-outlined">home</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl border-b-4 border-primary font-label-lg" href="#">
+<span class="material-symbols-outlined filled-icon">menu_book</span>
+                Materi
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 text-outline hover:bg-surface-container-low hover:text-primary rounded-xl transition-all font-label-lg group" href="#">
+<span class="material-symbols-outlined">group</span>
+                Siswa
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 text-outline hover:bg-surface-container-low hover:text-primary rounded-xl transition-all font-label-lg group" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+                Analitik
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 text-outline hover:bg-surface-container-low hover:text-primary rounded-xl transition-all font-label-lg group" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Pengaturan
+            </a>
+</nav>
+<!-- User Profile (Bottom Sidebar) -->
+<div class="p-6 border-t-4 border-surface-container-highest">
+<div class="flex items-center gap-3 bg-surface-container-low p-3 rounded-2xl border-2 border-outline-variant">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary shrink-0">
+<img alt="Admin Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7TGIfiUXTC1F9axKMCyQnl3ZPgQimFAoj0TGFZTGEXK5yfwSRd2Vm7tNjumI4QD348vqq2_v3wI6MNZHDNHaR3gsLHA9uAR1RZPj7-J3BrgGoNe7kfYrOn7W5nuXZAtH-hEJqwNVUm5Hf6KrzacXEE9ocP_etQ4IuRyL3WolT4kJZQLUx8O_pQCs3pWDYyibL2s5v-ZE69yQqHb-0eMp7mZ56BTZ-nDaX48fbv-pMIO-LjKSLpFxnDDZcNaixkOUssnKcZTOr2oJn"/>
+</div>
+<div class="overflow-hidden">
+<p class="font-label-lg text-on-surface truncate">Admin Utama</p>
+<p class="text-[10px] text-tertiary font-bold uppercase tracking-wider">1.250 PTS</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Anchor (Mobile Only) -->
+<header class="md:hidden fixed top-0 w-full z-40 bg-surface border-b-4 border-surface-container-highest shadow-[0_4px_0_0_rgba(0,0,0,0.05)] flex justify-between items-center h-20 px-margin-mobile">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center border-b-2 border-primary">
+<span class="material-symbols-outlined text-on-primary-container font-bold">school</span>
+</div>
+<h1 class="font-display-lg text-headline-md font-black text-primary">ADMIN</h1>
+</div>
+<button class="p-2 bg-surface-container rounded-lg border-b-2 border-outline-variant active:translate-y-1 active:border-b-0">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<!-- Main Content wrapper adjusted for sidebar -->
+<main class="pt-28 md:pt-12 px-margin-mobile md:pl-[calc(18rem+40px)] md:pr-margin-desktop max-w-full mx-auto pb-32">
+<!-- Header Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<nav class="flex items-center gap-2 text-outline font-label-md text-label-md mb-2">
+<span class="hover:text-primary cursor-pointer">Dashboard</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface">Manajemen Kurikulum</span>
+</nav>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Materi Pembelajaran</h2>
+<p class="text-on-surface-variant max-w-xl">Kurasi dan kelola konten edukasi untuk siswa Kelas 3-6 di berbagai mata pelajaran inti.</p>
+</div>
+<button class="chunky-button bg-primary-container text-on-primary-container px-8 py-4 rounded-xl border-b-4 border-primary flex items-center gap-3 font-label-lg text-label-lg group">
+<span class="material-symbols-outlined group-hover:rotate-90 transition-transform">add_circle</span>
+                Tambah Materi Baru
+            </button>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter">
+<!-- Skills Category Sidebar (Inner) -->
+<aside class="xl:col-span-3 space-y-4">
+<h3 class="font-label-lg text-label-lg text-outline uppercase tracking-wider mb-4">KATEGORI SKILL</h3>
+<button class="w-full flex items-center justify-between p-4 rounded-xl bg-secondary-container text-on-secondary-container border-b-4 border-secondary text-left group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined filled-icon" style="font-variation-settings: 'FILL' 1;">book_5</span>
+<span class="font-label-lg text-label-lg">Membaca</span>
+</div>
+<span class="bg-white/30 px-2 py-0.5 rounded text-[10px] font-bold">12 Chapter</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 rounded-xl bg-surface-container-low text-outline border-b-4 border-outline-variant text-left hover:bg-surface-container transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">hearing</span>
+<span class="font-label-lg text-label-lg">Mendengar</span>
+</div>
+<span class="bg-outline-variant/30 text-outline px-2 py-0.5 rounded text-[10px] font-bold">8 Chapter</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 rounded-xl bg-surface-container-low text-outline border-b-4 border-outline-variant text-left hover:bg-surface-container transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-label-lg text-label-lg">Menulis</span>
+</div>
+<span class="bg-outline-variant/30 text-outline px-2 py-0.5 rounded text-[10px] font-bold">5 Chapter</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 rounded-xl bg-surface-container-low text-outline border-b-4 border-outline-variant text-left hover:bg-surface-container transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">campaign</span>
+<span class="font-label-lg text-label-lg">Berbicara</span>
+</div>
+<span class="bg-outline-variant/30 text-outline px-2 py-0.5 rounded text-[10px] font-bold">6 Chapter</span>
+</button>
+<div class="pt-8 hidden xl:block">
+<img alt="Ruang Kelas" class="rounded-2xl border-b-4 border-surface-container-highest shadow-lg w-full aspect-square object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW6QvrF3a5gYnhdcCD7FQbGJXAajSeJ0rvaR0pRcgUvs1kZFOQohZh7M6i_K_mUVvlkgmNuNObQ97wNqSA-tyuDzrY6i0m7vlgxk_EBQ-0WhXkRApHbiAZjMqAjgSQvqRl3STDvSlzNy5ax06tZmGoLr5y7Y_dj9VTraOTLHwOJWuU-aw8ep0189St4JeHIOYdj0ga5T2vbnhcf4WP3tFAlPV0BXpJLPcx6OOvfYL9-aDI_WLB1lnQIlPF97clUNCqPpux9ULBZ9Xs"/>
+</div>
+</aside>
+<!-- Main Content Area (Chapter List) -->
+<div class="xl:col-span-9 space-y-6">
+<!-- Skill Detail Header -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl border-2 border-surface-container-highest flex flex-col md:flex-row gap-6 items-center">
+<div class="w-24 h-24 bg-secondary-fixed text-on-secondary-container rounded-2xl flex items-center justify-center border-b-8 border-secondary-container">
+<span class="material-symbols-outlined text-[48px] filled-icon" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+</div>
+<div class="text-center md:text-left flex-1">
+<div class="flex items-center justify-center md:justify-start gap-3 mb-1">
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Kurikulum Membaca</h3>
+<span class="bg-secondary-container/20 text-secondary px-3 py-1 rounded-full text-label-md font-bold">Kelas 3</span>
+</div>
+<p class="text-on-surface-variant mb-4">Fokus pada fonik, pemahaman bacaan, dan latihan mendongeng kreatif untuk siswa sekolah dasar.</p>
+<div class="flex flex-wrap gap-4 justify-center md:justify-start">
+<div class="flex items-center gap-2 text-outline text-label-md">
+<span class="material-symbols-outlined text-[18px]">quiz</span>
+                                248 Total Pertanyaan
+                            </div>
+<div class="flex items-center gap-2 text-outline text-label-md">
+<span class="material-symbols-outlined text-[18px]">group</span>
+                                1.420 Siswa Aktif
+                            </div>
+</div>
+</div>
+</div>
+<!-- Chapters List -->
+<div class="space-y-4">
+<div class="flex items-center justify-between px-4">
+<h4 class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-widest">CHAPTER TERSEDIA</h4>
+<div class="flex gap-2">
+<button class="p-2 bg-surface-container rounded-lg"><span class="material-symbols-outlined text-[20px]">sort</span></button>
+<button class="p-2 bg-surface-container rounded-lg"><span class="material-symbols-outlined text-[20px]">filter_list</span></button>
+</div>
+</div>
+<!-- Chapter Card 1 (Published) -->
+<div class="group bg-surface-container-lowest border-2 border-surface-container-highest p-6 rounded-2xl flex items-center gap-6 hover:border-primary-container transition-all relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-primary-container"></div>
+<div class="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center text-primary border-b-4 border-outline-variant group-hover:bg-primary-container group-hover:text-on-primary-container group-hover:border-primary transition-colors">
+<span class="font-headline-md text-headline-md">01</span>
+</div>
+<div class="flex-1">
+<h5 class="font-headline-md text-headline-md text-on-surface mb-1">Petualangan Fonik</h5>
+<p class="text-on-surface-variant text-body-md mb-3">Memahami bunyi vokal dan struktur kalimat dasar.</p>
+<div class="flex gap-4">
+<span class="flex items-center gap-1 text-label-md text-outline"><span class="material-symbols-outlined text-[16px]">task_alt</span> 42 Pertanyaan</span>
+<span class="flex items-center gap-1 text-label-md text-outline"><span class="material-symbols-outlined text-[16px]">schedule</span> Rata-rata 15 mnt.</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-3">
+<div class="flex items-center gap-3 bg-primary-fixed/30 px-3 py-1.5 rounded-full">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-label-md text-on-primary-fixed-variant">Diterbitkan</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<!-- Chapter Card 2 (Draft) -->
+<div class="group bg-surface-container-lowest border-2 border-surface-container-highest p-6 rounded-2xl flex items-center gap-6 hover:border-tertiary transition-all relative overflow-hidden opacity-80">
+<div class="absolute top-0 left-0 w-2 h-full bg-tertiary"></div>
+<div class="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center text-outline border-b-4 border-outline-variant transition-colors">
+<span class="font-headline-md text-headline-md">02</span>
+</div>
+<div class="flex-1">
+<h5 class="font-headline-md text-headline-md text-on-surface mb-1">Misteri Metafora</h5>
+<p class="text-on-surface-variant text-body-md mb-3">Pengenalan bahasa kiasan dan analogi sederhana.</p>
+<div class="flex gap-4">
+<span class="flex items-center gap-1 text-label-md text-outline"><span class="material-symbols-outlined text-[16px]">quiz</span> 18 Pertanyaan</span>
+<span class="flex items-center gap-1 text-label-md text-outline"><span class="material-symbols-outlined text-[16px]">pending</span> Terakhir diedit 2 jam lalu</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-3">
+<div class="flex items-center gap-3 bg-surface-container-highest px-3 py-1.5 rounded-full">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="text-label-md text-outline">Draf</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<!-- Chapter Card 3 (Published) -->
+<div class="group bg-surface-container-lowest border-2 border-surface-container-highest p-6 rounded-2xl flex items-center gap-6 hover:border-primary-container transition-all relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-primary-container"></div>
+<div class="w-16 h-16 rounded-xl bg-surface-container flex items-center justify-center text-primary border-b-4 border-outline-variant group-hover:bg-primary-container group-hover:text-on-primary-container group-hover:border-primary transition-colors">
+<span class="font-headline-md text-headline-md">03</span>
+</div>
+<div class="flex-1">
+<h5 class="font-headline-md text-headline-md text-on-surface mb-1">Pencarian Karakter</h5>
+<p class="text-on-surface-variant text-body-md mb-3">Mengidentifikasi motivasi protagonis dan alur cerita.</p>
+<div class="flex gap-4">
+<span class="flex items-center gap-1 text-label-md text-outline"><span class="material-symbols-outlined text-[16px]">task_alt</span> 64 Pertanyaan</span>
+<span class="flex items-center gap-1 text-label-md text-outline"><span class="material-symbols-outlined text-[16px]">schedule</span> Rata-rata 25 mnt.</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-3">
+<div class="flex items-center gap-3 bg-primary-fixed/30 px-3 py-1.5 rounded-full">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-label-md text-on-primary-fixed-variant">Diterbitkan</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Pagination/Load More Anchor -->
+<div class="flex justify-center pt-8">
+<button class="bg-surface-container text-on-surface px-12 py-3 rounded-xl border-b-4 border-outline-variant font-label-lg text-label-lg active:translate-y-1 active:border-b-0 transition-all">
+                        Lihat Semua Chapter Membaca
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-24 bg-surface-container-lowest border-t-4 border-surface-container-highest shadow-[0_-4px_0_0_rgba(0,0,0,0.05)] flex justify-around items-center px-4 pb-safe z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-outline px-6 py-2" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md mt-1">Beranda</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-6 py-2 border-b-4 border-primary" href="#">
+<span class="material-symbols-outlined filled-icon">map</span>
+<span class="font-label-md text-label-md mt-1">Materi</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline px-6 py-2" href="#">
+<span class="material-symbols-outlined">shopping_basket</span>
+<span class="font-label-md text-label-md mt-1">Toko</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline px-6 py-2" href="#">
+<span class="material-symbols-outlined">face_6</span>
+<span class="font-label-md text-label-md mt-1">Profil</span>
+</a>
+</nav>
+<!-- FAB for quick action -->
+<button class="fixed bottom-28 right-margin-mobile md:right-margin-desktop w-16 h-16 bg-tertiary-container text-on-tertiary-container rounded-full shadow-xl border-b-4 border-tertiary flex items-center justify-center chunky-button z-40 group">
+<span class="material-symbols-outlined text-[32px] group-hover:scale-110 transition-transform">edit_square</span>
+</button>
+<script>
+        // Simple Micro-interactions
+        document.querySelectorAll('.chunky-button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.borderBottomWidth = '0';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.borderBottomWidth = '4px';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.borderBottomWidth = '4px';
+            });
+        });
+
+        // Toggle simulation effect
+        document.querySelectorAll('input[type="checkbox"]').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const card = this.closest('.group');
+                const badge = card.querySelector('.rounded-full span:last-child');
+                const dot = card.querySelector('.rounded-full span:first-child');
+                const badgeContainer = card.querySelector('.rounded-full:not(.bg-surface-container)');
+
+                if (!badge || !dot || !badgeContainer) return;
+
+                if (this.checked) {
+                    badge.textContent = 'Diterbitkan';
+                    card.style.opacity = '1';
+                    badgeContainer.className = 'flex items-center gap-3 bg-primary-fixed/30 px-3 py-1.5 rounded-full';
+                    dot.className = 'w-2 h-2 rounded-full bg-primary animate-pulse';
+                } else {
+                    badge.textContent = 'Draf';
+                    card.style.opacity = '0.8';
+                    badgeContainer.className = 'flex items-center gap-3 bg-surface-container-highest px-3 py-1.5 rounded-full';
+                    dot.className = 'w-2 h-2 rounded-full bg-outline';
+                }
+            });
+        });
+    </script>
+</body></html>
