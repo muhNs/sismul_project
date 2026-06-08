@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Mascot } from "@/components/ui/Mascot";
-import { AuthField } from "./AuthField";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -21,172 +21,177 @@ export function RegisterForm() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#faf9f9",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "40px 20px",
-        position: "relative",
-        overflow: "hidden",
-        fontFamily: "var(--font-plus-jakarta, sans-serif)",
-      }}
-    >
-      {/* Ambient blobs */}
-      <div
-        style={{
-          position: "absolute", top: -60, left: -80, width: 280, height: 280,
-          borderRadius: "50%", background: "#87fe45", filter: "blur(60px)",
-          opacity: 0.25, zIndex: 0, pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute", bottom: "5%", right: -60, width: 240, height: 240,
-          borderRadius: "50%", background: "#2fb8ff", filter: "blur(60px)",
-          opacity: 0.2, zIndex: 0, pointerEvents: "none",
-        }}
-      />
-
-      <div style={{ width: "100%", maxWidth: 400, position: "relative", zIndex: 1 }}>
-        {/* Mascot */}
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: -16, marginTop: 16 }}>
-          <Mascot expression="grad" size="xl" className="drop-shadow-xl" />
-        </div>
-
-        {/* Heading */}
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <h1
-            style={{ fontSize: 30, fontWeight: 800, color: "#2b6c00", margin: 0, marginBottom: 6, lineHeight: 1.2 }}
-          >
-            Daftar Akun Baru
-          </h1>
-          <p style={{ fontSize: 14, color: "#6f7b64", margin: 0 }}>
+    <main className="flex flex-col items-center justify-center min-h-screen px-margin-mobile py-lg max-w-[800px] mx-auto w-full">
+      {/* Hero Section */}
+      <div className="flex flex-col items-center mb-8 w-full">
+        <img src="/owl-grad.png" alt="Learnly Logo" className="w-52 h-52 object-contain -mb-6 relative z-10" />
+        <div className="text-center">
+          <h1 className="font-display text-4xl font-extrabold text-primary mb-1">Daftar Akun Baru</h1>
+          <p className="text-xl font-bold text-on-surface-variant">
             Ayo mulai petualangan belajarmu sekarang!
           </p>
         </div>
-
-        {/* Card */}
-        <div
-          style={{
-            backgroundColor: "#ffffff", borderRadius: 24, border: "2px solid #e3e2e2",
-            boxShadow: "0 6px 0 #c8c6c6", padding: "28px 24px",
-          }}
-        >
-          <form style={{ display: "flex", flexDirection: "column", gap: 16 }} onSubmit={handleSubmit}>
-            <AuthField
-              id="full_name" label="Nama Lengkap" icon="person" type="text"
-              placeholder="Masukkan nama lengkap" focused={focusedField === "fullName"}
-              onFocus={() => setFocusedField("fullName")} onBlur={() => setFocusedField(null)}
-            />
-            <AuthField
-              id="username" label="Nama Pengguna" icon="alternate_email" type="text"
-              placeholder="Pilih username unik" focused={focusedField === "username"}
-              onFocus={() => setFocusedField("username")} onBlur={() => setFocusedField(null)}
-            />
-            <AuthField
-              id="email" label="Email" icon="mail" type="email"
-              placeholder="contoh@email.com" focused={focusedField === "email"}
-              onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)}
-            />
-
-            {/* Password Field */}
-            <div>
-              <label
-                htmlFor="password"
-                style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#1a1c1c", marginBottom: 6, marginLeft: 4 }}
-              >
-                Kata Sandi
-              </label>
-              <div
-                style={{
-                  position: "relative", display: "flex", alignItems: "center",
-                  transition: "transform 0.2s",
-                  transform: focusedField === "password" ? "scale(1.01)" : "scale(1)",
-                }}
-              >
-                <span
-                  className="material-symbols-outlined"
-                  style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#6f7b64", fontSize: 20, userSelect: "none", pointerEvents: "none" }}
-                >
-                  lock
-                </span>
-                <input
-                  id="password" name="password" type={showPassword ? "text" : "password"} required
-                  placeholder="Minimal 8 karakter"
-                  onFocus={() => setFocusedField("password")} onBlur={() => setFocusedField(null)}
-                  style={{
-                    width: "100%", paddingTop: 14, paddingBottom: 14, paddingLeft: 48, paddingRight: 48,
-                    backgroundColor: "#ffffff",
-                    border: `2px solid ${focusedField === "password" ? "#2b6c00" : "#e3e2e2"}`,
-                    borderBottom: `4px solid ${focusedField === "password" ? "#2b6c00" : "#e3e2e2"}`,
-                    borderRadius: 12, fontSize: 14, fontWeight: 500, color: "#1a1c1c",
-                    outline: "none", boxSizing: "border-box", transition: "border-color 0.2s",
-                  }}
-                />
-                <button
-                  type="button" onClick={() => setShowPassword(!showPassword)}
-                  style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#6f7b64", padding: 0, display: "flex", alignItems: "center" }}
-                >
-                  <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
-                    {showPassword ? "visibility_off" : "visibility"}
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            {submitState === "idle" && (
-              <button
-                type="submit"
-                style={{
-                  width: "100%", padding: "15px 24px", backgroundColor: "#58cc02", color: "#ffffff",
-                  fontSize: 16, fontWeight: 800, borderRadius: 16, border: "none",
-                  borderBottom: "4px solid #46a302", cursor: "pointer", display: "flex",
-                  alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8,
-                  transition: "all 0.1s", position: "relative", overflow: "hidden",
-                }}
-                onMouseDown={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(3px)"; (e.currentTarget as HTMLButtonElement).style.borderBottomWidth = "1px"; }}
-                onMouseUp={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLButtonElement).style.borderBottomWidth = "4px"; }}
-              >
-                Daftar Sekarang
-                <span className="material-symbols-outlined" style={{ fontSize: 20 }}>arrow_forward</span>
-              </button>
-            )}
-            {submitState === "processing" && (
-              <button disabled style={{ width: "100%", padding: "15px 24px", backgroundColor: "#58cc02", color: "#ffffff", fontSize: 16, fontWeight: 800, borderRadius: 16, border: "none", borderBottom: "4px solid #46a302", opacity: 0.8, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8, cursor: "not-allowed" }}>
-                <span className="material-symbols-outlined animate-spin" style={{ fontSize: 20 }}>progress_activity</span>
-                Memproses...
-              </button>
-            )}
-            {submitState === "success" && (
-              <button disabled style={{ width: "100%", padding: "15px 24px", backgroundColor: "#006590", color: "#ffffff", fontSize: 16, fontWeight: 800, borderRadius: 16, border: "none", borderBottom: "4px solid #004c6e", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 20 }}>check_circle</span>
-                Berhasil!
-              </button>
-            )}
-          </form>
-        </div>
-
-        {/* Footer */}
-        <div style={{ marginTop: 24, textAlign: "center" }}>
-          <p style={{ fontSize: 14, color: "#6f7b64", margin: 0 }}>
-            Sudah punya akun?{" "}
-            <a onClick={() => router.push("/login")} style={{ color: "#2b6c00", fontWeight: 700, cursor: "pointer", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
-              Masuk <span className="material-symbols-outlined" style={{ fontSize: 18 }}>login</span>
-            </a>
-          </p>
-        </div>
-        <div style={{ marginTop: 16, textAlign: "center", padding: "0 8px" }}>
-          <p style={{ fontSize: 10, color: "#becbb1", lineHeight: 1.6, margin: 0 }}>
-            Dengan mendaftar, kamu menyetujui{" "}
-            <span style={{ textDecoration: "underline", cursor: "pointer" }}>Ketentuan Layanan</span> dan{" "}
-            <span style={{ textDecoration: "underline", cursor: "pointer" }}>Kebijakan Privasi</span> kami.
-          </p>
-        </div>
       </div>
-    </div>
+
+      {/* Auth Container Card */}
+      <Card variant="surface" className="w-full p-6 bg-white shadow-[0_4px_0_#e3e2e2] border-2 border-surface-container-highest">
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          
+          {/* Full Name */}
+          <div className="space-y-2">
+            <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
+              Nama Lengkap
+            </label>
+            <div
+              className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${
+                focusedField === "fullName"
+                  ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
+                  : "border-surface-container-highest"
+              }`}
+            >
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
+                person
+              </span>
+              <input
+                type="text"
+                required
+                placeholder="Masukkan nama lengkap"
+                onFocus={() => setFocusedField("fullName")}
+                onBlur={() => setFocusedField(null)}
+                className="w-full pl-12 pr-4 py-4 font-sans text-sm bg-transparent outline-none border-none focus:ring-0"
+              />
+            </div>
+          </div>
+
+          {/* Username */}
+          <div className="space-y-2">
+            <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
+              Nama Pengguna
+            </label>
+            <div
+              className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${
+                focusedField === "username"
+                  ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
+                  : "border-surface-container-highest"
+              }`}
+            >
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
+                alternate_email
+              </span>
+              <input
+                type="text"
+                required
+                placeholder="Pilih username unik"
+                onFocus={() => setFocusedField("username")}
+                onBlur={() => setFocusedField(null)}
+                className="w-full pl-12 pr-4 py-4 font-sans text-sm bg-transparent outline-none border-none focus:ring-0"
+              />
+            </div>
+          </div>
+
+          {/* Email */}
+          <div className="space-y-2">
+            <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
+              Email
+            </label>
+            <div
+              className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${
+                focusedField === "email"
+                  ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
+                  : "border-surface-container-highest"
+              }`}
+            >
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
+                mail
+              </span>
+              <input
+                type="email"
+                required
+                placeholder="contoh@email.com"
+                onFocus={() => setFocusedField("email")}
+                onBlur={() => setFocusedField(null)}
+                className="w-full pl-12 pr-4 py-4 font-sans text-sm bg-transparent outline-none border-none focus:ring-0"
+              />
+            </div>
+          </div>
+
+          {/* Password Field */}
+          <div className="space-y-2">
+            <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
+              Kata Sandi
+            </label>
+            <div
+              className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${
+                focusedField === "password"
+                  ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
+                  : "border-surface-container-highest"
+              }`}
+            >
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
+                lock
+              </span>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                required
+                placeholder="Minimal 8 karakter"
+                onFocus={() => setFocusedField("password")}
+                onBlur={() => setFocusedField(null)}
+                className="w-full pl-12 pr-12 py-4 font-sans text-sm bg-transparent outline-none border-none focus:ring-0"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined">{showPassword ? "visibility_off" : "visibility"}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          {submitState === "idle" && (
+            <Button type="submit" variant="primary" className="mt-4 w-full">
+              Daftar Sekarang
+              <span className="material-symbols-outlined ml-2">arrow_forward</span>
+            </Button>
+          )}
+          {submitState === "processing" && (
+            <Button type="button" variant="primary" className="mt-4 w-full opacity-80 cursor-not-allowed" disabled>
+              <span className="material-symbols-outlined animate-spin mr-2">progress_activity</span>
+              Memproses...
+            </Button>
+          )}
+          {submitState === "success" && (
+            <Button type="button" variant="secondary" className="mt-4 w-full cursor-default">
+              <span className="material-symbols-outlined mr-2">check_circle</span>
+              Berhasil!
+            </Button>
+          )}
+        </form>
+      </Card>
+
+      {/* Login Link */}
+      <div className="mt-6 text-center">
+        <p className="font-label text-sm font-bold text-on-surface-variant">
+          Sudah punya akun?{" "}
+          <span
+            onClick={() => router.push("/login")}
+            className="text-primary hover:underline cursor-pointer font-extrabold flex items-center justify-center gap-1 mt-1"
+          >
+            Masuk <span className="material-symbols-outlined text-sm">login</span>
+          </span>
+        </p>
+      </div>
+
+      {/* Terms */}
+      <div className="mt-4 text-center px-2">
+        <p className="font-label text-[10px] font-bold text-outline">
+          Dengan mendaftar, kamu menyetujui{" "}
+          <a className="text-secondary hover:underline cursor-pointer">Ketentuan Layanan</a> dan{" "}
+          <a className="text-secondary hover:underline cursor-pointer">Kebijakan Privasi</a> kami.
+        </p>
+      </div>
+    </main>
   );
 }

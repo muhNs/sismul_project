@@ -32,12 +32,12 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="material-symbols-outlined text-primary">arrow_back</span>
           </button>
         )}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           {!showBack && (
             <img 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6fXSv1D7rTkzTA1xnm-JKzpCG4n1-fNisZoVrYGEiwWj0LD-okV2Ka1MyoxiGIwb24cnHjSiSYFXJ8kgoxE9CIxwJtHBZA9dgC4IVOGjAEX5Jkb1mU_ATRzcbGQfmORbRV4InopKjRqReBC30QVEXTpAUJok7B4BVKwmyE-BbaP_Qc9qHphQ8xoxFKU4seodLYKQL7XkwOqJn-mULY7NO6Wceu6oKeV2iSngDhLuNN4mx3iGhust6FB5T218AsjjosfvsWE4jSbs" 
+              src="/owl-grad.png" 
               alt="Learnly Logo" 
-              className="w-8 h-8 object-contain"
+              className="w-14 h-14 object-contain"
             />
           )}
           <span className="font-display font-black text-xl text-primary leading-tight">

@@ -19,7 +19,7 @@ export function LoginForm() {
     <main className="flex flex-col items-center justify-center min-h-screen px-margin-mobile py-lg max-w-[800px] mx-auto w-full">
       {/* Hero / Mascot Section */}
       <div className="flex flex-col items-center mb-8 w-full">
-        <Mascot expression="happy" speechBubble="Halo!" size="lg" className="mb-4" />
+        <img src="/owl-grad.png" alt="Learnly Logo" className="w-52 h-52 object-contain -mb-6 relative z-10" />
         <div className="text-center">
           <h1 className="font-display text-4xl font-extrabold text-primary mb-1">Learnly</h1>
           <p className="text-xl font-bold text-on-surface-variant">
@@ -36,11 +36,10 @@ export function LoginForm() {
               Email atau Username
             </label>
             <div
-              className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${
-                focusedField === "email"
-                  ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
-                  : "border-surface-container-highest"
-              }`}
+              className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${focusedField === "email"
+                ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
+                : "border-surface-container-highest"
+                }`}
             >
               <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
                 person
@@ -62,11 +61,10 @@ export function LoginForm() {
               Kata Sandi
             </label>
             <div
-              className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${
-                focusedField === "password"
-                  ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
-                  : "border-surface-container-highest"
-              }`}
+              className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${focusedField === "password"
+                ? "border-secondary scale-[1.01] ring-4 ring-secondary/10"
+                : "border-surface-container-highest"
+                }`}
             >
               <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
                 lock
