@@ -36,3 +36,8 @@ export const checkAnswerApi = async (quizId: number, studentAnswer: string) => {
   const response = await api.post(`/api/v1/quizzes/${quizId}/check`, { studentAnswer });
   return response.data.data;
 };
+
+export const saveStudentScore = async (materialId: number, score: number) => {
+  const response = await api.post("/api/v1/scores", { material_id: materialId, score });
+  return response.data;
+};

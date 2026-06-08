@@ -11,20 +11,28 @@ import { useStore } from "@/lib/store";
 export function LoginForm() {
   const router = useRouter();
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const user = useStore((state) => state.user);
   const setAuth = useStore((state) => state.setAuth);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (user) {
+      router.replace("/home");
+    }
+  }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
     const formData = new FormData(e.target as HTMLFormElement);
-    const username = formData.get("username") as string;
+    const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     try {
-      // In this system we support login with username/email and password
-      const response = await loginUser({ email: username, password });
+      // In this system we support login with email and password
+      const response = await loginUser({ email, password });
       
       if (response.data) {
         setAuth(response.data);
@@ -56,7 +64,7 @@ export function LoginForm() {
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-2">
             <label className="font-label text-sm font-bold text-on-surface-variant block ml-1">
-              Email atau Username
+              Email
             </label>
             <div
               className={`relative transition-all duration-200 rounded-xl border-2 bg-surface-container-low overflow-hidden ${focusedField === "email"
@@ -65,13 +73,13 @@ export function LoginForm() {
                 }`}
             >
               <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
-                person
+                mail
               </span>
               <input
-                type="text"
-                name="username"
+                type="email"
+                name="email"
                 required
-                placeholder="Masukkan namamu..."
+                placeholder="Masukkan emailmu..."
                 onFocus={() => setFocusedField("email")}
                 onBlur={() => setFocusedField(null)}
                 className="w-full pl-12 pr-4 py-4 font-sans text-sm bg-transparent outline-none border-none focus:ring-0"
@@ -93,7 +101,7 @@ export function LoginForm() {
                 lock
               </span>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 required
                 placeholder="Rahasia ssttt..."
@@ -103,9 +111,12 @@ export function LoginForm() {
               />
               <button
                 type="button"
+                onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors cursor-pointer"
               >
-                <span className="material-symbols-outlined">visibility</span>
+                <span className="material-symbols-outlined">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
               </button>
             </div>
           </div>

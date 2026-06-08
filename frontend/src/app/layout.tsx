@@ -28,6 +28,7 @@ export default function RootLayout({
     <html
       lang="id"
       className={`${plusJakartaSans.variable} ${beVietnamPro.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         <link

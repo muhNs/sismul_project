@@ -5,9 +5,9 @@ import { Card } from "@/components/ui/Card";
 import { WordItem } from "../constants/words";
 
 interface WordCardProps {
-  word: WordItem;
+  word: WordItem & { voicePath?: string | null };
   playingWord: string | null;
-  onPlay: (word: string) => void;
+  onPlay: (word: string, voicePath?: string | null) => void;
 }
 
 export function WordCard({ word, playingWord, onPlay }: WordCardProps) {
@@ -28,7 +28,7 @@ export function WordCard({ word, playingWord, onPlay }: WordCardProps) {
             <p className="text-on-surface-variant text-sm font-sans font-medium">{word.indonesian}</p>
           </div>
           <button
-            onClick={() => onPlay(word.english)}
+            onClick={() => onPlay(word.english, word.voicePath)}
             className={`w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer ${
               playingWord === word.english
                 ? "bg-primary-container text-white scale-110 shadow-md"

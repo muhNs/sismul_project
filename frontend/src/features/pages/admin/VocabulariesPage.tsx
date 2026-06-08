@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { VocabulariesTable } from "./components/vocabularies/VocabulariesTable";
-import { dummyVocabularies } from "./data/vocabularies";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { AdminVocabulary } from "./types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { getVocabularies, createVocabulary, updateVocabulary, deleteVocabulary } from "@/features/vocabularies/api/vocabularies";
 
 const formSchema = z.object({
   english: z.string().min(1, "English word wajib diisi"),
@@ -21,7 +21,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export const VocabulariesPage = () => {
-  const [vocabularies, setVocabularies] = useState<AdminVocabulary[]>(dummyVocabularies);
+  const [vocabularies, setVocabularies] = useState<AdminVocabulary[]>([]);
   const [search, setSearch] = useState("");
   const [filterGrade, setFilterGrade] = useState("Semua Grade");
 
@@ -32,6 +32,25 @@ export const VocabulariesPage = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchVocabs = async () => {
+      try {
+        const data = await getVocabularies();
+        setVocabularies(data.map(v => ({
+          id: String(v.id),
+          english: v.english,
+          indonesian: v.indonesian,
+          grade: `Grade ${v.gradeLevel}` as any,
+          image: v.image_path ? `http://localhost:5000${v.image_path}` : undefined,
+          audio: v.voice_path ? `http://localhost:5000${v.voice_path}` : undefined,
+        })));
+      } catch (err) {
+        console.error("Gagal memuat kosakata di dasbor admin:", err);
+      }
+    };
+    fetchVocabs();
+  }, []);
 
   React.useEffect(() => {
     if (toastMessage) {
@@ -82,25 +101,66 @@ export const VocabulariesPage = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const onSubmit = (data: FormValues) => {
-    if (editingId) {
-      setVocabularies(prev => prev.map(v => v.id === editingId ? { ...v, ...data } : v));
-      showToast("Berhasil mengubah kosakata");
-    } else {
-      const newVocab: AdminVocabulary = {
-        id: `VOC-${Date.now()}`,
-        ...data,
-      };
-      setVocabularies(prev => [...prev, newVocab]);
-      showToast("Berhasil menambahkan kosakata");
+  const onSubmit = async (data: FormValues) => {
+    const formData = new FormData();
+    formData.append("english", data.english);
+    formData.append("indonesian", data.indonesian);
+    
+    const gradeLevel = data.grade.replace("Grade ", "");
+    formData.append("gradeLevel", gradeLevel);
+
+    const imageInput = document.querySelector('input[type="file"][accept="image/*"]') as HTMLInputElement;
+    const audioInput = document.querySelector('input[type="file"][accept="audio/*"]') as HTMLInputElement;
+
+    if (imageInput?.files?.[0]) {
+      formData.append("image", imageInput.files[0]);
     }
-    setIsModalOpen(false);
+    if (audioInput?.files?.[0]) {
+      formData.append("voice", audioInput.files[0]);
+    }
+
+    try {
+      if (editingId) {
+        const updated = await updateVocabulary(parseInt(editingId, 10), formData);
+        setVocabularies(prev => prev.map(v => v.id === editingId ? {
+          id: String(updated.id),
+          english: updated.english,
+          indonesian: updated.indonesian,
+          grade: `Grade ${updated.gradeLevel}` as any,
+          image: updated.image_path ? `http://localhost:5000${updated.image_path}` : undefined,
+          audio: updated.voice_path ? `http://localhost:5000${updated.voice_path}` : undefined,
+        } : v));
+        showToast("Berhasil mengubah kosakata");
+      } else {
+        const created = await createVocabulary(formData);
+        const newVocab: AdminVocabulary = {
+          id: String(created.id),
+          english: created.english,
+          indonesian: created.indonesian,
+          grade: `Grade ${created.gradeLevel}` as any,
+          image: created.image_path ? `http://localhost:5000${created.image_path}` : undefined,
+          audio: created.voice_path ? `http://localhost:5000${created.voice_path}` : undefined,
+        };
+        setVocabularies(prev => [...prev, newVocab]);
+        showToast("Berhasil menambahkan kosakata");
+      }
+      setIsModalOpen(false);
+    } catch (err: any) {
+      console.error(err);
+      alert(err.response?.data?.message || "Gagal menyimpan kosakata.");
+    }
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (deletingId) {
-      setVocabularies(prev => prev.filter(v => v.id !== deletingId));
-      showToast("Berhasil menghapus kosakata");
+      try {
+        await deleteVocabulary(parseInt(deletingId, 10));
+        setVocabularies(prev => prev.filter(v => v.id !== deletingId));
+        showToast("Berhasil menghapus kosakata");
+      } catch (err) {
+        console.error("Gagal menghapus kosakata:", err);
+        alert("Gagal menghapus kosakata dari server.");
+      }
     }
     setIsDeleteModalOpen(false);
   };

@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/lib/store";
-import { getStudentQuiz, checkAnswerApi, QuizQuestion } from "../api/getStudentQuiz";
+import { getStudentQuiz, checkAnswerApi, saveStudentScore, QuizQuestion } from "../api/getStudentQuiz";
 
 export function useQuiz() {
   const router = useRouter();
@@ -93,16 +93,23 @@ export function useQuiz() {
     }
   }, [selectedOption, checked, currentQuestion, currentScore, setQuizScore]);
 
-  const handleNext = useCallback(() => {
+  const handleNext = useCallback(async () => {
     if (currentQIndex < questions.length - 1) {
       setCurrentQIndex(currentQIndex + 1);
       setSelectedOption(null);
       setChecked(false);
       setIsCorrect(false);
     } else {
+      if (materialId) {
+        try {
+          await saveStudentScore(materialId, currentScore);
+        } catch (err) {
+          console.error("Gagal menyimpan skor kuis ke backend:", err);
+        }
+      }
       router.push("/quiz/complete");
     }
-  }, [currentQIndex, questions.length, router]);
+  }, [currentQIndex, questions.length, router, materialId, currentScore]);
 
   const handleClose = useCallback(() => {
     if (window.confirm("Yakin keluar dari sesi? Semua progress akan hilang.")) {

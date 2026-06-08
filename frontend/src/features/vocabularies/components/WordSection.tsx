@@ -9,9 +9,9 @@ interface WordSectionProps {
   icon: string;
   iconColor: string;
   badgeColor: string;
-  words: WordItem[];
+  words: (WordItem & { voicePath?: string | null })[];
   playingWord: string | null;
-  onPlay: (word: string) => void;
+  onPlay: (word: string, voicePath?: string | null) => void;
 }
 
 export function WordSection({

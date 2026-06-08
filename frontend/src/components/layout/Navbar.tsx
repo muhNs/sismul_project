@@ -11,7 +11,7 @@ export const Navbar: React.FC = () => {
     {
       label: "Learn",
       icon: "school",
-      href: "/",
+      href: "/home",
       activeIconFill: true,
     },
     {

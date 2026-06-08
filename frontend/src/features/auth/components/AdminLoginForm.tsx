@@ -4,15 +4,45 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { loginUser } from "@/features/auth/api/loginUser";
+import { useStore } from "@/lib/store";
 
 export function AdminLoginForm() {
   const router = useRouter();
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const setAuth = useStore((state) => state.setAuth);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/admin");
+    setErrorMsg(null);
+    setIsLoading(true);
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      const response = await loginUser({ email, password });
+      
+      if (response.data && (response.data.role === "ADMIN" || response.data.role === "TEACHER")) {
+        setAuth(response.data);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("userRole", response.data.role);
+        }
+        router.push("/admin");
+      } else {
+        setErrorMsg("Akses ditolak. Anda bukan Administrator.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      setErrorMsg(err.response?.data?.message || "Login admin gagal. Periksa kembali kredensial Anda.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -96,8 +126,14 @@ export function AdminLoginForm() {
               </div>
             </div>
 
-            <Button type="submit" variant="primary" className="mt-8 w-full py-4 text-base font-bold shadow-[0_4px_0_rgba(0,0,0,0.1)] active:shadow-none active:translate-y-1 transition-all">
-              Masuk ke Dasbor
+            {errorMsg && (
+              <div className="text-error text-sm font-bold text-center mt-2">
+                {errorMsg}
+              </div>
+            )}
+
+            <Button type="submit" variant="primary" disabled={isLoading} className="mt-8 w-full py-4 text-base font-bold shadow-[0_4px_0_rgba(0,0,0,0.1)] active:shadow-none active:translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              {isLoading ? "Memproses..." : "Masuk ke Dasbor"}
             </Button>
           </form>
         </Card>

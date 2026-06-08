@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { loginService, refreshTokenService, registerService, logoutService, getMeService } from './auth.service';
 import { registerSchema, loginSchema } from './auth.schema';
 import { setAuthCookies, clearAuthCookies } from '../../shared/cookie.utils';
+import { ZodError } from 'zod';
 
 export class AuthController {
   static async register(req: Request, res: Response) {
@@ -10,6 +11,9 @@ export class AuthController {
       const user = await registerService(validatedData);
       res.status(201).json({ status: 'success', data: user });
     } catch (error: any) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ status: 'error', message: error.issues.map(i => i.message).join(', ') });
+      }
       res.status(400).json({ status: 'error', message: error.message || 'Validasi gagal' });
     }
   }
@@ -24,6 +28,9 @@ export class AuthController {
 
       res.status(200).json({ status: 'success', message: 'Login berhasil', data: user });
     } catch (error: any) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ status: 'error', message: error.issues.map(i => i.message).join(', ') });
+      }
       res.status(401).json({ status: 'error', message: error.message });
     }
   }

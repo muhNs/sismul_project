@@ -2,18 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useStore } from "@/lib/store";
 
 export const AdminGuard = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const user = useStore((state) => state.user);
 
   useEffect(() => {
-    // Simulasi proteksi route: mengambil role dari localStorage atau store
-    // Jika tidak ada di localStorage, kita default ke null (belum login)
-    // Untuk keperluan testing, Anda bisa set localStorage.setItem("userRole", "ADMIN")
-    
-    const role = typeof window !== "undefined" ? localStorage.getItem("userRole") : null;
+    // Ambil role dari Zustand store, fallback ke localStorage jika tidak ada
+    const storeRole = user?.role;
+    const localRole = typeof window !== "undefined" ? localStorage.getItem("userRole") : null;
+    const role = storeRole || localRole;
     
     // Bypass proteksi jika sedang berada di halaman login admin
     if (pathname === "/admin/login") {

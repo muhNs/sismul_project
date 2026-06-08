@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
+import { useStore } from "@/lib/store";
+import api from "@/lib/axios";
 
 interface AdminHeaderProps {
   onMenuClick?: () => void;
@@ -9,6 +11,7 @@ interface AdminHeaderProps {
 
 export const AdminHeader = ({ onMenuClick }: AdminHeaderProps) => {
   const router = useRouter();
+  const logout = useStore((state) => state.logout);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -41,12 +44,19 @@ export const AdminHeader = ({ onMenuClick }: AdminHeaderProps) => {
     setIsLogoutModalOpen(true);
   };
 
-  const confirmLogout = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("userRole");
+  const confirmLogout = async () => {
+    try {
+      await api.post("/api/v1/auth/logout");
+    } catch (err) {
+      console.error("Gagal logout admin di backend:", err);
+    } finally {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("userRole");
+      }
+      logout();
+      setIsLogoutModalOpen(false);
+      router.push("/admin/login");
     }
-    setIsLogoutModalOpen(false);
-    router.push("/admin/login");
   };
 
   return (
