@@ -41,8 +41,27 @@ export const ScoresPage = () => {
           api.get("/api/v1/scores"),
           api.get("/api/v1/materials"),
         ]);
-        setScores(scoresRes.data.data || scoresRes.data);
-        setMaterials(materialsRes.data.data || materialsRes.data);
+        const rawScores = scoresRes.data.data || scoresRes.data;
+        const mappedScores = rawScores.map((s: any) => ({
+          id: s.id,
+          studentName: s.user?.name || "Unknown",
+          materialId: s.material_id,
+          highestScore: s.score,
+          completedAt: new Date(s.created_at).toLocaleDateString("id-ID")
+        }));
+
+        const rawMaterials = materialsRes.data.data || materialsRes.data;
+        const mappedMaterials = rawMaterials.map((m: any) => ({
+          id: m.id,
+          title: `Chapter ${m.chapter}`,
+          grade: `Grade ${m.gradeLevel}`,
+          skill: m.skillCategory === "READING" ? "Reading" : 
+                 m.skillCategory === "LISTENING" ? "Listening" : 
+                 m.skillCategory === "WRITING" ? "Writing" : "Speaking"
+        }));
+
+        setScores(mappedScores);
+        setMaterials(mappedMaterials);
       } catch (err: any) {
         console.error(err);
         setError("Gagal memuat data. Pastikan server backend berjalan.");
@@ -91,8 +110,22 @@ export const ScoresPage = () => {
     }
   }, [filterGrade, availableChapters, filterChapter]);
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => setToastMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
+
+  const showToast = (message: string) => setToastMessage(message);
+
   const handleExportExcel = () => {
-    if (filteredScores.length === 0) return;
+    if (filteredScores.length === 0) {
+      showToast("Tidak ada data untuk diekspor.");
+      return;
+    }
     const aoaData: any[][] = [
       ["LAPORAN HASIL NILAI KUIS - LEARNLY"],
       [],
@@ -121,7 +154,10 @@ export const ScoresPage = () => {
   };
 
   const handleExportCSV = () => {
-    if (filteredScores.length === 0) return;
+    if (filteredScores.length === 0) {
+      showToast("Tidak ada data untuk diekspor.");
+      return;
+    }
     const headers = ["Nama Siswa", "Judul Chapter", "Skill", "Skor Tertinggi", "Tanggal Mengerjakan"];
     const rows = filteredScores.map(score => [`"${score.studentName}"`, `"${score.chapterTitle}"`, `"${score.skill}"`, score.highestScore, `"${score.completedAt}"`]);
     const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
@@ -162,6 +198,14 @@ export const ScoresPage = () => {
 
   return (
     <div className="space-y-6 relative">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] bg-surface-container-high text-on-surface px-6 py-3 rounded-full shadow-lg border border-outline-variant flex items-center gap-2 animate-in fade-in slide-in-from-top-4">
+          <span className="material-symbols-outlined text-primary">info</span>
+          <span className="font-semibold text-sm">{toastMessage}</span>
+        </div>
+      )}
+
       {/* Header Section */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>

@@ -53,7 +53,16 @@ export const MaterialsPage = () => {
     setError(null);
     try {
       const res = await api.get("/api/v1/materials");
-      setMaterials(res.data.data || res.data);
+      const rawMaterials = res.data.data || res.data;
+      const mappedMaterials = rawMaterials.map((m: any) => ({
+        id: m.id,
+        title: `Chapter ${m.chapter}`,
+        grade: `Grade ${m.gradeLevel}`,
+        skill: m.skillCategory === "READING" ? "Reading" : 
+               m.skillCategory === "LISTENING" ? "Listening" : 
+               m.skillCategory === "WRITING" ? "Writing" : "Speaking"
+      }));
+      setMaterials(mappedMaterials);
     } catch (err) {
       console.error(err);
       setError("Gagal memuat data materi. Pastikan server backend berjalan.");
@@ -108,20 +117,51 @@ export const MaterialsPage = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
+      // Map frontend fields to backend fields
+      const payload = {
+        chapter: data.title.replace(/\D/g, "") || "1", // Extract number from "Chapter 1"
+        gradeLevel: data.grade.replace("Grade ", ""),
+        skillCategory: data.skill.toUpperCase(),
+      };
+
       if (editingId) {
-        const res = await api.put(`/api/v1/materials/${editingId}`, data);
+        const res = await api.put(`/api/v1/materials/${editingId}`, payload);
         const updated = res.data.data || res.data;
-        setMaterials(prev => prev.map(m => m.id === editingId ? { ...m, ...updated } : m));
+        const mappedUpdated = {
+          id: updated.id,
+          title: `Chapter ${updated.chapter}`,
+          grade: `Grade ${updated.gradeLevel}`,
+          skill: updated.skillCategory === "READING" ? "Reading" : 
+                 updated.skillCategory === "LISTENING" ? "Listening" : 
+                 updated.skillCategory === "WRITING" ? "Writing" : "Speaking"
+        };
+        setMaterials(prev => prev.map(m => m.id === editingId ? { ...m, ...mappedUpdated } as AdminMaterial : m));
         showToast("Berhasil mengubah materi");
       } else {
-        const res = await api.post("/api/v1/materials", data);
+        const res = await api.post("/api/v1/materials", payload);
         const created = res.data.data || res.data;
-        setMaterials(prev => [...prev, created]);
+        const mappedCreated = {
+          id: created.id,
+          title: `Chapter ${created.chapter}`,
+          grade: `Grade ${created.gradeLevel}`,
+          skill: created.skillCategory === "READING" ? "Reading" : 
+                 created.skillCategory === "LISTENING" ? "Listening" : 
+                 created.skillCategory === "WRITING" ? "Writing" : "Speaking"
+        };
+        setMaterials(prev => [...prev, mappedCreated as AdminMaterial]);
         showToast("Berhasil menambahkan materi");
       }
       setIsModalOpen(false);
     } catch (err: any) {
-      showToast(err.response?.data?.message || "Gagal menyimpan materi");
+      let errorMessage = "Gagal menyimpan materi";
+      if (err.response?.data?.message) {
+        if (Array.isArray(err.response.data.message)) {
+          errorMessage = err.response.data.message[0]?.message || errorMessage;
+        } else if (typeof err.response.data.message === "string") {
+          errorMessage = err.response.data.message;
+        }
+      }
+      showToast(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

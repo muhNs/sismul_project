@@ -18,13 +18,7 @@ export const AdminGuard = ({ children }: { children: React.ReactNode }) => {
     
     // Bypass proteksi jika sedang berada di halaman login admin
     if (pathname === "/admin/login") {
-      if (role === "ADMIN" || role === "TEACHER") {
-        router.replace("/admin");
-      } else if (role === "STUDENT") {
-        router.replace("/home");
-      } else {
-        setIsAuthorized(true);
-      }
+      setIsAuthorized(true);
       return;
     }
 

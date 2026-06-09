@@ -147,7 +147,15 @@ export const VocabulariesPage = () => {
       setIsModalOpen(false);
     } catch (err: any) {
       console.error(err);
-      alert(err.response?.data?.message || "Gagal menyimpan kosakata.");
+      let errorMessage = "Gagal menyimpan kosakata.";
+      if (err.response?.data?.message) {
+        if (Array.isArray(err.response.data.message)) {
+          errorMessage = err.response.data.message[0]?.message || errorMessage;
+        } else if (typeof err.response.data.message === "string") {
+          errorMessage = err.response.data.message;
+        }
+      }
+      showToast(errorMessage);
     }
   };
 

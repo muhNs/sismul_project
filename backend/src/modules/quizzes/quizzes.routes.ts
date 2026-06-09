@@ -3,6 +3,7 @@ import { authenticate, authorize } from '../../middlewares/auth.middleware';
 import { upload } from '../../middlewares/upload.middleware';
 import {
   getAdminQuizzesController,
+  getAllQuizzesController,
   getStudentQuizzesController,
   createQuizController,
   updateQuizController,
@@ -13,6 +14,7 @@ import {
 const router: Router = Router();
 
 // Routes for ADMIN (CRUD)
+router.get('/', authenticate, authorize(['ADMIN', 'TEACHER']), getAllQuizzesController);
 router.get('/admin/:materialId', authenticate, authorize(['ADMIN', 'TEACHER']), getAdminQuizzesController);
 router.post('/', authenticate, authorize(['ADMIN', 'TEACHER']), upload.fields([{ name: 'media', maxCount: 1 }]), createQuizController);
 router.put('/:id', authenticate, authorize(['ADMIN', 'TEACHER']), upload.fields([{ name: 'media', maxCount: 1 }]), updateQuizController);

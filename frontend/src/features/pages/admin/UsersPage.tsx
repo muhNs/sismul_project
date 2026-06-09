@@ -105,20 +105,46 @@ export const UsersPage = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
+      const payload: any = {
+        name: data.name,
+        email: data.email,
+        role: data.role.toUpperCase(),
+      };
+
+      if (!editingId) {
+        payload.password = "sismul123"; // Default password for new users
+      }
+
       if (editingId) {
-        const res = await api.put(`/api/v1/users/${editingId}`, data);
+        const res = await api.put(`/api/v1/users/${editingId}`, payload);
         const updated = res.data.data || res.data;
-        setUsers(prev => prev.map(u => u.id === editingId ? { ...u, ...updated } : u));
+        const mappedUpdated = {
+          ...updated,
+          role: updated.role.toLowerCase()
+        };
+        setUsers(prev => prev.map(u => u.id === editingId ? { ...u, ...mappedUpdated } as AdminUser : u));
         showToast("Berhasil mengubah data user");
       } else {
-        const res = await api.post("/api/v1/users", data);
+        const res = await api.post("/api/v1/users", payload);
         const created = res.data.data || res.data;
-        setUsers(prev => [...prev, created]);
-        showToast("Berhasil menambahkan user");
+        const mappedCreated = {
+          ...created,
+          role: created.role.toLowerCase()
+        };
+        setUsers(prev => [...prev, mappedCreated as AdminUser]);
+        showToast("Berhasil menambahkan user. Password default: sismul123");
       }
       setIsModalOpen(false);
     } catch (err: any) {
-      showToast(err.response?.data?.message || "Gagal menyimpan data user");
+      let errorMessage = "Gagal menyimpan data user";
+      if (err.response?.data?.message) {
+        if (Array.isArray(err.response.data.message)) {
+          errorMessage = err.response.data.message[0]?.message || errorMessage;
+        } else if (typeof err.response.data.message === "string") {
+          errorMessage = err.response.data.message;
+        }
+      }
+      showToast(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

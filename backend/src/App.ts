@@ -11,6 +11,12 @@ dotenv.config();
 
 const app = express();
 
+// Logger untuk nge-track request masuk
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Origin: ${req.headers.origin}`);
+  next();
+});
+
 const allowedOrigins = (process.env.ALLOW_ORIGIN ?? "")
   .split(",")
   .map((origin) => origin.trim())
@@ -21,10 +27,12 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
+      const isLocalhost = origin.includes("localhost") || origin.includes("127.0.0.1") || origin.includes("192.168");
+      if (allowedOrigins.includes(origin) || isLocalhost) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        console.warn("Blocked by CORS. Origin:", origin, "Allowed:", allowedOrigins);
+        callback(null, false); // Block it gracefully instead of crashing
       }
     },
     credentials: true,

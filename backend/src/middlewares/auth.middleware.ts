@@ -24,7 +24,8 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 // Middleware Otorisasi (Cek Role)
 export const authorize = (roles: Role[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user || !roles.includes(req.user.role)) {
+    console.log("Authorize check: user role is", req.user?.role, "expected roles:", roles);
+    if (!req.user || !roles.some(r => r.toUpperCase() === (req.user!.role || "").toUpperCase())) {
       return res.status(403).json({ 
         status: 'error', 
         message: 'Akses ditolak. Anda tidak memiliki izin untuk resource ini.' 

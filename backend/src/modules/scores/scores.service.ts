@@ -86,3 +86,13 @@ export const getScoresByMaterial = async (material_id: number) => {
     orderBy: { score: 'desc' }
   });
 };
+
+export const getAllScores = async () => {
+  return prisma.studentScore.findMany({
+    include: {
+      user: { select: { name: true, email: true } },
+      material: { select: { chapter: true, gradeLevel: true, skillCategory: true } }
+    },
+    orderBy: { created_at: 'desc' }
+  });
+};
