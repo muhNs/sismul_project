@@ -78,21 +78,21 @@ export const deleteQuiz = async (id: number) => {
   });
 };
 
-// export const checkAnswer = async (id: number, studentAnswer: string) => {
-//   const quiz = await prisma.quizQuestion.findUnique({
-//     where: { id },
-//     select: { correctAnswer: true, questionText: true },
-//   });
+export const checkAnswer = async (id: number, studentAnswer: string) => {
+  const quiz = await prisma.quizQuestion.findUnique({
+    where: { id },
+    select: { correctAnswer: true, questionText: true },
+  });
 
-//   if (!quiz) throw new Error("Soal tidak ditemukan");
+  if (!quiz) throw new Error("Soal tidak ditemukan");
 
-//   // Validasi case-insensitive
-//   const isCorrect =
-//     quiz.correctAnswer.trim().toLowerCase() ===
-//     studentAnswer.trim().toLowerCase();
+  // Validasi case-insensitive dan hapus tanda baca
+  const normalize = (str: string) => str.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "").trim();
+  
+  const isCorrect = normalize(quiz.correctAnswer) === normalize(studentAnswer);
 
-//   return {
-//     isCorrect,
-//     correctAnswer: quiz.correctAnswer, // Kirim jawaban benar jika salah untuk feedback
-//   };
-// };
+  return {
+    isCorrect,
+    correctAnswer: quiz.correctAnswer, // Kirim jawaban benar jika salah untuk feedback
+  };
+};

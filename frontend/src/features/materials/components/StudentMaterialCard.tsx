@@ -44,12 +44,12 @@ export function ChapterCard({ materials }: ChapterCardProps) {
 
   const handleStartChapter = (material: Material) => {
     setSelectedChapterId(material.id.toString());
-    if (material.skillCategory === "READING" || material.skillCategory === "LISTENING") {
-      router.push("/quiz/prep");
-    } else if (material.skillCategory === "SPEAKING") {
-      router.push("/vocabulary");
+    const skillParam = material.skillCategory.toLowerCase();
+    if (material.skillCategory === "SPEAKING") {
+      // route to quiz prep so they can do the speaking quiz with voice recognition!
+      router.push(`/quiz/prep?skill=${skillParam}`);
     } else {
-      router.push("/quiz/prep");
+      router.push(`/quiz/prep?skill=${skillParam}`);
     }
   };
 

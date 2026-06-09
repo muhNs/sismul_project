@@ -8,13 +8,15 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { useStore } from "@/lib/store";
 import { chaptersData } from "@/lib/dummy-data";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function PrepPage() {
   const router = useRouter();
   const selectedChapterId = useStore((state) => state.selectedChapterId);
   const selectedClassId = useStore((state) => state.selectedClassId);
-  const chapter = chaptersData.find((c) => c.id === selectedChapterId) || chaptersData[0];
+  const searchParams = useSearchParams();
+  const skillParam = searchParams.get("skill");
+  const chapter = chaptersData.find((c) => c.id === skillParam) || chaptersData[0];
 
   return (
     <>

@@ -29,8 +29,8 @@ export function WordSection({
         </span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {words.map((word) => (
-          <WordCard key={word.english} word={word} playingWord={playingWord} onPlay={onPlay} />
+        {words.map((word, index) => (
+          <WordCard key={`${word.english}-${index}`} word={word} playingWord={playingWord} onPlay={onPlay} />
         ))}
       </div>
     </div>

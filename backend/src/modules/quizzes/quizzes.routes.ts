@@ -7,7 +7,7 @@ import {
   createQuizController,
   updateQuizController,
   deleteQuizController,
-  // checkAnswerController
+  checkAnswerController
 } from './quizzes.controller';
 
 const router: Router = Router();
@@ -20,6 +20,6 @@ router.delete('/:id', authenticate, authorize(['ADMIN', 'TEACHER']), deleteQuizC
 
 // Routes for STUDENTS
 router.get('/student/:materialId', authenticate, getStudentQuizzesController);
-// router.post('/:id/check', authenticate, checkAnswerController);
+router.post('/:id/check', authenticate, checkAnswerController);
 
 export default router;
