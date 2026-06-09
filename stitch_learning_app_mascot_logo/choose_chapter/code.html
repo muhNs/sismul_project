@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Pilih Chapter - Learnly</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&amp;family=Be+Vietnam+Pro:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e3e2e2",
+                    "on-surface": "#1a1c1c",
+                    "primary-fixed": "#87fe45",
+                    "on-secondary-fixed-variant": "#004c6e",
+                    "on-error": "#ffffff",
+                    "on-tertiary-container": "#683a00",
+                    "tertiary-fixed-dim": "#ffb872",
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eeeeed",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#6be026",
+                    "secondary": "#006590",
+                    "primary-container": "#58cc02",
+                    "primary": "#2b6c00",
+                    "on-surface-variant": "#3f4a36",
+                    "inverse-surface": "#2f3131",
+                    "on-secondary-fixed": "#001e2e",
+                    "background": "#faf9f9",
+                    "on-secondary": "#ffffff",
+                    "surface-bright": "#faf9f9",
+                    "surface": "#faf9f9",
+                    "surface-dim": "#dadada",
+                    "surface-container-high": "#e9e8e8",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#2b6c00",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#f1f0f0",
+                    "on-primary-fixed": "#082100",
+                    "secondary-fixed-dim": "#88ceff",
+                    "surface-variant": "#e3e2e2",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f4f3f3",
+                    "on-tertiary-fixed": "#2d1600",
+                    "secondary-container": "#2fb8ff",
+                    "on-secondary-container": "#004666",
+                    "on-primary-fixed-variant": "#1f5100",
+                    "tertiary": "#8c5000",
+                    "on-primary-container": "#1e5000",
+                    "tertiary-fixed": "#ffdcbf",
+                    "inverse-primary": "#6be026",
+                    "outline-variant": "#becbb1",
+                    "on-background": "#1a1c1c",
+                    "outline": "#6f7b64",
+                    "secondary-fixed": "#c8e6ff",
+                    "tertiary-container": "#ff9c27",
+                    "on-tertiary-fixed-variant": "#6a3b00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xl": "64px",
+                    "gutter": "16px",
+                    "md": "24px",
+                    "sm": "12px",
+                    "lg": "48px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "120px",
+                    "base": "8px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-bold": ["Be Vietnam Pro"],
+                    "display": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}],
+                    "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .tactile-button {
+            transition: all 0.1s ease;
+        }
+        .tactile-button:active {
+            transform: translateY(2px);
+            box-shadow: none !important;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        .shimmer-shine {
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md text-body-md min-h-screen pb-24">
+<!-- Top Navigation Bar -->
+<header class="bg-background dark:bg-background flex justify-between items-center px-margin-mobile h-16 w-full docked full-width top-0 border-b-4 border-surface-container-highest dark:border-surface-variant sticky z-50">
+<div class="flex items-center gap-3">
+<button class="tactile-button p-2 rounded-xl bg-surface-container hover:bg-surface-dim transition-colors flex items-center justify-center border-b-2 border-surface-dim">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary font-black">Materi Kelas 3</h1>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-full border-b-2 border-surface-variant">
+<span class="font-label-bold text-label-bold text-tertiary">1,240 pts</span>
+<div class="w-6 h-6 bg-tertiary-container rounded-full flex items-center justify-center overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A cute, stylized illustration of a green owl mascot smiling warmly, designed for a children's educational app. The mascot has a playful, friendly expression with large expressive eyes and simple geometric shapes. The art style is modern and tactile with clean outlines and bright, vibrant green tones against a soft white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6fXSv1D7rTkzTA1xnm-JKzpCG4n1-fNisZoVrYGEiwWj0LD-okV2Ka1MyoxiGIwb24cnHjSiSYFXJ8kgoxE9CIxwJtHBZA9dgC4IVOGjAEX5Jkb1mU_ATRzcbGQfmORbRV4InopKjRqReBC30QVEXTpAUJok7B4BVKwmyE-BbaP_Qc9qHphQ8xoxFKU4seodLYKQL7XkwOqJn-mULY7NO6Wceu6oKeV2iSngDhLuNN4mx3iGhust6FB5T218AsjjosfvsWE4jSbs"/>
+</div>
+</div>
+</header>
+<main class="px-margin-mobile py-8 max-w-[800px] mx-auto">
+<div class="mb-8">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">Pilih Chapter</h2>
+<p class="text-on-surface-variant">Pilih topik yang ingin kamu pelajari hari ini!</p>
+</div>
+<!-- Learning Path - Bento Grid Layout -->
+<div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+<!-- Reading Card (Large) -->
+<button class="col-span-2 md:col-span-3 tactile-button group bg-white p-6 rounded-2xl border-2 border-surface-variant border-b-4 border-b-primary shadow-sm flex flex-col items-start gap-4">
+<div class="w-16 h-16 bg-primary-container/20 rounded-2xl flex items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 shimmer-shine"></div>
+<span class="material-symbols-outlined text-[40px] text-primary" data-icon="menu_book" data-weight="fill" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+</div>
+<div class="text-left">
+<span class="font-label-bold text-label-bold text-primary block mb-1">CHAPTER 1</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Reading</h3>
+<p class="text-on-surface-variant text-sm mt-1">Latihan membaca cerita seru</p>
+</div>
+<div class="w-full bg-surface-container h-3 rounded-full overflow-hidden mt-2 relative">
+<div class="h-full bg-primary-container w-[65%] relative">
+<div class="absolute inset-0 shimmer-shine"></div>
+</div>
+</div>
+</button>
+<!-- Listening Card -->
+<button class="col-span-1 md:col-span-3 tactile-button bg-white p-6 rounded-2xl border-2 border-surface-variant border-b-4 border-b-secondary shadow-sm flex flex-col items-start gap-4">
+<div class="w-16 h-16 bg-secondary-container/20 rounded-2xl flex items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 shimmer-shine"></div>
+<span class="material-symbols-outlined text-[40px] text-secondary" data-icon="headphones" data-weight="fill" style="font-variation-settings: 'FILL' 1;">headphones</span>
+</div>
+<div class="text-left">
+<span class="font-label-bold text-label-bold text-secondary block mb-1">CHAPTER 2</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Listening</h3>
+</div>
+</button>
+<!-- Writing Card -->
+<button class="col-span-1 md:col-span-2 tactile-button bg-white p-6 rounded-2xl border-2 border-surface-variant border-b-4 border-b-tertiary shadow-sm flex flex-col items-start gap-4">
+<div class="w-14 h-14 bg-tertiary-container/20 rounded-xl flex items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 shimmer-shine"></div>
+<span class="material-symbols-outlined text-[32px] text-tertiary" data-icon="edit" data-weight="fill" style="font-variation-settings: 'FILL' 1;">edit</span>
+</div>
+<div class="text-left">
+<span class="font-label-bold text-label-bold text-tertiary block mb-1">CHAPTER 3</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Writing</h3>
+</div>
+</button>
+<!-- Speaking Card -->
+<button class="col-span-1 md:col-span-2 tactile-button bg-white p-6 rounded-2xl border-2 border-surface-variant border-b-4 border-b-error shadow-sm flex flex-col items-start gap-4">
+<div class="w-14 h-14 bg-error-container/20 rounded-xl flex items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 shimmer-shine"></div>
+<span class="material-symbols-outlined text-[32px] text-error" data-icon="record_voice_over" data-weight="fill" style="font-variation-settings: 'FILL' 1;">record_voice_over</span>
+</div>
+<div class="text-left">
+<span class="font-label-bold text-label-bold text-error block mb-1">CHAPTER 4</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Speaking</h3>
+</div>
+</button>
+<!-- Vocabulary Card -->
+<button class="col-span-1 md:col-span-2 tactile-button bg-white p-6 rounded-2xl border-2 border-surface-variant border-b-4 border-b-on-secondary-fixed-variant shadow-sm flex flex-col items-start gap-4">
+<div class="w-14 h-14 bg-secondary-fixed/50 rounded-xl flex items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 shimmer-shine"></div>
+<span class="material-symbols-outlined text-[32px] text-on-secondary-fixed-variant" data-icon="library_books" data-weight="fill" style="font-variation-settings: 'FILL' 1;">library_books</span>
+</div>
+<div class="text-left">
+<span class="font-label-bold text-label-bold text-on-secondary-fixed-variant block mb-1">CHAPTER 5</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Vocabulary</h3>
+</div>
+</button>
+</div>
+<!-- Weekly Progress Hint Card -->
+<div class="mt-8 p-6 bg-secondary-container/10 border-2 border-dashed border-secondary-container rounded-3xl flex items-center gap-6">
+<div class="shrink-0 w-24 h-24 relative">
+<img alt="Motivation Mascot" class="w-full h-full object-contain" data-alt="A cheerful 3D cartoon character holding a gold star, set against a soft blue background. The character has an exuberant and encouraging expression, perfectly capturing the dopaminergic feedback loops of gamified education for children. The lighting is bright and cheerful, reinforcing a modern-tactile aesthetic with soft shadows and vibrant colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_WzXxdPOQ-IMSY_T_mEEQMmOa5ze10_v7SlHhbJJCwrhkUmI24TfSjNNPXuQiZGIHINBWiDjgkOOuBd5X9yo97ujRjojcYcsYMopHTjbBeRZN0NLGcE8WqllRIZkjXNfimfRJSUGNn8MTddjnLjjWf76Km2jeBY8n_F3WF_C_h4YSOrl9YQcltQerhI66S54WWgClkwocGsRqQuo3_NNFtmTKOM-hqkn_LzgJgk81IIXpJwWhNX4B1anVlmP9nNrokYQVccqSxqQ"/>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-secondary mb-1">Kamu Hampir Selesai!</h4>
+<p class="text-on-surface-variant text-sm">Selesaikan materi Reading hari ini untuk mempertahankan streak mingguan kamu.</p>
+<button class="mt-3 px-4 py-2 bg-secondary text-white font-label-bold text-label-bold rounded-xl border-b-4 border-on-secondary-fixed-variant tactile-button">Lanjutkan Belajar</button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-surface-container-lowest dark:bg-surface-dim border-t-4 border-surface-container-highest dark:border-surface-variant z-50">
+<!-- Learn (Active) -->
+<div class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim bg-primary-container/20 rounded-xl px-4 py-1 scale-95 transition-transform duration-100">
+<span class="material-symbols-outlined" data-icon="school" data-weight="fill" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-label-bold text-label-bold">Learn</span>
+</div>
+<!-- Leaderboard -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined" data-icon="emoji_events">emoji_events</span>
+<span class="font-label-bold text-label-bold">Leaderboard</span>
+</div>
+<!-- Shop -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-label-bold text-label-bold">Shop</span>
+</div>
+<!-- Profile -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-bold text-label-bold">Profile</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.tactile-button').forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.classList.add('scale-95');
+            });
+            button.addEventListener('touchend', function() {
+                this.classList.remove('scale-95');
+            });
+        });
+    </script>
+</body></html>

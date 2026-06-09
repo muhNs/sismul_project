@@ -9,7 +9,6 @@ import {
 } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { AdminScore } from "../../types";
-import { dummyMaterials } from "../../data/materials";
 import { Card } from "@/components/ui/Card";
 
 export interface ExtendedScore extends AdminScore {

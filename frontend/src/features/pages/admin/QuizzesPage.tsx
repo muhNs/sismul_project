@@ -2,49 +2,22 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { QuizzesTable } from "./components/quizzes/QuizzesTable";
-import { dummyQuizzes } from "./data/quizzes";
-import { dummyMaterials } from "./data/materials";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
-import { AdminQuiz, QuizType } from "./types";
+import { AdminMaterial, AdminQuiz, QuizType } from "./types";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import api from "@/lib/axios";
 
 const getValidationSchema = (skill: string) => {
   const baseSchema = {
-    materialId: z.string().min(1, "Materi wajib dipilih"),
+    materialId: (v: string) => !!v || "Materi wajib dipilih",
   };
-
   if (skill === "Writing") {
-    return z.object({
-      ...baseSchema,
-      fullSentence: z.string().min(1, "Kalimat utuh wajib diisi"),
-      blankWord: z.string().min(1, "Kata yang dihilangkan wajib diisi"),
-      blankIndex: z.coerce.number().min(1, "Index kata wajib diisi"),
-    }).refine((data) => {
-      const words = data.fullSentence.split(" ");
-      return data.blankIndex <= words.length;
-    }, {
-      message: "Index tidak boleh lebih besar dari jumlah kata",
-      path: ["blankIndex"]
-    });
+    return { fullSentence: true, blankWord: true, blankIndex: true };
   } else if (skill === "Speaking") {
-    return z.object({
-      ...baseSchema,
-      instruction: z.string().min(1, "Instruksi wajib diisi"),
-      readingText: z.string().min(1, "Teks yang dibaca wajib diisi"),
-    });
-  } else {
-    return z.object({
-      ...baseSchema,
-      questionText: z.string().min(1, "Pertanyaan wajib diisi"),
-      optionsA: z.string().min(1, "Opsi A wajib diisi"),
-      optionsB: z.string().min(1, "Opsi B wajib diisi"),
-      optionsC: z.string().min(1, "Opsi C wajib diisi"),
-      answerKey: z.enum(["A", "B", "C"], { message: "Kunci jawaban wajib dipilih" }),
-    });
+    return { instruction: true, readingText: true };
   }
+  return { questionText: true, optionsA: true, optionsB: true, optionsC: true, answerKey: true };
 };
 
 type FormValues = {
@@ -62,10 +35,14 @@ type FormValues = {
 };
 
 export const QuizzesPage = () => {
-  const [quizzes, setQuizzes] = useState<AdminQuiz[]>(dummyQuizzes);
+  const [quizzes, setQuizzes] = useState<AdminQuiz[]>([]);
+  const [materials, setMaterials] = useState<AdminMaterial[]>([]);
   const [search, setSearch] = useState("");
   const [filterGrade, setFilterGrade] = useState("Semua Grade");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -73,11 +50,6 @@ export const QuizzesPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  // We need to initialize the form first without a dynamic schema 
-  // because the schema depends on the watched materialId.
-  // A clean way is to use a super schema that validates everything conditionally, 
-  // but since we want strict typing per branch, we'll recreate the resolver dynamically.
-  
   const form = useForm<FormValues>({
     defaultValues: {
       materialId: "",
@@ -97,10 +69,9 @@ export const QuizzesPage = () => {
   const fullSentenceWatch = form.watch("fullSentence");
   const blankWordWatch = form.watch("blankWord");
 
-  const selectedMaterial = useMemo(() => dummyMaterials.find(m => m.id === watchMaterialId), [watchMaterialId]);
+  const selectedMaterial = useMemo(() => materials.find(m => m.id === watchMaterialId), [watchMaterialId, materials]);
   const skill = selectedMaterial?.skill || "Reading";
 
-  // Re-apply the resolver when the skill changes
   useEffect(() => {
     form.clearErrors();
   }, [skill, form]);
@@ -112,20 +83,39 @@ export const QuizzesPage = () => {
     }
   }, [toastMessage]);
 
-  const showToast = (message: string) => {
-    setToastMessage(message);
+  const showToast = (message: string) => setToastMessage(message);
+
+  const fetchAll = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const [quizzesRes, materialsRes] = await Promise.all([
+        api.get("/api/v1/quizzes"),
+        api.get("/api/v1/materials"),
+      ]);
+      setQuizzes(quizzesRes.data.data || quizzesRes.data);
+      setMaterials(materialsRes.data.data || materialsRes.data);
+    } catch (err) {
+      console.error(err);
+      setError("Gagal memuat data. Pastikan server backend berjalan.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Enhance table data to include material title
+  useEffect(() => {
+    fetchAll();
+  }, []);
+
   const tableData = useMemo(() => {
     return quizzes.map(q => {
-      const mat = dummyMaterials.find(m => m.id === q.materialId);
+      const mat = materials.find(m => m.id === q.materialId);
       return {
         ...q,
         materialId: mat ? `${mat.title} (${mat.grade})` : q.materialId
       };
     });
-  }, [quizzes]);
+  }, [quizzes, materials]);
 
   const filteredData = useMemo(() => {
     return tableData.filter((q) => {
@@ -134,39 +124,27 @@ export const QuizzesPage = () => {
         (q.fullSentence || "").toLowerCase().includes(search.toLowerCase()) ||
         (q.instruction || "").toLowerCase().includes(search.toLowerCase()) ||
         q.materialId.toLowerCase().includes(search.toLowerCase());
-      
-      const mat = dummyMaterials.find(m => `${m.title} (${m.grade})` === q.materialId || m.id === q.materialId);
+      const mat = materials.find(m => `${m.title} (${m.grade})` === q.materialId || m.id === q.materialId);
       const matchGrade = filterGrade === "Semua Grade" ? true : mat?.grade === filterGrade;
-
       return matchSearch && matchGrade;
     });
-  }, [tableData, search, filterGrade]);
+  }, [tableData, search, filterGrade, materials]);
 
   const handleOpenAdd = () => {
     setEditingId(null);
     form.reset({
-      materialId: dummyMaterials[0]?.id || "",
-      questionText: "",
-      optionsA: "",
-      optionsB: "",
-      optionsC: "",
-      answerKey: undefined,
-      fullSentence: "",
-      blankWord: "",
-      blankIndex: 1,
-      instruction: "",
-      readingText: "",
+      materialId: materials[0]?.id || "",
+      questionText: "", optionsA: "", optionsB: "", optionsC: "",
+      answerKey: undefined, fullSentence: "", blankWord: "", blankIndex: 1,
+      instruction: "", readingText: "",
     });
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (quiz: AdminQuiz) => {
     setEditingId(quiz.id);
-    
-    // Find original materialId since the table injects the title
     const originalQuiz = quizzes.find(q => q.id === quiz.id);
     const mId = originalQuiz?.materialId || "";
-
     form.reset({
       materialId: mId,
       questionText: quiz.questionText,
@@ -188,68 +166,110 @@ export const QuizzesPage = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const onSubmit = async (data: FormValues) => {
-    // Manually validate using the dynamic schema because react-hook-form 
-    // doesn't gracefully update resolver on the fly mid-submit without re-renders.
-    const schema = getValidationSchema(skill);
-    const result = schema.safeParse(data);
-    
-    if (!result.success) {
-      result.error.issues.forEach(issue => {
-        form.setError(issue.path[0] as any, { message: issue.message });
-      });
-      return;
+  const validateForm = (data: FormValues): boolean => {
+    let valid = true;
+    if (!data.materialId) { form.setError("materialId", { message: "Materi wajib dipilih" }); valid = false; }
+    if (skill === "Writing") {
+      if (!data.fullSentence) { form.setError("fullSentence", { message: "Kalimat utuh wajib diisi" }); valid = false; }
+      if (!data.blankWord) { form.setError("blankWord", { message: "Kata yang dihilangkan wajib diisi" }); valid = false; }
+      if (!data.blankIndex || data.blankIndex < 1) { form.setError("blankIndex", { message: "Index kata wajib diisi" }); valid = false; }
+    } else if (skill === "Speaking") {
+      if (!data.instruction) { form.setError("instruction", { message: "Instruksi wajib diisi" }); valid = false; }
+      if (!data.readingText) { form.setError("readingText", { message: "Teks wajib diisi" }); valid = false; }
+    } else {
+      if (!data.questionText) { form.setError("questionText", { message: "Pertanyaan wajib diisi" }); valid = false; }
+      if (!data.optionsA) { form.setError("optionsA", { message: "Opsi A wajib diisi" }); valid = false; }
+      if (!data.optionsB) { form.setError("optionsB", { message: "Opsi B wajib diisi" }); valid = false; }
+      if (!data.optionsC) { form.setError("optionsC", { message: "Opsi C wajib diisi" }); valid = false; }
+      if (!data.answerKey) { form.setError("answerKey", { message: "Kunci jawaban wajib dipilih" }); valid = false; }
     }
+    return valid;
+  };
 
-    let newQuiz: Partial<AdminQuiz> = {
+  const onSubmit = async (data: FormValues) => {
+    if (!validateForm(data)) return;
+    setIsSubmitting(true);
+
+    let payload: Partial<AdminQuiz> = {
       materialId: data.materialId,
       type: `${skill} ${skill === "Writing" ? "Fill Blank" : skill === "Speaking" ? "Pronunciation" : "MCQ"}` as QuizType,
     };
 
     if (skill === "Reading" || skill === "Listening") {
-      newQuiz.questionText = data.questionText;
-      newQuiz.options = { A: data.optionsA!, B: data.optionsB!, C: data.optionsC! };
-      newQuiz.answerKey = data.answerKey;
+      payload.questionText = data.questionText;
+      payload.options = { A: data.optionsA!, B: data.optionsB!, C: data.optionsC! };
+      payload.answerKey = data.answerKey;
     } else if (skill === "Writing") {
-      newQuiz.questionText = "Lengkapi kalimat rumpang berikut.";
-      newQuiz.fullSentence = data.fullSentence;
-      newQuiz.blankWord = data.blankWord;
-      newQuiz.blankIndex = data.blankIndex;
+      payload.questionText = "Lengkapi kalimat rumpang berikut.";
+      payload.fullSentence = data.fullSentence;
+      payload.blankWord = data.blankWord;
+      payload.blankIndex = data.blankIndex;
     } else if (skill === "Speaking") {
-      newQuiz.questionText = data.instruction;
-      newQuiz.instruction = data.instruction;
-      newQuiz.readingText = data.readingText;
+      payload.questionText = data.instruction;
+      payload.instruction = data.instruction;
+      payload.readingText = data.readingText;
     }
 
-    if (editingId) {
-      setQuizzes(prev => prev.map(q => q.id === editingId ? { ...q, ...newQuiz } as AdminQuiz : q));
-      showToast("Soal berhasil diperbarui");
-    } else {
-      newQuiz.id = `QZ-${Date.now()}`;
-      setQuizzes(prev => [...prev, newQuiz as AdminQuiz]);
-      showToast("Soal berhasil ditambahkan");
+    try {
+      if (editingId) {
+        const res = await api.put(`/api/v1/quizzes/${editingId}`, payload);
+        const updated = res.data.data || res.data;
+        setQuizzes(prev => prev.map(q => q.id === editingId ? { ...q, ...updated } as AdminQuiz : q));
+        showToast("Soal berhasil diperbarui");
+      } else {
+        const res = await api.post("/api/v1/quizzes", payload);
+        const created = res.data.data || res.data;
+        setQuizzes(prev => [...prev, created as AdminQuiz]);
+        showToast("Soal berhasil ditambahkan");
+      }
+      setIsModalOpen(false);
+    } catch (err: any) {
+      showToast(err.response?.data?.message || "Gagal menyimpan soal");
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsModalOpen(true); // temporary workaround for rapid clicking
-    setTimeout(() => setIsModalOpen(false), 10);
   };
 
-  const confirmDelete = () => {
-    if (deletingId) {
+  const confirmDelete = async () => {
+    if (!deletingId) return;
+    try {
+      await api.delete(`/api/v1/quizzes/${deletingId}`);
       setQuizzes(prev => prev.filter(q => q.id !== deletingId));
       showToast("Soal berhasil dihapus");
+    } catch (err: any) {
+      showToast(err.response?.data?.message || "Gagal menghapus soal");
+    } finally {
+      setIsDeleteModalOpen(false);
+      setDeletingId(null);
     }
-    setIsDeleteModalOpen(false);
   };
 
-  // Helper for fill blank preview
   const getFillBlankPreview = () => {
     if (!fullSentenceWatch || !blankWordWatch) return "Preview...";
     const regex = new RegExp(`\\b${blankWordWatch}\\b`, 'i');
-    if (fullSentenceWatch.match(regex)) {
-      return fullSentenceWatch.replace(regex, "_____");
-    }
+    if (fullSentenceWatch.match(regex)) return fullSentenceWatch.replace(regex, "_____");
     return fullSentenceWatch;
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="h-8 w-48 bg-surface-container-highest rounded-md animate-pulse"></div>
+        <div className="h-20 w-full bg-surface-container-highest rounded-2xl animate-pulse"></div>
+        <div className="h-64 w-full bg-surface-container-highest rounded-2xl animate-pulse"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-4 text-center">
+        <span className="material-symbols-outlined text-5xl text-error">wifi_off</span>
+        <p className="text-on-surface-variant font-semibold">{error}</p>
+        <Button variant="outline" onClick={fetchAll}>Coba Lagi</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 relative">
@@ -308,8 +328,8 @@ export const QuizzesPage = () => {
       </div>
 
       {/* Table */}
-      <QuizzesTable 
-        quizzes={filteredData} 
+      <QuizzesTable
+        quizzes={filteredData}
         onEdit={handleOpenEdit}
         onDelete={handleOpenDelete}
       />
@@ -321,14 +341,14 @@ export const QuizzesPage = () => {
         title={editingId ? "Edit Soal" : "Tambah Soal Baru"}
       >
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          
           <div className="space-y-1 pb-4 mb-4 border-b border-outline-variant/30">
             <label className="text-sm font-semibold text-on-surface">Pilih Materi / Chapter</label>
             <select
               {...form.register("materialId")}
               className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all font-medium"
             >
-              {dummyMaterials.map(m => (
+              <option value="">-- Pilih Materi --</option>
+              {materials.map(m => (
                 <option key={m.id} value={m.id}>{m.title} ({m.skill}) - {m.grade}</option>
               ))}
             </select>
@@ -339,56 +359,33 @@ export const QuizzesPage = () => {
             <>
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-on-surface">Pertanyaan</label>
-                <textarea
-                  {...form.register("questionText")}
-                  rows={3}
-                  className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none"
-                  placeholder="Masukkan pertanyaan"
-                />
+                <textarea {...form.register("questionText")} rows={3} className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none" placeholder="Masukkan pertanyaan" />
                 {form.formState.errors.questionText && <p className="text-error text-xs">{form.formState.errors.questionText.message}</p>}
               </div>
-
               {skill === "Listening" && (
                 <div className="p-3 bg-cyan-50 border border-cyan-100 rounded-xl text-cyan-800 text-sm flex gap-2 items-start">
                   <span className="material-symbols-outlined text-[20px]">info</span>
                   <p>Audio upload akan didukung pada versi mendatang.</p>
                 </div>
               )}
-
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-on-surface">Opsi A</label>
-                <input
-                  {...form.register("optionsA")}
-                  className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                  placeholder="Masukkan Opsi A"
-                />
+                <input {...form.register("optionsA")} className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Masukkan Opsi A" />
                 {form.formState.errors.optionsA && <p className="text-error text-xs">{form.formState.errors.optionsA.message}</p>}
               </div>
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-on-surface">Opsi B</label>
-                <input
-                  {...form.register("optionsB")}
-                  className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                  placeholder="Masukkan Opsi B"
-                />
+                <input {...form.register("optionsB")} className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Masukkan Opsi B" />
                 {form.formState.errors.optionsB && <p className="text-error text-xs">{form.formState.errors.optionsB.message}</p>}
               </div>
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-on-surface">Opsi C</label>
-                <input
-                  {...form.register("optionsC")}
-                  className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                  placeholder="Masukkan Opsi C"
-                />
+                <input {...form.register("optionsC")} className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Masukkan Opsi C" />
                 {form.formState.errors.optionsC && <p className="text-error text-xs">{form.formState.errors.optionsC.message}</p>}
               </div>
-
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-on-surface">Kunci Jawaban</label>
-                <select
-                  {...form.register("answerKey")}
-                  className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                >
+                <select {...form.register("answerKey")} className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all">
                   <option value="">-- Pilih Kunci Jawaban --</option>
                   <option value="A">A</option>
                   <option value="B">B</option>
@@ -403,35 +400,19 @@ export const QuizzesPage = () => {
             <>
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-on-surface">Kalimat Utuh</label>
-                <input
-                  {...form.register("fullSentence")}
-                  className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                  placeholder="Contoh: I have a cat"
-                />
+                <input {...form.register("fullSentence")} className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Contoh: I have a cat" />
                 {form.formState.errors.fullSentence && <p className="text-error text-xs">{form.formState.errors.fullSentence.message}</p>}
               </div>
-
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-on-surface">Kata Yang Dihilangkan</label>
-                <input
-                  {...form.register("blankWord")}
-                  className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                  placeholder="Contoh: cat"
-                />
+                <input {...form.register("blankWord")} className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Contoh: cat" />
                 {form.formState.errors.blankWord && <p className="text-error text-xs">{form.formState.errors.blankWord.message}</p>}
               </div>
-
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-on-surface">Index Kata (ke-)</label>
-                <input
-                  type="number"
-                  {...form.register("blankIndex")}
-                  className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                  placeholder="Contoh: 4"
-                />
+                <input type="number" {...form.register("blankIndex")} className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Contoh: 4" />
                 {form.formState.errors.blankIndex && <p className="text-error text-xs">{form.formState.errors.blankIndex.message}</p>}
               </div>
-
               <div className="p-4 bg-surface-container-high rounded-xl border border-outline-variant/50">
                 <p className="text-xs text-on-surface-variant font-semibold mb-1">Preview:</p>
                 <p className="text-sm text-on-surface font-medium">{getFillBlankPreview()}</p>
@@ -443,22 +424,12 @@ export const QuizzesPage = () => {
             <>
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-on-surface">Instruksi</label>
-                <input
-                  {...form.register("instruction")}
-                  className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                  placeholder="Contoh: Please read the sentence below."
-                />
+                <input {...form.register("instruction")} className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" placeholder="Contoh: Please read the sentence below." />
                 {form.formState.errors.instruction && <p className="text-error text-xs">{form.formState.errors.instruction.message}</p>}
               </div>
-
               <div className="space-y-1">
                 <label className="text-sm font-semibold text-on-surface">Teks Yang Harus Dibaca</label>
-                <textarea
-                  {...form.register("readingText")}
-                  rows={4}
-                  className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none"
-                  placeholder="Contoh: My name is Kevin and I like English."
-                />
+                <textarea {...form.register("readingText")} rows={4} className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none" placeholder="Contoh: My name is Kevin and I like English." />
                 {form.formState.errors.readingText && <p className="text-error text-xs">{form.formState.errors.readingText.message}</p>}
               </div>
             </>
@@ -468,8 +439,8 @@ export const QuizzesPage = () => {
             <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
               Batal
             </Button>
-            <Button type="submit" variant="primary" className="w-full sm:w-auto">
-              {editingId ? "Update Soal" : "Simpan Soal"}
+            <Button type="submit" variant="primary" className="w-full sm:w-auto" disabled={isSubmitting}>
+              {isSubmitting ? "Menyimpan..." : editingId ? "Update Soal" : "Simpan Soal"}
             </Button>
           </div>
         </form>

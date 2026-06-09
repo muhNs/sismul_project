@@ -1,9 +1,55 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { StatCard } from "./components/dashboard/StatCard";
 import { Card } from "@/components/ui/Card";
-import { dummyUsers } from "./data/users";
+import api from "@/lib/axios";
+
+interface DashboardStats {
+  totalUsers: number;
+  totalStudents: number;
+  totalQuizzesCompleted: number;
+  totalMaterials: number;
+}
 
 export const AdminDashboardPage = () => {
+  const [stats, setStats] = useState<DashboardStats>({
+    totalUsers: 0,
+    totalStudents: 0,
+    totalQuizzesCompleted: 0,
+    totalMaterials: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      setIsLoading(true);
+      try {
+        const [usersRes, materialsRes, scoresRes] = await Promise.all([
+          api.get("/api/v1/users"),
+          api.get("/api/v1/materials"),
+          api.get("/api/v1/scores"),
+        ]);
+
+        const users: any[] = usersRes.data.data || usersRes.data;
+        const materials: any[] = materialsRes.data.data || materialsRes.data;
+        const scores: any[] = scoresRes.data.data || scoresRes.data;
+
+        setStats({
+          totalUsers: users.length,
+          totalStudents: users.filter((u: any) => u.role === "student").length,
+          totalQuizzesCompleted: scores.length,
+          totalMaterials: materials.length,
+        });
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -19,32 +65,32 @@ export const AdminDashboardPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          title="Total Pengguna" 
-          value={dummyUsers.length.toString()} 
+        <StatCard
+          title="Total Pengguna"
+          value={isLoading ? "..." : stats.totalUsers.toString()}
           icon="group"
-          trend={{ value: "+12%", isPositive: true }}
+          trend={{ value: "", isPositive: true }}
           colorClass="text-primary"
         />
-        <StatCard 
-          title="Sesi Belajar" 
-          value="1,240" 
-          icon="menu_book"
-          trend={{ value: "+8%", isPositive: true }}
+        <StatCard
+          title="Total Siswa"
+          value={isLoading ? "..." : stats.totalStudents.toString()}
+          icon="school"
+          trend={{ value: "", isPositive: true }}
           colorClass="text-tertiary"
         />
-        <StatCard 
-          title="Kuis Selesai" 
-          value="3,890" 
+        <StatCard
+          title="Kuis Selesai"
+          value={isLoading ? "..." : stats.totalQuizzesCompleted.toString()}
           icon="quiz"
-          trend={{ value: "+24%", isPositive: true }}
+          trend={{ value: "", isPositive: true }}
           colorClass="text-primary"
         />
-        <StatCard 
-          title="Pendapatan (Koin)" 
-          value="12K" 
-          icon="monetization_on"
-          trend={{ value: "-2%", isPositive: false }}
+        <StatCard
+          title="Total Materi"
+          value={isLoading ? "..." : stats.totalMaterials.toString()}
+          icon="menu_book"
+          trend={{ value: "", isPositive: true }}
           colorClass="text-error"
         />
       </div>

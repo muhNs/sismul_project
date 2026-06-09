@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Learnly - Vocabulary Dictionary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&amp;family=Be+Vietnam+Pro:wght@700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#e3e2e2",
+                    "on-surface": "#1a1c1c",
+                    "primary-fixed": "#87fe45",
+                    "on-secondary-fixed-variant": "#004c6e",
+                    "on-error": "#ffffff",
+                    "on-tertiary-container": "#683a00",
+                    "tertiary-fixed-dim": "#ffb872",
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eeeeed",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#6be026",
+                    "secondary": "#006590",
+                    "primary-container": "#58cc02",
+                    "primary": "#2b6c00",
+                    "on-surface-variant": "#3f4a36",
+                    "inverse-surface": "#2f3131",
+                    "on-secondary-fixed": "#001e2e",
+                    "background": "#faf9f9",
+                    "on-secondary": "#ffffff",
+                    "surface-bright": "#faf9f9",
+                    "surface": "#faf9f9",
+                    "surface-dim": "#dadada",
+                    "surface-container-high": "#e9e8e8",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#2b6c00",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#f1f0f0",
+                    "on-primary-fixed": "#082100",
+                    "secondary-fixed-dim": "#88ceff",
+                    "surface-variant": "#e3e2e2",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f4f3f3",
+                    "on-tertiary-fixed": "#2d1600",
+                    "secondary-container": "#2fb8ff",
+                    "on-secondary-container": "#004666",
+                    "on-primary-fixed-variant": "#1f5100",
+                    "tertiary": "#8c5000",
+                    "on-primary-container": "#1e5000",
+                    "tertiary-fixed": "#ffdcbf",
+                    "inverse-primary": "#6be026",
+                    "outline-variant": "#becbb1",
+                    "on-background": "#1a1c1c",
+                    "outline": "#6f7b64",
+                    "secondary-fixed": "#c8e6ff",
+                    "tertiary-container": "#ff9c27",
+                    "on-tertiary-fixed-variant": "#6a3b00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xl": "64px",
+                    "gutter": "16px",
+                    "md": "24px",
+                    "sm": "12px",
+                    "lg": "48px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "120px",
+                    "base": "8px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-bold": ["Be Vietnam Pro"],
+                    "display": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "label-bold": ["14px", {"lineHeight": "20px", "fontWeight": "700"}],
+                    "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tactile-card {
+            box-shadow: 0 4px 0 0 #e3e2e2;
+            transition: all 0.1s ease;
+        }
+        .tactile-card:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 0 #e3e2e2;
+        }
+        .tactile-button-green {
+            box-shadow: 0 4px 0 0 #1e5000;
+            transition: all 0.1s ease;
+        }
+        .tactile-button-green:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 0 #1e5000;
+        }
+        .recessed-input {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e3e2e2;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-background dark:bg-background border-b-4 border-surface-container-highest dark:border-surface-variant flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 z-50">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-surface-container-low transition-colors" onclick="history.back()">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<span class="font-headline-md text-headline-md text-primary font-black">Learnly</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-full border-2 border-surface-container-highest">
+<span class="material-symbols-outlined text-tertiary text-lg" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-bold text-label-bold text-on-surface">1,240 pts</span>
+</div>
+</header>
+<main class="pt-24 pb-32 max-w-[800px] mx-auto px-margin-mobile">
+<!-- Header & Search -->
+<div class="mb-8">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile mb-2 text-on-surface">Word Bank</h1>
+<p class="text-on-surface-variant font-body-md mb-6">Explore and practice new vocabulary!</p>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-secondary">search</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-2 border-surface-container-highest rounded-2xl focus:outline-none focus:border-secondary focus:border-4 transition-all recessed-input font-body-md" placeholder="Search words..." type="text"/>
+</div>
+</div>
+<!-- Thematic Section: Animals -->
+<div class="mb-10">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">pets</span>
+                    Animals
+                </h2>
+<span class="bg-primary-container/20 text-primary px-3 py-1 rounded-full font-label-bold text-label-bold">12 Words</span>
+</div>
+<!-- Vocabulary Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Word Card: Elephant -->
+<div class="tactile-card bg-surface-container-lowest border-2 border-surface-container-highest rounded-2xl p-4 flex gap-4 items-center">
+<div class="w-20 h-20 bg-surface-container rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Elephant" class="w-full h-full object-cover" data-alt="A friendly, cute 3D cartoon elephant with big ears and a happy expression, standing in a sunny savannah. The style is modern-tactile with soft clay-like textures and vibrant colors, fitting a kid-friendly educational app aesthetic. Soft morning light creates gentle shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsTPplKGIf2hnVGrNj2FVlkLihn8QBPXzCrBXuecBRMKaxUEBRpMlvkNxdJ8zwD94trDWj3OtRMaBL5v3F7oCmDwL3-OOJl2QAOVvgeU9RvPy7Q_6Eh38-eKB_GeahmNkMlh3c1s_pkP8uzYzZ0cx_6JrC4HEGTbzZ_93_3WyRjgmv4UL_7cFGSdie6SHr2vy4ESjFSH9n34CAahK9bPI5GmwFttnfkHm2uQ5d5cYWd9eiKhFF6fXrEqZbzdhH7bSgoY8br1hM6JE"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-headline-md text-[20px] text-primary">Elephant</p>
+<p class="text-on-surface-variant font-body-md">Gajah</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center hover:bg-secondary-container/40 transition-colors">
+<span class="material-symbols-outlined">volume_up</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Word Card: Tiger -->
+<div class="tactile-card bg-surface-container-lowest border-2 border-surface-container-highest rounded-2xl p-4 flex gap-4 items-center">
+<div class="w-20 h-20 bg-surface-container rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Tiger" class="w-full h-full object-cover" data-alt="A stylized, adorable 3D cartoon tiger with bright orange fur and bold black stripes, sitting playfully in a lush jungle setting. The illustration uses thick borders and a physical toy-like feel. Bright, saturated colors and cheerful lighting enhance the playful learning atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDazu3A7g6hpjkSJhzKdJCKCnqoiij8lvdGZWh3pDxDFKkmSfHL-kKKK0To9lbqRQ2LxMy5OjdIf2nx6mN0CCjVbHClXJj1F4JQojTu7xPsImGp4_inZ1M4d_RGwh6gw9ZGDTR30E0yQjmsyO8Afni0jynPFBDOy6thtEX8dWyvBRsoT8N1EgaoVPrKUENVBWQFZlvnmNbtJLBQ9s3HfMT7yu6itQQOTLBldE-Fb8iz2ObZWIOwdm5Xaaz84iCrNe8OrFJkW4u2c9E"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-headline-md text-[20px] text-primary">Tiger</p>
+<p class="text-on-surface-variant font-body-md">Harimau</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center hover:bg-secondary-container/40 transition-colors">
+<span class="material-symbols-outlined">volume_up</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Word Card: Owl -->
+<div class="tactile-card bg-surface-container-lowest border-2 border-surface-container-highest rounded-2xl p-4 flex gap-4 items-center ring-2 ring-primary-container ring-offset-2">
+<div class="w-20 h-20 bg-primary-container/10 rounded-xl overflow-hidden flex-shrink-0 border-2 border-primary-container/20">
+<img alt="Owl" class="w-full h-full object-cover" data-alt="A charming, intelligent-looking 3D green owl mascot wearing bright orange headphones, similar to the project logo. The owl has a friendly expression and is perched on a wooden branch against a soft blue sky. High-contrast, tactile textures with a 3D gummy effect on the beak." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDh3-lf8GXwOkuSuxJMBlgqnpaDsYsC0QydfEf96VmHga6MgHQ_DcZWia5hOno-6_4h0wJrS1vQWQj9vzzcOaUFGmIZ5_Xf9-st9wYA9qzg7FVWvlnxqqK76tyPxAN2gY2rTT85U6I9Jj01ImDSN6stHLrCAFdyKOy16Y9Uoz6RJOlT9c7AH0hk24fRYrUZ_WdBDhrdQ4HXxzihc225NbfE4E7Lfc7w5VDwMhRYD3exoS1BU0BqBrV9o1FR9brWyKxx77abFYdFAiQ"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-headline-md text-[20px] text-primary">Owl</p>
+<p class="text-on-surface-variant font-body-md">Burung Hantu</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined">volume_up</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Word Card: Rabbit -->
+<div class="tactile-card bg-surface-container-lowest border-2 border-surface-container-highest rounded-2xl p-4 flex gap-4 items-center">
+<div class="w-20 h-20 bg-surface-container rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Rabbit" class="w-full h-full object-cover" data-alt="A cute white fluffy 3D cartoon rabbit with long pink ears and a twitching nose, hopping through a field of colorful flowers. The style is exuberant and tactile with a soft directional light casting subtle shadows. Vibrant colors and high clarity for children's UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA78ceBrgBLCuF1DszwV1Gk3EPHtOCbEemn3Dg7NRfq1oB3wrL3aI03goKfkRUS_mg160USm2bsDyyhxnxdVFhbykbx4WJx7JztEjRKLxCt1Nkzdsam0emiQV6flNLlfiwcLGJ3VVqNLDyxerppj3Yi1ucsAcebNaaxKj71TI37d306AmNxdrbWR1vDLDa1uwmNa9Q_sG_rdlF984xRSgivAz14OF07B-70FG-u1H4Q03ZNIKcvacJQrEsJmEd0FdH6mt6ZaDqvnJw"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-headline-md text-[20px] text-primary">Rabbit</p>
+<p class="text-on-surface-variant font-body-md">Kelinci</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center hover:bg-secondary-container/40 transition-colors">
+<span class="material-symbols-outlined">volume_up</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Thematic Section: Food -->
+<div class="mb-10">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">restaurant</span>
+                    Food &amp; Drinks
+                </h2>
+<span class="bg-tertiary-container/20 text-tertiary px-3 py-1 rounded-full font-label-bold text-label-bold">8 Words</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Word Card: Apple -->
+<div class="tactile-card bg-surface-container-lowest border-2 border-surface-container-highest rounded-2xl p-4 flex gap-4 items-center">
+<div class="w-20 h-20 bg-surface-container rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Apple" class="w-full h-full object-cover" data-alt="A shiny, vibrant red 3D cartoon apple with a single green leaf and a tiny happy face. The fruit looks like a physical toy with a glossy gummy finish and a soft white shine highlight. Set against a clean, bright white background to maximize focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWik5nXVvd4r3SlZKQy4ByjJYCZsLw9NCeXpbkgKGovI0_Vci_bXvjjtSz5ab8LSB6NtP1cl4ureFkjoDgO9QKeGvutycvXY-baQ5wv3aX4MCorEJ5zDO9F58DHCfKmn8ZZGgb2wRYE97fQxJagYiw8hYPFkkNP9uHvZXyaXuWJ6hTxqEtwEIjE-N9mCZk2u0zekpEq3jkkdjBx2-5KBsMuUK2tlE7lifrZDoCPCC-exStlULOctqzE0BKl2JwyydrW6RsTl5rQp4"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-headline-md text-[20px] text-primary">Apple</p>
+<p class="text-on-surface-variant font-body-md">Apel</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center hover:bg-secondary-container/40 transition-colors">
+<span class="material-symbols-outlined">volume_up</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Word Card: Bread -->
+<div class="tactile-card bg-surface-container-lowest border-2 border-surface-container-highest rounded-2xl p-4 flex gap-4 items-center">
+<div class="w-20 h-20 bg-surface-container rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Bread" class="w-full h-full object-cover" data-alt="A warm, golden-brown 3D loaf of bread with a soft, pillowy texture. The illustration has a cozy and tactile feel with thick outlines and cheerful lighting. Tiny steam swirls rise from the bread, rendered in a playful cartoon style for kids." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5HqHAaZNLTfclUGp_6vJlXmDj3Hwmwghc28-nmrv36aY2Bmj1BjlGLdtDdwgFwwRt7HA1kN1XvrGYUo0Ygxgptks2SfrwpnklUUbm-WWn3Sn9O6SHThupJX6mFO24_TBus8vR8ZAXBt7qihTzFTOOWE_mNuYlHcXjiL0O6HS8T2adc8Azg2OUj78T9dfnZ6at0gZaJf2chbuWHKX-J3egeLIhO-uHTk1DYTchfpz7qhYacowZQZ8PEBjlrcXcQHPf19upEByhXL8"/>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-headline-md text-[20px] text-primary">Bread</p>
+<p class="text-on-surface-variant font-body-md">Roti</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center hover:bg-secondary-container/40 transition-colors">
+<span class="material-symbols-outlined">volume_up</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for Review Quiz -->
+<button class="fixed bottom-24 right-margin-mobile w-14 h-14 bg-primary-container text-on-primary rounded-full tactile-button-green flex items-center justify-center z-50 group">
+<span class="material-symbols-outlined text-3xl">psychology</span>
+<span class="absolute right-full mr-4 bg-on-surface text-surface py-2 px-4 rounded-xl font-label-bold text-label-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">Test My Vocabulary!</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-surface-container-lowest dark:bg-surface-dim border-t-4 border-surface-container-highest dark:border-surface-variant z-50 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-bold text-label-bold">Learn</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">emoji_events</span>
+<span class="font-label-bold text-label-bold">Leaderboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="font-label-bold text-label-bold">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary bg-primary-container/20 rounded-xl px-4 py-1 scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-bold text-label-bold">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for speaker buttons
+        document.querySelectorAll('button').forEach(btn => {
+            if (btn.querySelector('.material-symbols-outlined')?.textContent === 'volume_up') {
+                btn.addEventListener('click', function() {
+                    this.classList.add('scale-110');
+                    setTimeout(() => this.classList.remove('scale-110'), 200);
+                    // Add a mock sound feedback or toast here if needed
+                });
+            }
+        });
+
+        // Simple search filtering logic
+        const searchInput = document.querySelector('input[type="text"]');
+        const cards = document.querySelectorAll('.tactile-card');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(term)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body></html>

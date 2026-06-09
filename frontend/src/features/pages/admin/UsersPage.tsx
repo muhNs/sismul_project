@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { UsersTable } from "./components/users/UsersTable";
-import { dummyUsers } from "./data/users";
 import { AdminUser } from "./types";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import api from "@/lib/axios";
 
 const formSchema = z.object({
   name: z.string().min(1, "Nama wajib diisi"),
@@ -20,9 +20,12 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export const UsersPage = () => {
-  const [users, setUsers] = useState<AdminUser[]>(dummyUsers);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [search, setSearch] = useState("");
-  
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -31,7 +34,7 @@ export const UsersPage = () => {
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (toastMessage) {
       const timer = setTimeout(() => setToastMessage(null), 3000);
       return () => clearTimeout(timer);
@@ -39,6 +42,24 @@ export const UsersPage = () => {
   }, [toastMessage]);
 
   const showToast = (message: string) => setToastMessage(message);
+
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await api.get("/api/v1/users");
+      setUsers(res.data.data || res.data);
+    } catch (err) {
+      console.error(err);
+      setError("Gagal memuat data pengguna. Pastikan server backend berjalan.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -81,29 +102,61 @@ export const UsersPage = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const onSubmit = (data: FormValues) => {
-    if (editingId) {
-      setUsers(prev => prev.map(u => u.id === editingId ? { ...u, ...data } : u));
-      showToast("Berhasil mengubah data user");
-    } else {
-      const newUser: AdminUser = {
-        id: `USR-${Date.now()}`,
-        createdAt: new Date().toISOString().split("T")[0],
-        ...data,
-      };
-      setUsers(prev => [...prev, newUser]);
-      showToast("Berhasil menambahkan user");
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    try {
+      if (editingId) {
+        const res = await api.put(`/api/v1/users/${editingId}`, data);
+        const updated = res.data.data || res.data;
+        setUsers(prev => prev.map(u => u.id === editingId ? { ...u, ...updated } : u));
+        showToast("Berhasil mengubah data user");
+      } else {
+        const res = await api.post("/api/v1/users", data);
+        const created = res.data.data || res.data;
+        setUsers(prev => [...prev, created]);
+        showToast("Berhasil menambahkan user");
+      }
+      setIsModalOpen(false);
+    } catch (err: any) {
+      showToast(err.response?.data?.message || "Gagal menyimpan data user");
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsModalOpen(false);
   };
 
-  const confirmDelete = () => {
-    if (deletingId) {
+  const confirmDelete = async () => {
+    if (!deletingId) return;
+    try {
+      await api.delete(`/api/v1/users/${deletingId}`);
       setUsers(prev => prev.filter(u => u.id !== deletingId));
       showToast("Berhasil menghapus user");
+    } catch (err: any) {
+      showToast(err.response?.data?.message || "Gagal menghapus user");
+    } finally {
+      setIsDeleteModalOpen(false);
+      setDeletingId(null);
     }
-    setIsDeleteModalOpen(false);
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="h-8 w-48 bg-surface-container-highest rounded-md animate-pulse"></div>
+        <div className="h-16 w-full bg-surface-container-highest rounded-2xl animate-pulse"></div>
+        <div className="h-64 w-full bg-surface-container-highest rounded-2xl animate-pulse"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-4 text-center">
+        <span className="material-symbols-outlined text-5xl text-error">wifi_off</span>
+        <p className="text-on-surface-variant font-semibold">{error}</p>
+        <Button variant="outline" onClick={fetchUsers}>Coba Lagi</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 relative">
@@ -143,11 +196,27 @@ export const UsersPage = () => {
         </div>
       </div>
 
+      {/* Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div className="bg-surface p-4 rounded-2xl border border-outline-variant">
+          <p className="text-xs text-on-surface-variant font-semibold">Total Siswa</p>
+          <p className="text-2xl font-bold text-on-surface mt-1">{users.filter(u => u.role === 'student').length}</p>
+        </div>
+        <div className="bg-surface p-4 rounded-2xl border border-outline-variant">
+          <p className="text-xs text-on-surface-variant font-semibold">Total Guru</p>
+          <p className="text-2xl font-bold text-on-surface mt-1">{users.filter(u => u.role === 'teacher').length}</p>
+        </div>
+        <div className="bg-surface p-4 rounded-2xl border border-outline-variant">
+          <p className="text-xs text-on-surface-variant font-semibold">Total Admin</p>
+          <p className="text-2xl font-bold text-on-surface mt-1">{users.filter(u => u.role === 'admin').length}</p>
+        </div>
+      </div>
+
       {/* Table */}
-      <UsersTable 
-        users={filteredData} 
-        onEdit={handleOpenEdit} 
-        onDelete={handleOpenDelete} 
+      <UsersTable
+        users={filteredData}
+        onEdit={handleOpenEdit}
+        onDelete={handleOpenDelete}
       />
 
       {/* Modal Add/Edit */}
@@ -189,6 +258,7 @@ export const UsersPage = () => {
                 className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
               >
                 <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
                 <option value="admin">Admin</option>
               </select>
               {form.formState.errors.role && (
@@ -215,8 +285,8 @@ export const UsersPage = () => {
             <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
               Batal
             </Button>
-            <Button type="submit" variant="primary">
-              {editingId ? "Update User" : "Simpan User"}
+            <Button type="submit" variant="primary" disabled={isSubmitting}>
+              {isSubmitting ? "Menyimpan..." : editingId ? "Update User" : "Simpan User"}
             </Button>
           </div>
         </form>

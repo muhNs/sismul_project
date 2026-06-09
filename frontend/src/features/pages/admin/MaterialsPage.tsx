@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { MaterialsTable } from "./components/materials/MaterialsTable";
-import { dummyMaterials } from "./data/materials";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { AdminMaterial } from "./types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import api from "@/lib/axios";
 
 const formSchema = z.object({
   title: z.string().min(1, "Judul Chapter wajib diisi"),
@@ -23,20 +23,23 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export const MaterialsPage = () => {
-  const [materials, setMaterials] = useState<AdminMaterial[]>(dummyMaterials);
+  const [materials, setMaterials] = useState<AdminMaterial[]>([]);
   const [search, setSearch] = useState("");
   const [filterGrade, setFilterGrade] = useState("Semua Grade");
   const [filterSkill, setFilterSkill] = useState("Semua Skill");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (toastMessage) {
       const timer = setTimeout(() => setToastMessage(null), 3000);
       return () => clearTimeout(timer);
@@ -44,6 +47,24 @@ export const MaterialsPage = () => {
   }, [toastMessage]);
 
   const showToast = (message: string) => setToastMessage(message);
+
+  const fetchMaterials = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await api.get("/api/v1/materials");
+      setMaterials(res.data.data || res.data);
+    } catch (err) {
+      console.error(err);
+      setError("Gagal memuat data materi. Pastikan server backend berjalan.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMaterials();
+  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -84,28 +105,61 @@ export const MaterialsPage = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const onSubmit = (data: FormValues) => {
-    if (editingId) {
-      setMaterials(prev => prev.map(m => m.id === editingId ? { ...m, ...data } : m));
-      showToast("Berhasil mengubah materi");
-    } else {
-      const newMaterial: AdminMaterial = {
-        id: `MAT-${Date.now()}`,
-        ...data,
-      };
-      setMaterials(prev => [...prev, newMaterial]);
-      showToast("Berhasil menambahkan materi");
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    try {
+      if (editingId) {
+        const res = await api.put(`/api/v1/materials/${editingId}`, data);
+        const updated = res.data.data || res.data;
+        setMaterials(prev => prev.map(m => m.id === editingId ? { ...m, ...updated } : m));
+        showToast("Berhasil mengubah materi");
+      } else {
+        const res = await api.post("/api/v1/materials", data);
+        const created = res.data.data || res.data;
+        setMaterials(prev => [...prev, created]);
+        showToast("Berhasil menambahkan materi");
+      }
+      setIsModalOpen(false);
+    } catch (err: any) {
+      showToast(err.response?.data?.message || "Gagal menyimpan materi");
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsModalOpen(false);
   };
 
-  const confirmDelete = () => {
-    if (deletingId) {
+  const confirmDelete = async () => {
+    if (!deletingId) return;
+    try {
+      await api.delete(`/api/v1/materials/${deletingId}`);
       setMaterials(prev => prev.filter(m => m.id !== deletingId));
       showToast("Berhasil menghapus materi");
+    } catch (err: any) {
+      showToast(err.response?.data?.message || "Gagal menghapus materi");
+    } finally {
+      setIsDeleteModalOpen(false);
+      setDeletingId(null);
     }
-    setIsDeleteModalOpen(false);
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="h-8 w-48 bg-surface-container-highest rounded-md animate-pulse"></div>
+        <div className="h-20 w-full bg-surface-container-highest rounded-2xl animate-pulse"></div>
+        <div className="h-64 w-full bg-surface-container-highest rounded-2xl animate-pulse"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-4 text-center">
+        <span className="material-symbols-outlined text-5xl text-error">wifi_off</span>
+        <p className="text-on-surface-variant font-semibold">{error}</p>
+        <Button variant="outline" onClick={fetchMaterials}>Coba Lagi</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 relative">
@@ -176,8 +230,8 @@ export const MaterialsPage = () => {
       </div>
 
       {/* Table */}
-      <MaterialsTable 
-        materials={filteredData} 
+      <MaterialsTable
+        materials={filteredData}
         onEdit={handleOpenEdit}
         onDelete={handleOpenDelete}
       />
@@ -239,8 +293,8 @@ export const MaterialsPage = () => {
             <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
               Batal
             </Button>
-            <Button type="submit" variant="primary" className="w-full sm:w-auto">
-              {editingId ? "Update Materi" : "Simpan Materi"}
+            <Button type="submit" variant="primary" className="w-full sm:w-auto" disabled={isSubmitting}>
+              {isSubmitting ? "Menyimpan..." : editingId ? "Update Materi" : "Simpan Materi"}
             </Button>
           </div>
         </form>
