@@ -2,5 +2,12 @@ import { z } from 'zod';
 
 export const saveScoreSchema = z.object({
   material_id: z.number().int().positive('ID material tidak valid'),
-  score: z.number().min(0, 'Nilai minimal 0').max(100, 'Nilai maksimal 100'),
+  answers: z.array(
+    z.object({
+      quiz_id: z.number().int().positive(),
+      answer: z.string()
+    })
+  ).min(1, "Minimal harus ada 1 jawaban yang dikumpulkan")
 });
+
+export type SaveScoreInput = z.infer<typeof saveScoreSchema>;

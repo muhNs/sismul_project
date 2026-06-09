@@ -26,3 +26,15 @@ export const updateQuizSchema = z.object({
 export const checkAnswerSchema = z.object({
   answer: z.string(),
 });
+
+export const submitScoreSchema = z.object({
+  material_id: z.number().int().positive("ID Material tidak valid"),
+  answers: z.array(
+    z.object({
+      quiz_id: z.number().int().positive(),
+      answer: z.string()
+    })
+  ).min(1, "Minimal harus ada 1 jawaban yang dikumpulkan")
+});
+
+export type SubmitScoreInput = z.infer<typeof submitScoreSchema>;

@@ -5,12 +5,16 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import router from "./routes/routes";
+import { seedDefaultAdmin } from "../create-admin";
 
 dotenv.config();
 
 const app = express();
 
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5174", "http://localhost:5173", "http://localhost:5175", "http://localhost:5176", "http://localhost:5177"];
+const allowedOrigins = (process.env.ALLOW_ORIGIN ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 // configuration of CORS untuk mengizinkan origin tertentu dan mendukung credentials (cookies)
 app.use(
@@ -49,8 +53,16 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
+async function bootstrap() {
+  try {
+    await seedDefaultAdmin();
+    app.listen(process.env.PORT!, () => {
+      console.log(`Server is running on port ${process.env.PORT!}`);
+    });
+  } catch (error) {
+    console.error("Gagal menjalankan seeder admin:", error);
+    process.exit(1);
+  }
+}
 
-app.listen(process.env.PORT!, () => {
-  console.log(`Server is running on port ${process.env.PORT!}`);
-});
-
+bootstrap();

@@ -61,3 +61,42 @@ export const deleteUser = async (userId: number) => {
   });
   return user;
 };
+
+export const createUser = async (data: any) => {
+  // Cek apakah email sudah terdaftar
+  const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
+  if (existingUser) throw new Error('Email sudah digunakan');
+
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+  
+  return prisma.user.create({
+    data: {
+      ...data,
+      password: hashedPassword,
+    },
+    select: { id: true, name: true, email: true, role: true, created_at: true },
+  });
+};
+
+// Tambahkan fungsi updateUserById (Khusus Admin)
+export const updateUserById = async (userId: number, data: any) => {
+  const updateData: any = { ...data };
+  
+  if (data.password) {
+    updateData.password = await bcrypt.hash(data.password, 10);
+  }
+
+  // Jika admin mencoba mengubah email, pastikan tidak bentrok dengan email lain
+  if (data.email) {
+    const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
+    if (existingUser && existingUser.id !== userId) {
+      throw new Error('Email sudah digunakan oleh user lain');
+    }
+  }
+
+  return prisma.user.update({
+    where: { id: userId },
+    data: updateData,
+    select: { id: true, name: true, email: true, role: true },
+  });
+};

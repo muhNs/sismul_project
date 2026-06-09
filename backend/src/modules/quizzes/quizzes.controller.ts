@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as quizzesService from './quizzes.service';
-import { createQuizSchema, updateQuizSchema, checkAnswerSchema } from './quizzes.schema';
+import { createQuizSchema, updateQuizSchema } from './quizzes.schema';
 import { ZodError } from 'zod';
 
 export const getAdminQuizzesController = async (req: Request, res: Response) => {
@@ -91,19 +91,19 @@ export const deleteQuizController = async (req: Request, res: Response) => {
   }
 };
 
-export const checkAnswerController = async (req: Request, res: Response) => {
-  try {
-    const id = parseInt(req.params.id as string, 10);
-    if (isNaN(id)) return res.status(400).json({ status: 'error', message: 'ID soal tidak valid' });
+// export const checkAnswerController = async (req: Request, res: Response) => {
+//   try {
+//     const id = parseInt(req.params.id as string, 10);
+//     if (isNaN(id)) return res.status(400).json({ status: 'error', message: 'ID soal tidak valid' });
 
-    const { answer } = checkAnswerSchema.parse(req.body);
-    const result = await quizzesService.checkAnswer(id, answer);
+//     const { answer } = checkAnswerSchema.parse(req.body);
+//     const result = await quizzesService.checkAnswer(id, answer);
 
-    res.status(200).json({ status: 'success', data: result });
-  } catch (error: any) {
-    if (error instanceof ZodError) {
-      return res.status(400).json({ status: 'error', message: error.issues });
-    }
-    res.status(404).json({ status: 'error', message: error.message });
-  }
-};
+//     res.status(200).json({ status: 'success', data: result });
+//   } catch (error: any) {
+//     if (error instanceof ZodError) {
+//       return res.status(400).json({ status: 'error', message: error.issues });
+//     }
+//     res.status(404).json({ status: 'error', message: error.message });
+//   }
+// };

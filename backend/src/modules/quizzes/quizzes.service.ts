@@ -1,15 +1,16 @@
-import { QuestionType } from '../../../generated/prisma/client';
-import { prisma } from '../../shared/prisma';
+import { QuestionType } from "../../../generated/prisma/client";
+import { prisma } from "../../shared/prisma";
 
 export const getAdminQuizzes = async (material_id: number) => {
   return prisma.quizQuestion.findMany({
     where: { material_id, deleted_at: null },
-    orderBy: { created_at: 'desc' },
+    orderBy: { created_at: "desc" },
   });
 };
 
+// quizes.service.ts
 export const getStudentQuizzes = async (material_id: number) => {
-  // Ambil semua soal dari material tersebut
+  // 1. Ambil semua soal dari material tersebut (TERMASUK correctAnswer)
   const allQuizzes = await prisma.quizQuestion.findMany({
     where: { material_id, deleted_at: null },
     select: {
@@ -23,13 +24,29 @@ export const getStudentQuizzes = async (material_id: number) => {
       optionC: true,
       optionD: true,
       missingWordIndex: true,
-      // correctAnswer sengaja TIDAK di-select agar tidak bocor ke client
+      correctAnswer: true, // <-- WAJIB DI-SELECT UNTUK DI-ENCODE NANTI
     },
   });
 
-  // Acak soal dan ambil maksimal 10
+  if (allQuizzes.length === 0) {
+    throw new Error("Belum ada soal untuk materi ini");
+  }
+
+  // 2. Acak soal dan ambil maksimal 10
   const shuffled = allQuizzes.sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, 10);
+  const selectedQuizzes = shuffled.slice(0, 10);
+
+  // 3. ENKRIPSI JAWABAN (Ubah correctAnswer menjadi Base64)
+  const encodedQuizzes = selectedQuizzes.map((quiz) => {
+    return {
+      ...quiz,
+      // Di Node.js, mengubah teks ke Base64 menggunakan Buffer
+      correctAnswer: Buffer.from(quiz.correctAnswer).toString("base64"),
+    };
+  });
+
+  // 4. Return soal yang jawabannya sudah disamarkan
+  return encodedQuizzes;
 };
 
 export const createQuiz = async (data: {
@@ -61,19 +78,21 @@ export const deleteQuiz = async (id: number) => {
   });
 };
 
-export const checkAnswer = async (id: number, studentAnswer: string) => {
-  const quiz = await prisma.quizQuestion.findUnique({
-    where: { id },
-    select: { correctAnswer: true, questionText: true },
-  });
+// export const checkAnswer = async (id: number, studentAnswer: string) => {
+//   const quiz = await prisma.quizQuestion.findUnique({
+//     where: { id },
+//     select: { correctAnswer: true, questionText: true },
+//   });
 
-  if (!quiz) throw new Error("Soal tidak ditemukan");
+//   if (!quiz) throw new Error("Soal tidak ditemukan");
 
-  // Validasi case-insensitive
-  const isCorrect = quiz.correctAnswer.trim().toLowerCase() === studentAnswer.trim().toLowerCase();
-  
-  return {
-    isCorrect,
-    correctAnswer: quiz.correctAnswer, // Kirim jawaban benar jika salah untuk feedback
-  };
-};
+//   // Validasi case-insensitive
+//   const isCorrect =
+//     quiz.correctAnswer.trim().toLowerCase() ===
+//     studentAnswer.trim().toLowerCase();
+
+//   return {
+//     isCorrect,
+//     correctAnswer: quiz.correctAnswer, // Kirim jawaban benar jika salah untuk feedback
+//   };
+// };

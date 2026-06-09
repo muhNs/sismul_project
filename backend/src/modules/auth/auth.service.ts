@@ -110,6 +110,7 @@ export const getMeService = async (userId: number) => {
       points: true,
       diamonds: true,
       avatar: true,
+      deleted_at: true,
     }
   });
 
