@@ -37,6 +37,8 @@ export function useQuiz() {
         return;
       }
 
+      setError(null);
+
       try {
         setLoading(true);
         const mappedQuestions = await getStudentQuiz(materialId);

@@ -35,7 +35,11 @@ export const useStore = create<LearnlyState>()(
     }),
     {
       name: "learnly-storage", // nama key di localStorage
-      partialize: (state) => ({ user: state.user, selectedClassId: state.selectedClassId }),
+      partialize: (state) => ({
+        user: state.user,
+        selectedClassId: state.selectedClassId,
+        selectedChapterId: state.selectedChapterId,
+      }),
     }
   )
 );
