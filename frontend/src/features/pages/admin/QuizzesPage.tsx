@@ -93,8 +93,38 @@ export const QuizzesPage = () => {
         api.get("/api/v1/quizzes"),
         api.get("/api/v1/materials"),
       ]);
-      setQuizzes(quizzesRes.data.data || quizzesRes.data);
-      setMaterials(materialsRes.data.data || materialsRes.data);
+      
+      const rawQuizzes = quizzesRes.data.data || quizzesRes.data;
+      const mappedQuizzes = rawQuizzes.map((q: any) => ({
+        id: q.id,
+        materialId: q.material_id,
+        questionText: q.questionText,
+        type: q.questionType === "MULTIPLE_CHOICE" ? (q.material?.skillCategory === "READING" ? "Reading MCQ" : "Listening MCQ") : (q.questionType === "WRITING" ? "Writing Fill Blank" : "Speaking Pronunciation"),
+        options: {
+          A: q.optionA,
+          B: q.optionB,
+          C: q.optionC
+        },
+        answerKey: q.correctAnswer,
+        fullSentence: q.questionText, // Assuming full sentence is stored here for writing
+        blankWord: q.correctAnswer,   // Assuming correct answer is the blank word
+        blankIndex: q.missingWordIndex,
+        instruction: q.questionText,  // Assuming instruction is stored here for speaking
+        readingText: q.correctAnswer, // Assuming reading text is stored here
+      }));
+
+      const rawMaterials = materialsRes.data.data || materialsRes.data;
+      const mappedMaterials = rawMaterials.map((m: any) => ({
+        id: m.id,
+        title: `Chapter ${m.chapter}`,
+        grade: `Grade ${m.gradeLevel}`,
+        skill: m.skillCategory === "READING" ? "Reading" : 
+               m.skillCategory === "LISTENING" ? "Listening" : 
+               m.skillCategory === "WRITING" ? "Writing" : "Speaking"
+      }));
+
+      setQuizzes(mappedQuizzes);
+      setMaterials(mappedMaterials);
     } catch (err) {
       console.error(err);
       setError("Gagal memuat data. Pastikan server backend berjalan.");
@@ -190,41 +220,85 @@ export const QuizzesPage = () => {
     if (!validateForm(data)) return;
     setIsSubmitting(true);
 
-    let payload: Partial<AdminQuiz> = {
-      materialId: data.materialId,
-      type: `${skill} ${skill === "Writing" ? "Fill Blank" : skill === "Speaking" ? "Pronunciation" : "MCQ"}` as QuizType,
+    let payload: any = {
+      material_id: String(data.materialId),
     };
 
     if (skill === "Reading" || skill === "Listening") {
+      payload.questionType = "MULTIPLE_CHOICE";
       payload.questionText = data.questionText;
-      payload.options = { A: data.optionsA!, B: data.optionsB!, C: data.optionsC! };
-      payload.answerKey = data.answerKey;
+      payload.optionA = data.optionsA;
+      payload.optionB = data.optionsB;
+      payload.optionC = data.optionsC;
+      payload.correctAnswer = data.answerKey;
     } else if (skill === "Writing") {
-      payload.questionText = "Lengkapi kalimat rumpang berikut.";
-      payload.fullSentence = data.fullSentence;
-      payload.blankWord = data.blankWord;
-      payload.blankIndex = data.blankIndex;
+      payload.questionType = "WRITING";
+      payload.questionText = data.fullSentence; // Store the full sentence in questionText
+      payload.correctAnswer = data.blankWord;   // Store the correct word in correctAnswer
+      payload.missingWordIndex = String(data.blankIndex);
     } else if (skill === "Speaking") {
-      payload.questionText = data.instruction;
-      payload.instruction = data.instruction;
-      payload.readingText = data.readingText;
+      payload.questionType = "SPEAKING";
+      payload.questionText = data.instruction;  // Store instruction in questionText
+      payload.correctAnswer = data.readingText; // Store text to read in correctAnswer
     }
 
     try {
       if (editingId) {
         const res = await api.put(`/api/v1/quizzes/${editingId}`, payload);
         const updated = res.data.data || res.data;
-        setQuizzes(prev => prev.map(q => q.id === editingId ? { ...q, ...updated } as AdminQuiz : q));
+        const mappedUpdated = {
+          id: updated.id,
+          materialId: updated.material_id,
+          questionText: updated.questionText,
+          type: updated.questionType === "MULTIPLE_CHOICE" ? (skill === "Reading" ? "Reading MCQ" : "Listening MCQ") : (updated.questionType === "WRITING" ? "Writing Fill Blank" : "Speaking Pronunciation"),
+          options: {
+            A: updated.optionA,
+            B: updated.optionB,
+            C: updated.optionC
+          },
+          answerKey: updated.correctAnswer,
+          fullSentence: updated.questionText,
+          blankWord: updated.correctAnswer,
+          blankIndex: updated.missingWordIndex,
+          instruction: updated.questionText,
+          readingText: updated.correctAnswer,
+        };
+        setQuizzes(prev => prev.map(q => q.id === editingId ? { ...q, ...mappedUpdated } as AdminQuiz : q));
         showToast("Soal berhasil diperbarui");
       } else {
         const res = await api.post("/api/v1/quizzes", payload);
         const created = res.data.data || res.data;
-        setQuizzes(prev => [...prev, created as AdminQuiz]);
+        const mappedCreated = {
+          id: created.id,
+          materialId: created.material_id,
+          questionText: created.questionText,
+          type: created.questionType === "MULTIPLE_CHOICE" ? (skill === "Reading" ? "Reading MCQ" : "Listening MCQ") : (created.questionType === "WRITING" ? "Writing Fill Blank" : "Speaking Pronunciation"),
+          options: {
+            A: created.optionA,
+            B: created.optionB,
+            C: created.optionC
+          },
+          answerKey: created.correctAnswer,
+          fullSentence: created.questionText,
+          blankWord: created.correctAnswer,
+          blankIndex: created.missingWordIndex,
+          instruction: created.questionText,
+          readingText: created.correctAnswer,
+        };
+        setQuizzes(prev => [...prev, mappedCreated as AdminQuiz]);
         showToast("Soal berhasil ditambahkan");
       }
       setIsModalOpen(false);
     } catch (err: any) {
-      showToast(err.response?.data?.message || "Gagal menyimpan soal");
+      let errorMessage = "Gagal menyimpan soal";
+      if (err.response?.data?.message) {
+        if (Array.isArray(err.response.data.message)) {
+          errorMessage = err.response.data.message[0]?.message || errorMessage;
+        } else if (typeof err.response.data.message === "string") {
+          errorMessage = err.response.data.message;
+        }
+      }
+      showToast(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

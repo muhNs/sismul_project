@@ -15,6 +15,15 @@ export const getAdminQuizzesController = async (req: Request, res: Response) => 
   }
 };
 
+export const getAllQuizzesController = async (req: Request, res: Response) => {
+  try {
+    const quizzes = await quizzesService.getAllQuizzes();
+    res.status(200).json({ status: 'success', data: quizzes });
+  } catch (error: any) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+};
+
 export const getStudentQuizzesController = async (req: Request, res: Response) => {
   try {
     const material_id = parseInt(req.params.materialId as string, 10);

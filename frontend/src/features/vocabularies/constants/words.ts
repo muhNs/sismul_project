@@ -2,7 +2,7 @@ export interface WordItem {
   english: string;
   indonesian: string;
   image: string;
-  category: "animals" | "food";
+  category: string;
   highlighted?: boolean;
 }
 

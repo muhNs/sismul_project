@@ -11,6 +11,12 @@ dotenv.config();
 
 const app = express();
 
+// Logger untuk nge-track request masuk
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Origin: ${req.headers.origin}`);
+  next();
+});
+
 const allowedOrigins = (process.env.ALLOW_ORIGIN ?? "")
   .split(",")
   .map((origin) => origin.trim())

@@ -8,6 +8,14 @@ export const getAdminQuizzes = async (material_id: number) => {
   });
 };
 
+export const getAllQuizzes = async () => {
+  return prisma.quizQuestion.findMany({
+    where: { deleted_at: null },
+    include: { material: { select: { chapter: true, gradeLevel: true, skillCategory: true } } },
+    orderBy: { created_at: "desc" },
+  });
+};
+
 // quizes.service.ts
 export const getStudentQuizzes = async (material_id: number) => {
   // 1. Ambil semua soal dari material tersebut (TERMASUK correctAnswer)
