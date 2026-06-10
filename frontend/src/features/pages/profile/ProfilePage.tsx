@@ -7,7 +7,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/Button";
 import { ProfileHeader } from "./components/ProfileHeader";
 import { ProfileForm } from "@/features/users/components/ProfileForm";
-import { ReportCard } from "./components/ReportCard";
 import { useStore } from "@/lib/store";
 import api from "@/lib/axios";
 
@@ -32,9 +31,8 @@ export default function ProfilePage() {
       <main className="pt-24 pb-28 px-margin-mobile max-w-[800px] mx-auto w-full flex-grow">
         <ProfileHeader />
         <ProfileForm />
-        <ReportCard />
 
-        <section>
+        <section className="mt-8">
           <Button
             onClick={handleLogout}
             variant="outline"

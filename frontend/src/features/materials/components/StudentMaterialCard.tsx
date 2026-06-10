@@ -105,14 +105,6 @@ export function ChapterCard({ materials }: ChapterCardProps) {
                 <p className="text-on-surface-variant text-xs mt-1">{material.content || details.desc}</p>
               )}
             </div>
-            {isFeatured && (
-              <div className="w-full bg-surface-container h-3 rounded-full overflow-hidden mt-2 relative shine-effect">
-                <div
-                  className="h-full bg-primary-container rounded-full transition-all"
-                  style={{ width: `0%` }}
-                />
-              </div>
-            )}
           </button>
         );
       })}

@@ -15,6 +15,7 @@ export default function ArenaPage() {
     shakeOption,
     progressPercent,
     totalPoints,
+    pointsPerQuestion,
     resetQuiz,
     handleSelectOption,
     handleCheckAnswer,
@@ -60,7 +61,7 @@ export default function ArenaPage() {
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
               add_circle
             </span>
-            +10 Poin
+            +{pointsPerQuestion} Poin
           </div>
         )}
 

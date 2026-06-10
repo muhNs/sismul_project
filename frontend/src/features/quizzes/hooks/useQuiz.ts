@@ -64,6 +64,7 @@ export function useQuiz() {
   const currentQuestion = questions[currentQIndex];
   const progressPercent = questions.length > 0 ? (currentQIndex / questions.length) * 100 : 0;
   const totalPoints = (user?.points || 0) + currentScore;
+  const pointsPerQuestion = questions.length > 0 ? Math.round(100 / questions.length) : 0;
 
   const handleSelectOption = useCallback(
     (optionId: string) => {
@@ -90,7 +91,7 @@ export function useQuiz() {
       if (data.isCorrect) {
         setIsCorrect(true);
         setChecked(true);
-        const newScore = currentScore + 20;
+        const newScore = currentScore + pointsPerQuestion;
         setCurrentScore(newScore);
         setQuizScore(newScore);
         setShowScorePopup(true);
@@ -103,7 +104,7 @@ export function useQuiz() {
       console.error(err);
       alert("Terjadi kesalahan saat mengecek jawaban");
     }
-  }, [selectedOption, checked, currentQuestion, currentScore, setQuizScore]);
+  }, [selectedOption, checked, currentQuestion, currentScore, setQuizScore, pointsPerQuestion]);
 
   const handleNext = useCallback(async () => {
     if (currentQIndex < questions.length - 1) {
@@ -144,6 +145,7 @@ export function useQuiz() {
     currentScore,
     progressPercent,
     totalPoints,
+    pointsPerQuestion,
     resetQuiz,
     handleSelectOption,
     handleCheckAnswer,

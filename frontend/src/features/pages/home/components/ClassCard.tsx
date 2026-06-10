@@ -62,20 +62,6 @@ export function ClassCard() {
           </Card>
         ))}
       </div>
-
-      {/* Weekly Progress Card */}
-      <Card variant="surface" className="mt-8 p-6 bg-surface-container-lowest">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-label text-xs font-bold text-on-surface-variant uppercase tracking-wider">
-            PROGRES MINGGU INI
-          </h3>
-          <span className="text-primary font-label font-bold">75%</span>
-        </div>
-        <ProgressBar value={75} color="primary" />
-        <p className="mt-4 font-sans text-sm font-medium text-on-surface-variant text-center">
-          Selesaikan 2 materi lagi untuk mencapai target! 🎯
-        </p>
-      </Card>
     </>
   );
 }
