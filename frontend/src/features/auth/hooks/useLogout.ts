@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logout } from "../api/logoutApi";
 import { useRouter } from "next/navigation";
+import { useStore } from "@/lib/store";
 
 export const useLogout = () => {
   const router = useRouter();
@@ -11,8 +12,14 @@ export const useLogout = () => {
     onSuccess: () => {
       // 1. Bersihkan seluruh cache agar data admin lama tidak tertinggal
       queryClient.clear();
+
+      // 2. Bersihkan Zustand store dan localStorage
+      useStore.getState().logout();
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("userRole");
+      }
       
-      // 2. Arahkan user kembali ke halaman login
+      // 3. Arahkan user kembali ke halaman login
       router.push("/admin/login");
     },
     onError: (error) => {

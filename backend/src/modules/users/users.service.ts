@@ -100,3 +100,26 @@ export const updateUserById = async (userId: number, data: any) => {
     select: { id: true, name: true, email: true, role: true },
   });
 };
+
+export const changePassword = async (userId: number, data: { currentPassword?: string; newPassword?: string }) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId, deleted_at: null }
+  });
+
+  if (!user) {
+    throw new Error('User tidak ditemukan');
+  }
+
+  if (data.currentPassword && data.newPassword) {
+    const isPasswordValid = await bcrypt.compare(data.currentPassword, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Password saat ini salah');
+    }
+
+    const hashedPassword = await bcrypt.hash(data.newPassword, 10);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword }
+    });
+  }
+};

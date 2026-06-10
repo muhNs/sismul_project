@@ -1,102 +1,299 @@
 // src/features/quizzes/components/AdminQuizForm.tsx
 "use client";
 
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card } from "@/components/ui/Card";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
-import { quizSchema } from "../schemas/quiz.schema";
-import type { QuizFormValues } from "../schemas/quiz.schema";
+import { useAdminQuiz } from "../hooks/useAdminQuiz";
+import api from "@/lib/axios";
 
 interface AdminQuizFormProps {
-  skill: "Reading" | "Listening" | "Writing" | "Speaking";
-  onSubmitSuccess?: (data: any) => void;
+  quiz?: any;
+  onSubmitSuccess?: () => void;
 }
 
-export function AdminQuizForm({ skill, onSubmitSuccess }: AdminQuizFormProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<QuizFormValues>({
-    resolver: zodResolver(quizSchema),
-  });
+export function AdminQuizForm({ quiz, onSubmitSuccess }: AdminQuizFormProps) {
+  const { createQuiz, isCreating, updateQuiz, isUpdating } = useAdminQuiz();
+  const isSubmitting = isCreating || isUpdating;
 
-  const onSubmit = async (data: QuizFormValues) => {
-    // Di sini Anda bisa memanggil function dari useAdminQuiz
-    console.log("Quiz Data:", { ...data, skill });
-    alert("Soal berhasil disimpan!");
-    if (onSubmitSuccess) onSubmitSuccess(data);
+  const [materials, setMaterials] = useState<any[]>([]);
+  const [loadingMaterials, setLoadingMaterials] = useState(true);
+
+  // Form States
+  const [materialId, setMaterialId] = useState(quiz?.material_id || "");
+  const [questionType, setQuestionType] = useState<"MULTIPLE_CHOICE" | "WRITING" | "SPEAKING">(
+    quiz?.questionType || "MULTIPLE_CHOICE"
+  );
+  const [questionText, setQuestionText] = useState(quiz?.questionText || "");
+  const [correctAnswer, setCorrectAnswer] = useState(quiz?.correctAnswer || "");
+  const [optionA, setOptionA] = useState(quiz?.optionA || "");
+  const [optionB, setOptionB] = useState(quiz?.optionB || "");
+  const [optionC, setOptionC] = useState(quiz?.optionC || "");
+  const [optionD, setOptionD] = useState(quiz?.optionD || "");
+  const [missingWordIndex, setMissingWordIndex] = useState(
+    quiz?.missingWordIndex !== undefined && quiz?.missingWordIndex !== null
+      ? String(quiz.missingWordIndex)
+      : ""
+  );
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        const res = await api.get("/api/v1/materials");
+        setMaterials(res.data.data || res.data);
+      } catch (err) {
+        console.error("Gagal mengambil data materi:", err);
+      } finally {
+        setLoadingMaterials(false);
+      }
+    };
+    fetchMaterials();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!materialId) {
+      alert("Pilih materi terlebih dahulu");
+      return;
+    }
+    if (!questionText.trim()) {
+      alert("Pertanyaan tidak boleh kosong");
+      return;
+    }
+    if (!correctAnswer.trim()) {
+      alert("Kunci jawaban tidak boleh kosong");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("material_id", String(materialId));
+    formData.append("questionType", questionType);
+    formData.append("questionText", questionText);
+    formData.append("correctAnswer", correctAnswer);
+
+    if (questionType === "MULTIPLE_CHOICE") {
+      formData.append("optionA", optionA);
+      formData.append("optionB", optionB);
+      formData.append("optionC", optionC);
+      formData.append("optionD", optionD);
+    } else if (questionType === "WRITING" && missingWordIndex !== "") {
+      formData.append("missingWordIndex", missingWordIndex);
+    }
+
+    if (mediaFile) {
+      formData.append("media", mediaFile);
+    }
+
+    if (quiz) {
+      // Update Mode
+      updateQuiz(
+        { id: quiz.id, formData },
+        {
+          onSuccess: () => {
+            alert("Soal berhasil diperbarui!");
+            if (onSubmitSuccess) onSubmitSuccess();
+          },
+          onError: (err: any) => {
+            alert(err.response?.data?.message || "Gagal memperbarui soal");
+          },
+        }
+      );
+    } else {
+      // Create Mode
+      createQuiz(formData as any, {
+        onSuccess: () => {
+          alert("Soal berhasil ditambahkan!");
+          if (onSubmitSuccess) onSubmitSuccess();
+        },
+        onError: (err: any) => {
+          alert(err.response?.data?.message || "Gagal menambahkan soal");
+        },
+      });
+    }
   };
 
   return (
-    <Card variant="surface" className="p-6 bg-white">
-      <h2 className="font-display text-xl font-bold mb-4">Tambah Soal {skill}</h2>
-      
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        {/* Pertanyaan */}
-        <div className="flex flex-col gap-2">
-          <label className="font-label text-sm font-bold text-on-surface-variant">Pertanyaan</label>
-          <textarea 
-            {...register("question")}
-            className="w-full p-3 border border-outline rounded-lg focus:outline-none focus:border-primary resize-none h-24"
-            placeholder="Masukkan pertanyaan soal di sini..."
-          />
-          {errors.question && <span className="text-error text-xs">{errors.question.message}</span>}
-        </div>
-
-        {/* Opsi Jawaban */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {["A", "B", "C", "D"].map((option) => (
-            <div key={option} className="flex flex-col gap-1">
-              <label className="font-label text-xs font-bold text-on-surface-variant uppercase">Opsi {option}</label>
-              <input 
-                {...register(`option${option}` as keyof QuizFormValues)}
-                className="w-full p-2 border border-outline rounded-lg focus:outline-none focus:border-primary"
-                placeholder={`Jawaban ${option}`}
-              />
-              {errors[`option${option}` as keyof QuizFormValues] && (
-                <span className="text-error text-xs">{errors[`option${option}` as keyof QuizFormValues]?.message}</span>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Kunci Jawaban */}
-        <div className="flex flex-col gap-2">
-          <label className="font-label text-sm font-bold text-on-surface-variant">Kunci Jawaban Benar</label>
-          <select 
-            {...register("correctAnswer")}
-            className="w-full p-3 border border-outline rounded-lg bg-white"
+    <form onSubmit={handleSubmit} className="space-y-4 text-on-surface">
+      {/* Pilih Materi */}
+      <div className="space-y-1">
+        <label className="text-sm font-semibold block">Materi Pembelajaran</label>
+        {loadingMaterials ? (
+          <div className="text-xs text-on-surface-variant animate-pulse">Memuat materi...</div>
+        ) : (
+          <select
+            value={materialId}
+            onChange={(e) => setMaterialId(e.target.value)}
+            className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+            required
           >
-            <option value="">Pilih jawaban yang benar...</option>
+            <option value="">Pilih materi...</option>
+            {materials.map((m) => (
+              <option key={m.id} value={m.id}>
+                Chapter {m.chapter} - Grade {m.gradeLevel} ({m.skillCategory})
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
+
+      {/* Tipe Soal */}
+      <div className="space-y-1">
+        <label className="text-sm font-semibold block">Tipe Soal</label>
+        <select
+          value={questionType}
+          onChange={(e) => setQuestionType(e.target.value as any)}
+          className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+          required
+        >
+          <option value="MULTIPLE_CHOICE">Pilihan Ganda (Multiple Choice)</option>
+          <option value="WRITING">Menulis (Writing - Lengkapi Kata)</option>
+          <option value="SPEAKING">Berbicara (Speaking)</option>
+        </select>
+      </div>
+
+      {/* Pertanyaan / Teks Soal */}
+      <div className="space-y-1">
+        <label className="text-sm font-semibold block">
+          {questionType === "SPEAKING" ? "Teks Pengucapan" : "Pertanyaan / Kalimat Soal"}
+        </label>
+        <textarea
+          value={questionText}
+          onChange={(e) => setQuestionText(e.target.value)}
+          className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none h-20"
+          placeholder={
+            questionType === "WRITING"
+              ? "Contoh: I have a ___ (kucing)."
+              : "Masukkan teks pertanyaan..."
+          }
+          required
+        />
+      </div>
+
+      {/* Kunci Jawaban */}
+      <div className="space-y-1">
+        <label className="text-sm font-semibold block">Kunci Jawaban Benar</label>
+        {questionType === "MULTIPLE_CHOICE" ? (
+          <select
+            value={correctAnswer}
+            onChange={(e) => setCorrectAnswer(e.target.value)}
+            className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+            required
+          >
+            <option value="">Pilih opsi kunci jawaban...</option>
             <option value="A">Opsi A</option>
             <option value="B">Opsi B</option>
             <option value="C">Opsi C</option>
             <option value="D">Opsi D</option>
           </select>
-          {errors.correctAnswer && <span className="text-error text-xs">{errors.correctAnswer.message}</span>}
-        </div>
-
-        {/* Info Tambahan (Sesuai kode awal Anda) */}
-        {(skill === "Reading" || skill === "Listening") && (
-          <div className="mt-1 p-3 bg-secondary-container/20 rounded-lg border border-secondary-container text-sm text-on-surface-variant">
-            <span className="font-bold flex items-center gap-2 mb-1">
-              <span className="material-symbols-outlined text-secondary text-[18px]">info</span>
-              Tips Media:
-            </span>
-            Masukkan link Google Drive/Media URL langsung di pertanyaan.
-          </div>
+        ) : (
+          <input
+            type="text"
+            value={correctAnswer}
+            onChange={(e) => setCorrectAnswer(e.target.value)}
+            className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+            placeholder={questionType === "WRITING" ? "Contoh: cat" : "Contoh: kalimat pengucapan lengkap"}
+            required
+          />
         )}
+      </div>
 
-        <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" type="button">Batal</Button>
-          <Button variant="primary" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Menyimpan..." : "Simpan Soal"}
-          </Button>
+      {/* Pilihan Ganda Khusus MULTIPLE_CHOICE */}
+      {questionType === "MULTIPLE_CHOICE" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border p-4 rounded-2xl bg-surface-container-low border-outline-variant/30">
+          <div className="space-y-1">
+            <label className="text-xs font-bold uppercase text-on-surface-variant">Opsi A</label>
+            <input
+              type="text"
+              value={optionA}
+              onChange={(e) => setOptionA(e.target.value)}
+              className="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface text-on-surface focus:ring-1 focus:ring-primary focus:outline-none"
+              placeholder="Pilihan A"
+              required
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-bold uppercase text-on-surface-variant">Opsi B</label>
+            <input
+              type="text"
+              value={optionB}
+              onChange={(e) => setOptionB(e.target.value)}
+              className="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface text-on-surface focus:ring-1 focus:ring-primary focus:outline-none"
+              placeholder="Pilihan B"
+              required
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-bold uppercase text-on-surface-variant">Opsi C</label>
+            <input
+              type="text"
+              value={optionC}
+              onChange={(e) => setOptionC(e.target.value)}
+              className="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface text-on-surface focus:ring-1 focus:ring-primary focus:outline-none"
+              placeholder="Pilihan C"
+              required
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-bold uppercase text-on-surface-variant">Opsi D</label>
+            <input
+              type="text"
+              value={optionD}
+              onChange={(e) => setOptionD(e.target.value)}
+              className="w-full px-3 py-1.5 rounded-lg border border-outline-variant bg-surface text-on-surface focus:ring-1 focus:ring-primary focus:outline-none"
+              placeholder="Pilihan D (Opsional)"
+            />
+          </div>
         </div>
-      </form>
-    </Card>
+      )}
+
+      {/* Indeks Kata yang Hilang Khusus WRITING */}
+      {questionType === "WRITING" && (
+        <div className="space-y-1 border p-4 rounded-2xl bg-surface-container-low border-outline-variant/30">
+          <label className="text-sm font-semibold block">Indeks Kata yang Hilang (0-based Index)</label>
+          <input
+            type="number"
+            value={missingWordIndex}
+            onChange={(e) => setMissingWordIndex(e.target.value)}
+            className="w-full px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+            placeholder="Contoh: 3 (jika kata ke-4 adalah ___)"
+            min="0"
+          />
+          <p className="text-xs text-on-surface-variant mt-1">
+            Indeks dimulai dari 0. Misalnya pada kalimat "I have a ___", kata ke-4 (indeks 3) adalah yang dihilangkan.
+          </p>
+        </div>
+      )}
+
+      {/* Upload Media file (Audio/Image) */}
+      <div className="space-y-1">
+        <label className="text-sm font-semibold block">File Media Tambahan (Gambar/Audio - Opsional)</label>
+        <input
+          type="file"
+          accept="image/*,audio/*"
+          onChange={(e) => setMediaFile(e.target.files?.[0] || null)}
+          className="w-full px-4 py-2 text-sm border border-outline-variant rounded-xl text-on-surface file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary-container file:text-primary hover:file:bg-primary/20 transition-all"
+        />
+        {quiz?.mediaUrl && (
+          <p className="text-xs text-primary font-semibold mt-1">
+            File media saat ini: <a href={`http://localhost:5000${quiz.mediaUrl}`} target="_blank" rel="noopener noreferrer" className="underline">Lihat Media</a>
+          </p>
+        )}
+      </div>
+
+      {/* Tombol Aksi */}
+      <div className="pt-4 flex justify-end gap-3 border-t border-outline-variant/30 mt-6">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onSubmitSuccess}
+          disabled={isSubmitting}
+        >
+          Batal
+        </Button>
+        <Button type="submit" variant="primary" disabled={isSubmitting}>
+          {isSubmitting ? "Menyimpan..." : "Simpan Soal"}
+        </Button>
+      </div>
+    </form>
   );
-}
+}

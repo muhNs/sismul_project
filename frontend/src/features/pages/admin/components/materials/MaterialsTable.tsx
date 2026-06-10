@@ -151,7 +151,6 @@ export const MaterialsTable: React.FC<MaterialsTableProps> = ({
                 </tbody>
               </table>
             </div>
-            {/* Pagination Controls could be added here if needed */}
           </Card>
 
           {/* Mobile Card List View */}
@@ -205,8 +204,34 @@ export const MaterialsTable: React.FC<MaterialsTableProps> = ({
               );
             })}
           </div>
+
+          {/* Pagination Controls */}
+          {table.getPageCount() > 1 && (
+            <div className="flex items-center justify-between px-2 py-4">
+              <div className="text-xs text-on-surface-variant font-medium">
+                Menampilkan halaman {table.getState().pagination.pageIndex + 1} dari {table.getPageCount()} ({materials.length} data)
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                  className="px-4 py-2 rounded-xl border border-outline-variant bg-surface text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-container-low transition-colors"
+                >
+                  Sebelumnya
+                </button>
+                <button
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                  className="px-4 py-2 rounded-xl border border-outline-variant bg-surface text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-container-low transition-colors"
+                >
+                  Selanjutnya
+                </button>
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
   );
 };
+

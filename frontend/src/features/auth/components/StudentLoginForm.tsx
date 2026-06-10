@@ -41,7 +41,7 @@ export function LoginForm() {
         setErrorMsg("Gagal masuk. Silakan periksa kembali email dan password Anda.");
       }
     } catch (err: any) {
-      console.error(err);
+      console.warn(err);
       setErrorMsg(err.response?.data?.message || "Login gagal. Periksa kembali kredensial Anda.");
     }
   };
@@ -173,7 +173,12 @@ export function LoginForm() {
       <div className="mt-2 text-center">
         <p className="font-label text-xs font-bold text-outline">
           Lupa kata sandi?{" "}
-          <a className="text-secondary hover:underline cursor-pointer">Klik di sini</a>
+          <span 
+            onClick={() => router.push("/forgot-password")}
+            className="text-secondary hover:underline cursor-pointer font-extrabold"
+          >
+            Klik di sini
+          </span>
         </p>
       </div>
     </main>

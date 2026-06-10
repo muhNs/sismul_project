@@ -12,9 +12,14 @@ interface AdminHeaderProps {
 export const AdminHeader = ({ onMenuClick }: AdminHeaderProps) => {
   const router = useRouter();
   const logout = useStore((state) => state.logout);
+  const user = useStore((state) => state.user);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const adminName = user?.name || "Admin Utama";
+  const adminInitial = adminName.charAt(0).toUpperCase();
+  const adminRoleName = user?.role === "ADMIN" ? "Superadmin" : user?.role === "TEACHER" ? "Guru / Pengajar" : "Admin";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -108,11 +113,11 @@ export const AdminHeader = ({ onMenuClick }: AdminHeaderProps) => {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-semibold text-on-surface">Admin Utama</p>
-              <p className="text-xs text-on-surface-variant">Superadmin</p>
+              <p className="text-sm font-semibold text-on-surface">{adminName}</p>
+              <p className="text-xs text-on-surface-variant">{adminRoleName}</p>
             </div>
             <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-primary-container text-primary font-bold flex items-center justify-center border border-primary/20 text-sm md:text-base">
-              A
+              {adminInitial}
             </div>
           </div>
 
@@ -120,32 +125,43 @@ export const AdminHeader = ({ onMenuClick }: AdminHeaderProps) => {
           {isDropdownOpen && (
             <div className="absolute right-0 top-full mt-2 w-56 bg-surface border border-outline-variant rounded-2xl shadow-lg z-50 dropdown-animate overflow-hidden">
               <div className="px-4 py-3 border-b border-outline-variant/30 sm:hidden bg-surface-container-lowest">
-                <p className="text-sm font-semibold text-on-surface">Admin Utama</p>
-                <p className="text-xs text-on-surface-variant">Superadmin</p>
+                <p className="text-sm font-semibold text-on-surface">{adminName}</p>
+                <p className="text-xs text-on-surface-variant">{adminRoleName}</p>
               </div>
+
               <div className="p-2 space-y-1">
                 <button 
                   className="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-high rounded-xl transition-colors flex items-center gap-3 font-medium"
-                  onClick={() => setIsDropdownOpen(false)}
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    router.push("/admin/profile");
+                  }}
                 >
                   <span className="material-symbols-outlined text-[18px] text-on-surface-variant">person</span>
                   Profil Saya
                 </button>
                 <button 
                   className="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-high rounded-xl transition-colors flex items-center gap-3 font-medium"
-                  onClick={() => setIsDropdownOpen(false)}
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    router.push("/admin/profile");
+                  }}
                 >
                   <span className="material-symbols-outlined text-[18px] text-on-surface-variant">settings</span>
                   Pengaturan Akun
                 </button>
                 <button 
                   className="w-full text-left px-3 py-2 text-sm text-on-surface hover:bg-surface-container-high rounded-xl transition-colors flex items-center gap-3 font-medium"
-                  onClick={() => setIsDropdownOpen(false)}
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    router.push("/admin/profile");
+                  }}
                 >
                   <span className="material-symbols-outlined text-[18px] text-on-surface-variant">lock</span>
                   Ubah Password
                 </button>
               </div>
+
               <div className="p-2 border-t border-outline-variant/30 bg-surface-container-lowest">
                 <button 
                   onClick={handleLogoutClick}

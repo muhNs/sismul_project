@@ -14,8 +14,18 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Jika error 401 dan bukan saat mencoba refresh token itu sendiri
-    if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== '/api/v1/auth/refresh-token') {
+    // Exclude auth-specific endpoints from triggering refresh token loop on 401
+    const bypassUrls = [
+      '/api/v1/auth/login',
+      '/api/v1/auth/register',
+      '/api/v1/auth/refresh-token',
+      '/api/v1/auth/forgot-password',
+      '/api/v1/auth/reset-password'
+    ];
+    const isBypassUrl = bypassUrls.some(url => originalRequest.url?.endsWith(url));
+
+    // Jika error 401 dan bukan endpoint bypass
+    if (error.response?.status === 401 && !originalRequest._retry && !isBypassUrl) {
       originalRequest._retry = true;
 
       try {

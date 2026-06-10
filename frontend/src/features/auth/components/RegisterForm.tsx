@@ -29,7 +29,7 @@ export function RegisterForm() {
       setSubmitState("success");
       setTimeout(() => router.push("/login"), 1000);
     } catch (err: any) {
-      console.error(err);
+      console.warn(err);
       setErrorMsg(err.response?.data?.message || "Pendaftaran gagal. Silakan coba lagi.");
       setSubmitState("idle");
     }

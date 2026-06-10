@@ -151,7 +151,8 @@ export const ScoresTable: React.FC<ScoresTableProps> = ({ scores }) => {
 
       {/* Mobile Card List */}
       <div className="md:hidden flex flex-col gap-4">
-        {scores.map((score) => {
+        {table.getRowModel().rows.map((row) => {
+          const score = row.original;
           let label = "Needs Improvement";
           let color = "bg-red-100 text-red-700";
 
@@ -201,6 +202,32 @@ export const ScoresTable: React.FC<ScoresTableProps> = ({ scores }) => {
           );
         })}
       </div>
+
+      {/* Pagination Controls */}
+      {table.getPageCount() > 1 && (
+        <div className="flex items-center justify-between px-2 py-4">
+          <div className="text-xs text-on-surface-variant font-medium">
+            Menampilkan halaman {table.getState().pagination.pageIndex + 1} dari {table.getPageCount()} ({scores.length} data)
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="px-4 py-2 rounded-xl border border-outline-variant bg-surface text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-container-low transition-colors"
+            >
+              Sebelumnya
+            </button>
+            <button
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="px-4 py-2 rounded-xl border border-outline-variant bg-surface text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-container-low transition-colors"
+            >
+              Selanjutnya
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
+

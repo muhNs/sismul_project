@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as userService from './users.service';
-import { updateProfileSchema, createUserSchema, updateUserSchema } from './users.schema';
+import { updateProfileSchema, createUserSchema, updateUserSchema, changePasswordSchema } from './users.schema';
 import { ZodError } from 'zod';
 
 export const getAllUsersController = async (req: Request, res: Response) => {
@@ -82,5 +82,24 @@ export const updateUserController = async (req: Request, res: Response) => {
       return res.status(400).json({ status: 'error', message: error.issues });
     }
     res.status(error.message.includes('digunakan') ? 409 : 500).json({ status: 'error', message: error.message });
+  }
+};
+
+export const changePasswordController = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json({ status: 'error', message: 'User belum login' });
+    }
+
+    const parsedData = changePasswordSchema.parse(req.body);
+    await userService.changePassword(userId, parsedData);
+
+    res.status(200).json({ status: 'success', message: 'Password berhasil diubah' });
+  } catch (error: any) {
+    if (error instanceof ZodError) {
+      return res.status(400).json({ status: 'error', message: error.issues.map(i => i.message).join(', ') });
+    }
+    res.status(400).json({ status: 'error', message: error.message });
   }
 };

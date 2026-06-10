@@ -58,9 +58,10 @@ export default function QuizzesPage() {
         title={editingQuiz ? "Edit Kuis" : "Tambah Kuis"}
       >
         <AdminQuizForm 
-          skill={currentSkill}
+          quiz={editingQuiz}
           onSubmitSuccess={() => setIsModalOpen(false)} 
         />
+
       </Modal>
     </div>
   );

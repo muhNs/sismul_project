@@ -5,6 +5,8 @@ import {
   registerService,
   logoutService,
   getMeService,
+  forgotPasswordService,
+  resetPasswordService,
 } from "./auth.service";
 import { registerSchema, loginSchema } from "./auth.schema";
 import { setAuthCookies, clearAuthCookies } from "../../shared/cookie.utils";
@@ -117,6 +119,42 @@ export class AuthController {
       res.status(200).json({ status: "success", data: user });
     } catch (error: any) {
       res.status(404).json({ status: "error", message: error.message });
+    }
+  }
+
+  static async forgotPassword(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        return res.status(400).json({ status: "error", message: "Email wajib diisi" });
+      }
+      const token = await forgotPasswordService(email);
+      res.status(200).json({
+        status: "success",
+        message: "Kode reset password berhasil dibuat",
+        data: {
+          token,
+          info: "Untuk keperluan demo/development, token Anda dicantumkan di sini agar tidak perlu membuka log console server."
+        }
+      });
+    } catch (error: any) {
+      res.status(400).json({ status: "error", message: error.message });
+    }
+  }
+
+  static async resetPassword(req: Request, res: Response) {
+    try {
+      const { token, newPassword } = req.body;
+      if (!token || !newPassword) {
+        return res.status(400).json({ status: "error", message: "Token dan password baru wajib diisi" });
+      }
+      if (newPassword.length < 6) {
+        return res.status(400).json({ status: "error", message: "Password minimal 6 karakter" });
+      }
+      await resetPasswordService(token, newPassword);
+      res.status(200).json({ status: "success", message: "Password berhasil diubah. Silakan login kembali." });
+    } catch (error: any) {
+      res.status(400).json({ status: "error", message: error.message });
     }
   }
 }

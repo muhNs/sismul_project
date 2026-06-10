@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { authenticate, authorize } from '../../middlewares/auth.middleware';
-import { getAllUsersController, getProfileController, updateProfileController, deleteUserController, updateUserController, createUserController } from './users.controller';
+import { getAllUsersController, getProfileController, updateProfileController, deleteUserController, updateUserController, createUserController, changePasswordController } from './users.controller';
 
 const router = Router();
 
 // Endpoint Profil Siswa / Guru (bisa diakses oleh semua yang sudah login)
 router.get('/profile', authenticate, getProfileController);
 router.put('/profile', authenticate, updateProfileController);
+router.put('/change-password', authenticate, changePasswordController);
 
 // Endpoint Admin (Manajemen Pengguna)
 router.get('/', authenticate, authorize(['ADMIN']), getAllUsersController);

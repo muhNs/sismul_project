@@ -19,7 +19,22 @@ export const AdminDashboardPage = () => {
     totalQuizzesCompleted: 0,
     totalMaterials: 0,
   });
+  const [recentActivities, setRecentActivities] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  function formatRelativeTime(date: Date) {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return "Baru saja";
+    if (diffMins < 60) return `${diffMins} menit yang lalu`;
+    if (diffHours < 24) return `${diffHours} jam yang lalu`;
+    if (diffDays < 7) return `${diffDays} hari yang lalu`;
+    return date.toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+  }
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -41,6 +56,42 @@ export const AdminDashboardPage = () => {
           totalQuizzesCompleted: scores.length,
           totalMaterials: materials.length,
         });
+
+        const activities: any[] = [];
+        
+        // Map users
+        users.forEach((u: any) => {
+          activities.push({
+            id: `user-${u.id}`,
+            type: "user_registered",
+            icon: "person_add",
+            iconBg: "bg-primary/10 text-primary",
+            title: "Pengguna Baru Terdaftar",
+            description: `${u.name} mendaftar sebagai ${
+              u.role === "ADMIN" ? "Admin" : u.role === "TEACHER" ? "Guru" : "Siswa"
+            }.`,
+            timestamp: new Date(u.created_at),
+          });
+        });
+
+        // Map scores
+        scores.forEach((s: any) => {
+          activities.push({
+            id: `score-${s.id}`,
+            type: "quiz_completed",
+            icon: "assignment_turned_in",
+            iconBg: "bg-tertiary/10 text-tertiary",
+            title: "Kuis Selesai",
+            description: `${s.user?.name || "Siswa"} menyelesaikan kuis ${
+              s.material ? `Chapter ${s.material.chapter}` : "materi"
+            } dengan skor ${s.score}.`,
+            timestamp: new Date(s.created_at),
+          });
+        });
+
+        // Sort by timestamp desc and take top 5
+        activities.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+        setRecentActivities(activities.slice(0, 5));
       } catch (err) {
         console.error("Failed to fetch dashboard stats:", err);
       } finally {
@@ -95,55 +146,34 @@ export const AdminDashboardPage = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="col-span-1 lg:col-span-2 p-6 bg-surface-container-low border border-outline-variant/30 shadow-sm">
+      <div className="grid grid-cols-1 gap-6">
+        <Card className="p-6 bg-surface-container-low border border-outline-variant/30 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <h3 className="font-bold text-on-surface">Aktivitas Terbaru</h3>
-            <button className="text-primary text-sm font-semibold hover:underline">Lihat Semua</button>
+            <span className="text-on-surface-variant text-xs font-semibold">Real-time update</span>
           </div>
           <div className="space-y-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex items-center gap-4 p-3 rounded-xl hover:bg-surface-container-high transition-colors">
-                <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[20px]">person</span>
+            {recentActivities.map((act) => (
+              <div key={act.id} className="flex items-center gap-4 p-3 rounded-xl hover:bg-surface-container-high transition-colors">
+                <div className={`w-10 h-10 rounded-full ${act.iconBg} flex items-center justify-center`}>
+                  <span className="material-symbols-outlined text-[20px]">{act.icon}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-on-surface break-words">Pengguna Baru Terdaftar</p>
-                  <p className="text-xs text-on-surface-variant break-words">Budi Santoso menyelesaikan pendaftaran.</p>
+                  <p className="text-sm font-semibold text-on-surface break-words">{act.title}</p>
+                  <p className="text-xs text-on-surface-variant break-words">{act.description}</p>
                 </div>
-                <span className="text-xs text-on-surface-variant font-medium flex-shrink-0 whitespace-nowrap">{i * 2} jam yang lalu</span>
+                <span className="text-xs text-on-surface-variant font-medium flex-shrink-0 whitespace-nowrap">
+                  {formatRelativeTime(act.timestamp)}
+                </span>
               </div>
             ))}
-          </div>
-        </Card>
-
-        <Card className="col-span-1 p-6 bg-surface-container-low border border-outline-variant/30 shadow-sm">
-          <h3 className="font-bold text-on-surface mb-6">Status Sistem</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center p-3 rounded-xl bg-surface-container-high border border-outline-variant/50">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-tertiary">dns</span>
-                <span className="text-sm font-semibold text-on-surface">Database</span>
-              </div>
-              <span className="px-2 py-1 rounded-md bg-tertiary/10 text-tertiary text-xs font-bold">Online</span>
-            </div>
-            <div className="flex justify-between items-center p-3 rounded-xl bg-surface-container-high border border-outline-variant/50">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-tertiary">cloud</span>
-                <span className="text-sm font-semibold text-on-surface">Storage</span>
-              </div>
-              <span className="px-2 py-1 rounded-md bg-tertiary/10 text-tertiary text-xs font-bold">Online</span>
-            </div>
-            <div className="flex justify-between items-center p-3 rounded-xl bg-surface-container-high border border-outline-variant/50">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-error">api</span>
-                <span className="text-sm font-semibold text-on-surface">Payment API</span>
-              </div>
-              <span className="px-2 py-1 rounded-md bg-error/10 text-error text-xs font-bold">Gangguan</span>
-            </div>
+            {recentActivities.length === 0 && (
+              <p className="text-sm text-on-surface-variant text-center py-6">Belum ada aktivitas terbaru.</p>
+            )}
           </div>
         </Card>
       </div>
     </div>
   );
 };
+

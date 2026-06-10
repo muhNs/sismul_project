@@ -123,3 +123,20 @@ export const getLeaderboard = async () => {
     totalScore: g._sum.score || 0
   }));
 };
+
+export const getAllScores = async () => {
+  return prisma.studentScore.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true
+        }
+      },
+      material: true
+    },
+    orderBy: { created_at: 'desc' }
+  });
+};
+

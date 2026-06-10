@@ -132,3 +132,58 @@ export const getMeService = async (userId: number) => {
     avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`
   };
 };
+
+// In-memory token store for forgot password flow
+const resetTokens = new Map<string, { email: string; expires: number }>();
+
+export const forgotPasswordService = async (email: string) => {
+  const user = await prisma.user.findUnique({
+    where: { email }
+  });
+
+  if (!user || user.deleted_at) {
+    throw new Error("User dengan email tersebut tidak ditemukan");
+  }
+
+  // Generate 6-digit verification code
+  const token = Math.floor(100000 + Math.random() * 900000).toString();
+  // Token expires in 15 minutes
+  const expires = Date.now() + 15 * 60 * 1000;
+
+  resetTokens.set(token, { email, expires });
+
+  // Log to console for backend debugging/demo
+  console.log(`\n=============================================`);
+  console.log(`[RESET PASSWORD REQUEST]`);
+  console.log(`Email: ${email}`);
+  console.log(`Token: ${token}`);
+  console.log(`Expires: ${new Date(expires).toLocaleTimeString()}`);
+  console.log(`=============================================\n`);
+
+  return token;
+};
+
+export const resetPasswordService = async (token: string, newPassword: string) => {
+  const tokenData = resetTokens.get(token);
+
+  if (!tokenData) {
+    throw new Error("Token tidak valid atau sudah kadaluarsa");
+  }
+
+  if (Date.now() > tokenData.expires) {
+    resetTokens.delete(token);
+    throw new Error("Token sudah kadaluarsa. Silakan ajukan ulang.");
+  }
+
+  // Hash new password
+  const hashedPassword = await hashPassword(newPassword);
+
+  // Update password in DB
+  await prisma.user.update({
+    where: { email: tokenData.email },
+    data: { password: hashedPassword }
+  });
+
+  // Remove used token
+  resetTokens.delete(token);
+};

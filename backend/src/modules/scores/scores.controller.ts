@@ -72,3 +72,13 @@ export const getLeaderboardController = async (req: Request, res: Response) => {
     res.status(500).json({ status: "error", message: error.message });
   }
 };
+
+export const getAllScoresController = async (req: Request, res: Response) => {
+  try {
+    const scores = await scoresService.getAllScores();
+    res.status(200).json({ status: "success", data: scores });
+  } catch (error: any) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
+

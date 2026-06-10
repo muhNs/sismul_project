@@ -35,8 +35,9 @@ export const useAdminQuiz = () => {
   });
 
   return {
-    quizzes: data?.data || [], // Asumsi backend membungkus data di properti 'data'
+    quizzes: data || [],
     isLoading,
+
     error,
     createQuiz: createMutation.mutate,
     isCreating: createMutation.isPending,

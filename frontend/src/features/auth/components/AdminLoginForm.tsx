@@ -38,7 +38,7 @@ export function AdminLoginForm() {
         setErrorMsg("Akses ditolak. Anda bukan Administrator.");
       }
     } catch (err: any) {
-      console.error(err);
+      console.warn(err);
       setErrorMsg(err.response?.data?.message || "Login admin gagal. Periksa kembali kredensial Anda.");
     } finally {
       setIsLoading(false);
