@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import {privateApi} from "@/lib/axios";
 
 export interface Option {
   id: string;
@@ -16,7 +16,7 @@ export interface QuizQuestion {
 }
 
 export const getStudentQuiz = async (materialId: number): Promise<QuizQuestion[]> => {
-  const response = await api.get(`/api/v1/quizzes/student/${materialId}`);
+  const response = await privateApi.get(`/quizzes/student/${materialId}`);
   const data = response.data.data;
   
   if (!data) return [];
@@ -60,11 +60,11 @@ export const getStudentQuiz = async (materialId: number): Promise<QuizQuestion[]
 };
 
 export const checkAnswerApi = async (quizId: number, studentAnswer: string) => {
-  const response = await api.post(`/api/v1/quizzes/${quizId}/check`, { answer: studentAnswer });
+  const response = await privateApi.post(`/quizzes/${quizId}/check`, { answer: studentAnswer });
   return response.data.data;
 };
 
 export const saveStudentScore = async (materialId: number, score: number) => {
-  const response = await api.post("/api/v1/scores", { material_id: materialId, score });
+  const response = await privateApi.post("/scores", { material_id: materialId, score });
   return response.data;
 };

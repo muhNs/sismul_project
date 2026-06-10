@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import { privateApi } from "@/lib/axios";
 
 export interface Material {
   id: number;
@@ -15,8 +15,12 @@ export interface MaterialsResponse {
   data: Material[];
 }
 
-export const getStudentMaterials = async (gradeLevel?: number): Promise<Material[]> => {
-  const url = gradeLevel ? `/api/v1/materials?gradeLevel=${gradeLevel}` : '/api/v1/materials';
-  const response = await api.get<MaterialsResponse>(url);
+export const getStudentMaterials = async (
+  gradeLevel?: number,
+): Promise<Material[]> => {
+  const url = gradeLevel
+    ? `/materials?gradeLevel=${gradeLevel}`
+    : "/materials";
+  const response = await privateApi.get<MaterialsResponse>(url);
   return response.data.data;
 };

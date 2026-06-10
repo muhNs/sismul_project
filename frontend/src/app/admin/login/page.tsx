@@ -1,4 +1,5 @@
-import AdminLoginPage from "@/features/pages/admin/auth/pages/AdminLoginPage";
-export default AdminLoginPage;
+import { AdminLoginForm } from "@/features/auth/components/AdminLoginForm";
 
-
+export default function AdminLoginPage() {
+  return <AdminLoginForm />;
+}

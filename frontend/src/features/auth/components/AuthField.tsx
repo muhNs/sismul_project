@@ -1,20 +1,14 @@
-"use client";
+import React, { InputHTMLAttributes } from "react";
 
-import React from "react";
-
-interface AuthFieldProps {
-  id: string;
+interface AuthFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   icon: string;
-  type: string;
-  placeholder: string;
   focused: boolean;
   onFocus: () => void;
   onBlur: () => void;
 }
 
 export function AuthField({
-  id,
   label,
   icon,
   type,
@@ -22,71 +16,26 @@ export function AuthField({
   focused,
   onFocus,
   onBlur,
+  id, // Tetap ambil id jika dikirim manual
+  ...props // Tangkap sisa props dari register() (name, onChange, ref, dll)
 }: AuthFieldProps) {
   return (
     <div>
-      <label
-        htmlFor={id}
-        style={{
-          display: "block",
-          fontSize: 13,
-          fontWeight: 700,
-          color: "#1a1c1c",
-          marginBottom: 6,
-          marginLeft: 4,
-        }}
-      >
+      <label htmlFor={id} style={{ /* ... style Anda ... */ }}>
         {label}
       </label>
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          transition: "transform 0.2s",
-          transform: focused ? "scale(1.01)" : "scale(1)",
-        }}
-      >
-        <span
-          className="material-symbols-outlined"
-          style={{
-            position: "absolute",
-            left: 14,
-            top: "50%",
-            transform: "translateY(-50%)",
-            color: "#6f7b64",
-            fontSize: 20,
-            userSelect: "none",
-            pointerEvents: "none",
-          }}
-        >
+      <div style={{ /* ... style container ... */ }}>
+        <span className="material-symbols-outlined" style={{ /* ... style icon ... */ }}>
           {icon}
         </span>
         <input
+          {...props} // Ini yang menyuntikkan register("name")
           id={id}
-          name={id}
           type={type}
-          required
           placeholder={placeholder}
           onFocus={onFocus}
           onBlur={onBlur}
-          style={{
-            width: "100%",
-            paddingTop: 14,
-            paddingBottom: 14,
-            paddingLeft: 48,
-            paddingRight: 16,
-            backgroundColor: "#ffffff",
-            border: `2px solid ${focused ? "#2b6c00" : "#e3e2e2"}`,
-            borderBottom: `4px solid ${focused ? "#2b6c00" : "#e3e2e2"}`,
-            borderRadius: 12,
-            fontSize: 14,
-            fontWeight: 500,
-            color: "#1a1c1c",
-            outline: "none",
-            boxSizing: "border-box",
-            transition: "border-color 0.2s",
-          }}
+          style={{ /* ... style input ... */ }}
         />
       </div>
     </div>
