@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Navbar } from "@/components/layout/Navbar";
@@ -19,6 +19,13 @@ interface ConfettiItem {
 export default function CompletePage() {
   const router = useRouter();
   const quizScore = useStore((state) => state.quizScore);
+  const user = useStore((state) => state.user);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const confetti = useMemo(() => {
     const colors = ["#58cc02", "#2fb8ff", "#ff9c27", "#ffdcbf", "#87fe45"];
     return Array.from({ length: 40 }).map((_, i) => ({
@@ -35,7 +42,7 @@ export default function CompletePage() {
       <main className="flex-grow pt-24 pb-32 px-margin-mobile flex flex-col items-center max-w-[800px] mx-auto w-full relative">
         {/* Confetti */}
         <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
-          {confetti.map((c) => (
+          {mounted && confetti.map((c) => (
             <div
               key={c.id}
               className="absolute w-3 h-3 rounded-sm opacity-0 animate-[confetti_3s_linear_forwards]"

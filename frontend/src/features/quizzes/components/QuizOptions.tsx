@@ -145,6 +145,21 @@ export function QuizOptions({
               </div>
             )}
           </div>
+        ) : question.questionType === "WRITING" ? (
+          <div className="flex flex-col gap-4">
+            <input
+              type="text"
+              disabled={checked}
+              value={selectedOption || ""}
+              onChange={(e) => onSelect(e.target.value)}
+              placeholder="Ketik jawabanmu di sini..."
+              className={`w-full p-4 rounded-2xl border-2 font-sans text-base outline-none transition-all ${
+                shakeOption !== null && shakeOption === selectedOption
+                  ? "border-error bg-red-50 animate-bounce"
+                  : "border-surface-container-highest focus:border-primary bg-white"
+              }`}
+            />
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {question.options.map((opt) => {

@@ -11,6 +11,7 @@ export function useQuiz() {
   const setQuizScore = useStore((state) => state.setQuizScore);
   const resetQuiz = useStore((state) => state.resetQuiz);
   const user = useStore((state) => state.user);
+  const updateUserPoints = useStore((state) => state.updateUserPoints);
 
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +24,7 @@ export function useQuiz() {
   const [showScorePopup, setShowScorePopup] = useState(false);
   const [shakeOption, setShakeOption] = useState<string | null>(null);
   const [currentScore, setCurrentScore] = useState(0);
+  const [studentAnswers, setStudentAnswers] = useState<{ quiz_id: number; answer: string }[]>([]);
 
   const materialId = selectedChapterId ? parseInt(selectedChapterId, 10) : null;
 
@@ -75,6 +77,14 @@ export function useQuiz() {
     try {
       const data = await checkAnswerApi(currentQuestion.id, selectedOption);
 
+      setStudentAnswers((prev) => {
+        const alreadyAnswered = prev.some(a => a.quiz_id === currentQuestion.id);
+        if (!alreadyAnswered) {
+          return [...prev, { quiz_id: currentQuestion.id, answer: selectedOption }];
+        }
+        return prev;
+      });
+
       if (data.isCorrect) {
         setIsCorrect(true);
         setChecked(true);
@@ -102,14 +112,17 @@ export function useQuiz() {
     } else {
       if (materialId) {
         try {
-          await saveStudentScore(materialId, currentScore);
+          const res = await saveStudentScore(materialId, studentAnswers);
+          if (res?.data?.totalPoints !== undefined) {
+            updateUserPoints(res.data.totalPoints);
+          }
         } catch (err) {
           console.error("Gagal menyimpan skor kuis ke backend:", err);
         }
       }
       router.push("/quiz/complete");
     }
-  }, [currentQIndex, questions.length, router, materialId, currentScore]);
+  }, [currentQIndex, questions.length, router, materialId, currentScore, studentAnswers, updateUserPoints]);
 
   const handleClose = useCallback(() => {
     if (window.confirm("Yakin keluar dari sesi? Semua progress akan hilang.")) {

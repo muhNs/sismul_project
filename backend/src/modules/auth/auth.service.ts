@@ -56,6 +56,12 @@ export const loginService = async (data: any) => {
     },
   });
 
+  // Hitung total poin
+  const scoreSum = await prisma.studentScore.aggregate({
+    where: { user_id: user.id },
+    _sum: { score: true }
+  });
+
   return {
     accessToken,
     refreshToken: refreshTokenStr,
@@ -64,6 +70,7 @@ export const loginService = async (data: any) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      points: scoreSum._sum.score || 0,
     },
   };
 };
@@ -107,13 +114,21 @@ export const getMeService = async (userId: number) => {
       name: true,
       email: true,
       role: true,
-      points: true,
-      diamonds: true,
-      avatar: true,
       deleted_at: true,
     }
   });
 
   if (!user || user.deleted_at) throw new Error("User tidak ditemukan");
-  return user;
+
+  // Hitung total poin
+  const scoreSum = await prisma.studentScore.aggregate({
+    where: { user_id: userId },
+    _sum: { score: true }
+  });
+
+  return {
+    ...user,
+    points: scoreSum._sum.score || 0,
+    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`
+  };
 };

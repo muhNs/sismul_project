@@ -57,11 +57,18 @@ export const saveScore = async (user_id: number, data: SaveScoreInput) => {
     }
   }
 
+  // Hitung total poin baru
+  const scoreSum = await prisma.studentScore.aggregate({
+    where: { user_id },
+    _sum: { score: true }
+  });
+
   return {
     score: finalScore,
     correctCount,
     totalQuestions,
-    isNewHighScore
+    isNewHighScore,
+    totalPoints: scoreSum._sum.score || 0
   };
 };
 
@@ -85,4 +92,34 @@ export const getScoresByMaterial = async (material_id: number) => {
     },
     orderBy: { score: 'desc' }
   });
+};
+
+export const getLeaderboard = async () => {
+  const groupedScores = await prisma.studentScore.groupBy({
+    by: ['user_id'],
+    _sum: {
+      score: true,
+    },
+    orderBy: {
+      _sum: {
+        score: 'desc'
+      }
+    }
+  });
+
+  const users = await prisma.user.findMany({
+    where: {
+      id: { in: groupedScores.map(g => g.user_id) }
+    },
+    select: { id: true, name: true }
+  });
+
+  const userMap = new Map(users.map(u => [u.id, u.name]));
+
+  return groupedScores.map((g, idx) => ({
+    rank: idx + 1,
+    userId: g.user_id,
+    name: userMap.get(g.user_id) || "Unknown",
+    totalScore: g._sum.score || 0
+  }));
 };

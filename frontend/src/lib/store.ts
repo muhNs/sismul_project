@@ -13,6 +13,7 @@ interface LearnlyState {
   resetQuiz: () => void;
   setAuth: (user: User) => void;
   logout: () => void;
+  updateUserPoints: (points: number) => void;
 }
 
 export const useStore = create<LearnlyState>()(
@@ -28,6 +29,9 @@ export const useStore = create<LearnlyState>()(
       resetQuiz: () => set({ quizScore: 0 }),
       setAuth: (user) => set({ user }),
       logout: () => set({ user: null }),
+      updateUserPoints: (points) => set((state) => ({
+        user: state.user ? { ...state.user, points } : null
+      })),
     }),
     {
       name: "learnly-storage", // nama key di localStorage

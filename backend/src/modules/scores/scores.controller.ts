@@ -63,3 +63,12 @@ export const getScoresByMaterialController = async (
     res.status(500).json({ status: "error", message: error.message });
   }
 };
+
+export const getLeaderboardController = async (req: Request, res: Response) => {
+  try {
+    const leaderboard = await scoresService.getLeaderboard();
+    res.status(200).json({ status: "success", data: leaderboard });
+  } catch (error: any) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};

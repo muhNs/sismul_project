@@ -64,7 +64,7 @@ export const checkAnswerApi = async (quizId: number, studentAnswer: string) => {
   return response.data.data;
 };
 
-export const saveStudentScore = async (materialId: number, score: number) => {
-  const response = await api.post("/api/v1/scores", { material_id: materialId, score });
+export const saveStudentScore = async (materialId: number, answers: { quiz_id: number; answer: string }[]) => {
+  const response = await api.post("/api/v1/scores", { material_id: materialId, answers });
   return response.data;
 };
