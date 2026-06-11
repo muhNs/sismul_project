@@ -2,42 +2,45 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useStore } from "@/lib/store";
+import { useAdminStore } from "@/lib/adminStore";
 
 export const AdminGuard = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const user = useStore((state) => state.user);
+  const user = useAdminStore((state) => state.adminUser);
+  const hasHydrated = useAdminStore((state) => state._hasHydrated);
 
   useEffect(() => {
-    // Ambil role dari Zustand store, fallback ke localStorage jika tidak ada
-    const storeRole = user?.role;
-    const localRole = typeof window !== "undefined" ? localStorage.getItem("userRole") : null;
-    const role = storeRole || localRole;
-    
-    // Bypass proteksi jika sedang berada di halaman login admin
+    // Tunggu sampai Zustand selesai membaca data dari localStorage
+    // Tanpa ini, tab baru selalu redirect ke login karena user masih null saat pertama render
+    if (!hasHydrated) return;
+
+    const role = user?.role;
+
+    // Jika sudah login sebagai admin dan mencoba buka halaman login, redirect ke dashboard
     if (pathname === "/admin/login") {
-      setIsAuthorized(true);
+      if (role === "ADMIN" || role === "TEACHER") {
+        router.replace("/admin");
+      } else {
+        setIsAuthorized(true); // Belum login, boleh lihat halaman login
+      }
       return;
     }
 
-    // Jika user mengakses halaman admin, tapi role-nya student, lempar ke /home
-    if (role === "STUDENT") {
-      router.replace("/home");
-    } 
-    // Jika user belum login, lempar ke halaman login admin
-    else if (!role) {
+    // Jika belum login sebagai admin, lempar ke halaman login admin
+    if (!role) {
       router.replace("/admin/login");
-    } 
+    }
     // Jika role ADMIN atau TEACHER, izinkan akses
     else if (role === "ADMIN" || role === "TEACHER") {
       setIsAuthorized(true);
     } else {
       router.replace("/admin/login");
     }
-  }, [router, pathname]);
+  }, [router, pathname, user, hasHydrated]);
 
+  // Selama belum terhidrasi atau belum terotorisasi, tampilkan loading
   if (!isAuthorized) {
     return (
       <div className="flex min-h-screen w-full flex-col items-center justify-center bg-surface">
