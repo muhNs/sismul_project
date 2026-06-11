@@ -8,9 +8,9 @@ import { ChapterCard, ProgressHint } from "@/features/materials/components/Stude
 import { useMaterials } from "@/features/materials/hooks/useMaterials";
 
 export default function ChooseChapterPage() {
-  const selectedClassId = useStore((state) => state.selectedClassId) || "kelas-3";
-  const className = selectedClassId.replace("-", " ").toUpperCase();
-  const gradeLevel = parseInt(selectedClassId.split("-")[1], 10) || 3;
+  const selectedClassId = useStore((state) => state.selectedClassId) || "3";
+  const gradeLevel = parseInt(selectedClassId.replace(/\D/g, ""), 10) || 3;
+  const className = `KELAS ${gradeLevel}`;
 
   const { materials, loading, error } = useMaterials(gradeLevel);
 
@@ -35,7 +35,7 @@ export default function ChooseChapterPage() {
           <ChapterCard materials={materials} />
         )}
 
-        <ProgressHint />
+        <ProgressHint materials={materials} />
       </main>
       <Navbar />
     </>

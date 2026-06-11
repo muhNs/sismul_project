@@ -7,8 +7,20 @@ import { Card } from "@/components/ui/Card";
 import { useStore } from "@/lib/store";
 import { Material } from "../api/getStudentMaterials";
 
-export function ProgressHint() {
+export function ProgressHint({ materials }: { materials?: Material[] }) {
   const router = useRouter();
+  const setSelectedChapterId = useStore((state) => state.setSelectedChapterId);
+
+  const handleContinue = () => {
+    if (materials && materials.length > 0) {
+      const material = materials[0];
+      setSelectedChapterId(material.id.toString());
+      const skillParam = material.skillCategory.toLowerCase();
+      router.push(`/quiz/prep?skill=${skillParam}`);
+    } else {
+      alert("Belum ada materi untuk dilanjutkan.");
+    }
+  };
 
   return (
     <Card
@@ -21,10 +33,10 @@ export function ProgressHint() {
           Kamu Hampir Selesai!
         </h4>
         <p className="text-on-surface-variant text-xs font-medium">
-          Selesaikan materi Reading hari ini untuk mempertahankan streak mingguan kamu.
+          Selesaikan materi pertama hari ini untuk mempertahankan streak mingguan kamu.
         </p>
         <button
-          onClick={() => router.push("/quiz/prep")}
+          onClick={handleContinue}
           className="mt-3 px-4 py-2 bg-secondary text-white font-label text-xs font-bold rounded-xl border-b-4 border-on-secondary-fixed-variant tactile-button cursor-pointer"
         >
           Lanjutkan Belajar

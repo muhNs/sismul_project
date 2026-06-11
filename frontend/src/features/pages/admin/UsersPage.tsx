@@ -13,6 +13,7 @@ import api from "@/lib/axios";
 const formSchema = z.object({
   name: z.string().min(1, "Nama wajib diisi"),
   email: z.string().email("Format email tidak valid").min(1, "Email wajib diisi"),
+  password: z.string().min(6, "Password minimal 6 karakter").or(z.literal("")),
   role: z.enum(["admin", "student", "teacher"], { message: "Role wajib dipilih" }),
   status: z.enum(["active", "inactive"], { message: "Status wajib dipilih" }),
 });
@@ -33,6 +34,7 @@ export const UsersPage = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (toastMessage) {
@@ -66,6 +68,7 @@ export const UsersPage = () => {
     defaultValues: {
       name: "",
       email: "",
+      password: "",
       role: "student",
       status: "active",
     },
@@ -82,7 +85,8 @@ export const UsersPage = () => {
 
   const handleOpenAdd = () => {
     setEditingId(null);
-    form.reset({ name: "", email: "", role: "student", status: "active" });
+    form.reset({ name: "", email: "", password: "", role: "student", status: "active" });
+    setShowPassword(false);
     setIsModalOpen(true);
   };
 
@@ -91,9 +95,11 @@ export const UsersPage = () => {
     form.reset({
       name: user.name,
       email: user.email,
+      password: "",
       role: user.role,
       status: user.status,
     });
+    setShowPassword(false);
     setIsModalOpen(true);
   };
 
@@ -103,6 +109,14 @@ export const UsersPage = () => {
   };
 
   const onSubmit = async (data: FormValues) => {
+    if (!editingId && !data.password) {
+      form.setError("password", {
+        type: "manual",
+        message: "Password wajib diisi",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const payload: any = {
@@ -112,11 +126,13 @@ export const UsersPage = () => {
       };
 
       if (!editingId) {
-        payload.password = "sismul123"; // Default password for new users
+        payload.password = data.password;
+      } else if (data.password) {
+        payload.password = data.password;
       }
 
       if (editingId) {
-        const res = await api.put(`/api/v1/users/${editingId}`, payload);
+        const res = await api.patch(`/api/v1/users/${editingId}`, payload);
         const updated = res.data.data || res.data;
         const mappedUpdated = {
           ...updated,
@@ -132,7 +148,7 @@ export const UsersPage = () => {
           role: created.role.toLowerCase()
         };
         setUsers(prev => [...prev, mappedCreated as AdminUser]);
-        showToast("Berhasil menambahkan user. Password default: sismul123");
+        showToast("Berhasil menambahkan user");
       }
       setIsModalOpen(false);
     } catch (err: any) {
@@ -273,6 +289,32 @@ export const UsersPage = () => {
             />
             {form.formState.errors.email && (
               <p className="text-error text-xs">{form.formState.errors.email.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-sm font-semibold text-on-surface">
+              Password {editingId && <span className="text-xs text-on-surface-variant font-normal">(Kosongkan jika tidak ingin diubah)</span>}
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                {...form.register("password")}
+                className="w-full pl-4 pr-12 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                placeholder={editingId ? "••••••" : "Masukkan password (min. 6 karakter)"}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors focus:outline-none flex items-center justify-center p-1 rounded-full hover:bg-surface-container"
+              >
+                <span className="material-symbols-outlined text-xl select-none">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
+              </button>
+            </div>
+            {form.formState.errors.password && (
+              <p className="text-error text-xs">{form.formState.errors.password.message}</p>
             )}
           </div>
 

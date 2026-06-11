@@ -117,15 +117,18 @@ export const MaterialsPage = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      // Map frontend fields to backend fields
-      const payload = {
-        chapter: data.title.replace(/\D/g, "") || "1", // Extract number from "Chapter 1"
-        gradeLevel: data.grade.replace("Grade ", ""),
-        skillCategory: data.skill.toUpperCase(),
-      };
+      const formData = new FormData();
+      formData.append("chapter", data.title.replace(/\D/g, "") || "1");
+      formData.append("gradeLevel", data.grade.replace("Grade ", ""));
+      formData.append("skillCategory", data.skill.toUpperCase());
+
+      const mediaInput = document.querySelector('input[type="file"][accept="image/*,audio/*,video/*"]') as HTMLInputElement;
+      if (mediaInput?.files?.[0]) {
+        formData.append("media", mediaInput.files[0]);
+      }
 
       if (editingId) {
-        const res = await api.put(`/api/v1/materials/${editingId}`, payload);
+        const res = await api.put(`/api/v1/materials/${editingId}`, formData);
         const updated = res.data.data || res.data;
         const mappedUpdated = {
           id: updated.id,
@@ -138,7 +141,7 @@ export const MaterialsPage = () => {
         setMaterials(prev => prev.map(m => m.id === editingId ? { ...m, ...mappedUpdated } as AdminMaterial : m));
         showToast("Berhasil mengubah materi");
       } else {
-        const res = await api.post("/api/v1/materials", payload);
+        const res = await api.post("/api/v1/materials", formData);
         const created = res.data.data || res.data;
         const mappedCreated = {
           id: created.id,
@@ -327,6 +330,15 @@ export const MaterialsPage = () => {
                 <p className="text-error text-xs">{form.formState.errors.skill.message}</p>
               )}
             </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-sm font-semibold text-on-surface">Upload Media (Opsional)</label>
+            <input
+              type="file"
+              accept="image/*,audio/*,video/*"
+              className="w-full px-4 py-2 text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-container file:text-primary hover:file:bg-primary/20 transition-all"
+            />
           </div>
 
           <div className="pt-4 flex flex-col sm:flex-row justify-end gap-3 border-t border-outline-variant/30 mt-6">
