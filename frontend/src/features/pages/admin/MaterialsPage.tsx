@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { MaterialsTable } from "./components/materials/MaterialsTable";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
@@ -38,6 +38,8 @@ export const MaterialsPage = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const mediaInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (toastMessage) {
@@ -96,6 +98,7 @@ export const MaterialsPage = () => {
   const handleOpenAdd = () => {
     setEditingId(null);
     form.reset({ title: "", grade: "Grade 3", skill: "Reading" });
+    if (mediaInputRef.current) mediaInputRef.current.value = "";
     setIsModalOpen(true);
   };
 
@@ -106,6 +109,7 @@ export const MaterialsPage = () => {
       grade: material.grade,
       skill: material.skill,
     });
+    if (mediaInputRef.current) mediaInputRef.current.value = "";
     setIsModalOpen(true);
   };
 
@@ -122,7 +126,7 @@ export const MaterialsPage = () => {
       formData.append("gradeLevel", data.grade.replace("Grade ", ""));
       formData.append("skillCategory", data.skill.toUpperCase());
 
-      const mediaInput = document.querySelector('input[type="file"][accept="image/*,audio/*,video/*"]') as HTMLInputElement;
+      const mediaInput = mediaInputRef.current;
       if (mediaInput?.files?.[0]) {
         formData.append("media", mediaInput.files[0]);
       }
@@ -336,6 +340,7 @@ export const MaterialsPage = () => {
             <label className="text-sm font-semibold text-on-surface">Upload Media (Opsional)</label>
             <input
               type="file"
+              ref={mediaInputRef}
               accept="image/*,audio/*,video/*"
               className="w-full px-4 py-2 text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-container file:text-primary hover:file:bg-primary/20 transition-all"
             />
