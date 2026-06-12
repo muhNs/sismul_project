@@ -97,6 +97,8 @@ export function useQuiz() {
         setShowScorePopup(true);
         setTimeout(() => setShowScorePopup(false), 2000);
       } else {
+        setIsCorrect(false);
+        setChecked(true);
         setShakeOption(selectedOption);
         setTimeout(() => setShakeOption(null), 500);
       }

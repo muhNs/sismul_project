@@ -11,6 +11,7 @@ export default function ArenaPage() {
     currentQuestion,
     selectedOption,
     checked,
+    isCorrect,
     showScorePopup,
     shakeOption,
     progressPercent,
@@ -79,6 +80,7 @@ export default function ArenaPage() {
 
       <QuizFeedback
         checked={checked}
+        isCorrect={isCorrect}
         selectedOption={selectedOption}
         onCheck={handleCheckAnswer}
         onNext={handleNext}
