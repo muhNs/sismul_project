@@ -15,6 +15,15 @@ export interface QuizQuestion {
   options: Option[];
 }
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+// Jika mediaUrl adalah path relatif dari backend (/public/uploads/...), tambahkan base URL backend
+const resolveMediaUrl = (url?: string): string | undefined => {
+  if (!url) return undefined;
+  if (url.startsWith("/public/")) return `${BACKEND_URL}${url}`;
+  return url;
+};
+
 export const getStudentQuiz = async (materialId: number): Promise<QuizQuestion[]> => {
   const response = await api.get(`/api/v1/quizzes/student/${materialId}`);
   const data = response.data.data;
@@ -23,7 +32,7 @@ export const getStudentQuiz = async (materialId: number): Promise<QuizQuestion[]
 
   return data.map((q: any) => {
     let questionText = q.questionText || "";
-    let extractedUrl = q.mediaUrl;
+    let extractedUrl = resolveMediaUrl(q.mediaUrl);
     let ttsWord: string | undefined;
 
     // Cari [TTS: word] di dalam teks untuk dibacakan oleh Text-To-Speech

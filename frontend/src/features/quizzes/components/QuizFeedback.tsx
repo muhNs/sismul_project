@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/Button";
 
 interface QuizFeedbackProps {
   checked: boolean;
+  isCorrect: boolean;
   selectedOption: string | null;
   onCheck: () => void;
   onNext: () => void;
 }
 
-export function QuizFeedback({ checked, selectedOption, onCheck, onNext }: QuizFeedbackProps) {
+export function QuizFeedback({ checked, isCorrect, selectedOption, onCheck, onNext }: QuizFeedbackProps) {
   return (
     <>
       {/* Bottom Action Bar */}
@@ -45,29 +46,29 @@ export function QuizFeedback({ checked, selectedOption, onCheck, onNext }: QuizF
       {/* Result Overlay */}
       {checked && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/10 transition-opacity">
-          <div className="w-full bg-primary-container/95 backdrop-blur-sm p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className={`w-full ${isCorrect ? 'bg-primary-container/95' : 'bg-error/95'} backdrop-blur-sm p-8 flex flex-col md:flex-row items-center justify-between gap-6`}>
             <div className="flex items-center gap-6">
               <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg">
                 <span
-                  className="material-symbols-outlined text-primary text-5xl"
+                  className={`material-symbols-outlined ${isCorrect ? 'text-primary' : 'text-error'} text-5xl`}
                   style={{ fontVariationSettings: "'FILL' 1" }}
                 >
-                  check_circle
+                  {isCorrect ? 'check_circle' : 'cancel'}
                 </span>
               </div>
               <div>
                 <h3 className="font-display text-xl md:text-2xl font-extrabold text-white">
-                  Luar Biasa!
+                  {isCorrect ? 'Luar Biasa!' : 'Yah, Kurang Tepat'}
                 </h3>
                 <p className="text-white/90 text-sm font-sans font-medium">
-                  Kamu menjawab dengan benar.
+                  {isCorrect ? 'Kamu menjawab dengan benar.' : 'Ayo coba lagi di soal berikutnya!'}
                 </p>
               </div>
             </div>
             <Button
               onClick={onNext}
               variant="outline"
-              className="md:w-48 h-14 bg-white text-primary font-bold border-none shadow-[0_4px_0_#d1d5db] hover:bg-gray-100"
+              className={`md:w-48 h-14 bg-white ${isCorrect ? 'text-primary' : 'text-error'} font-bold border-none shadow-[0_4px_0_#d1d5db] hover:bg-gray-100`}
             >
               Lanjut
             </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { VocabulariesTable } from "./components/vocabularies/VocabulariesTable";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
@@ -32,6 +32,9 @@ export const VocabulariesPage = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const audioInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchVocabs = async () => {
@@ -83,6 +86,8 @@ export const VocabulariesPage = () => {
   const handleOpenAdd = () => {
     setEditingId(null);
     form.reset({ english: "", indonesian: "", grade: "Grade 3" });
+    if (imageInputRef.current) imageInputRef.current.value = "";
+    if (audioInputRef.current) audioInputRef.current.value = "";
     setIsModalOpen(true);
   };
 
@@ -93,6 +98,8 @@ export const VocabulariesPage = () => {
       indonesian: vocab.indonesian,
       grade: vocab.grade,
     });
+    if (imageInputRef.current) imageInputRef.current.value = "";
+    if (audioInputRef.current) audioInputRef.current.value = "";
     setIsModalOpen(true);
   };
 
@@ -109,8 +116,8 @@ export const VocabulariesPage = () => {
     const gradeLevel = data.grade.replace("Grade ", "");
     formData.append("gradeLevel", gradeLevel);
 
-    const imageInput = document.querySelector('input[type="file"][accept="image/*"]') as HTMLInputElement;
-    const audioInput = document.querySelector('input[type="file"][accept="audio/*"]') as HTMLInputElement;
+    const imageInput = imageInputRef.current;
+    const audioInput = audioInputRef.current;
 
     if (imageInput?.files?.[0]) {
       formData.append("image", imageInput.files[0]);
@@ -283,6 +290,7 @@ export const VocabulariesPage = () => {
             <label className="text-sm font-semibold text-on-surface">Upload Image (Opsional)</label>
             <input
               type="file"
+              ref={imageInputRef}
               accept="image/*"
               className="w-full px-4 py-2 text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-container file:text-primary hover:file:bg-primary/20 transition-all"
             />
@@ -292,6 +300,7 @@ export const VocabulariesPage = () => {
             <label className="text-sm font-semibold text-on-surface">Upload Audio (Opsional)</label>
             <input
               type="file"
+              ref={audioInputRef}
               accept="audio/*"
               className="w-full px-4 py-2 text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-container file:text-primary hover:file:bg-primary/20 transition-all"
             />

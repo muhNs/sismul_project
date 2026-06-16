@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { loginUser } from "@/features/auth/api/loginUser";
-import { useStore } from "@/lib/store";
+import { useAdminStore } from "@/lib/adminStore";
 
 export function AdminLoginForm() {
   const router = useRouter();
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  const setAuth = useStore((state) => state.setAuth);
+  const setAdminAuth = useAdminStore((state) => state.setAdminAuth);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,10 +29,7 @@ export function AdminLoginForm() {
       const response = await loginUser({ email, password });
       
       if (response.data && (response.data.role === "ADMIN" || response.data.role === "TEACHER")) {
-        setAuth(response.data);
-        if (typeof window !== "undefined") {
-          localStorage.setItem("userRole", response.data.role);
-        }
+        setAdminAuth(response.data);
         router.push("/admin");
       } else {
         setErrorMsg("Akses ditolak. Anda bukan Administrator.");

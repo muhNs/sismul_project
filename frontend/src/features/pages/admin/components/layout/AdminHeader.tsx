@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
-import { useStore } from "@/lib/store";
+import { useAdminStore } from "@/lib/adminStore";
 import api from "@/lib/axios";
 
 interface AdminHeaderProps {
@@ -11,8 +11,8 @@ interface AdminHeaderProps {
 
 export const AdminHeader = ({ onMenuClick }: AdminHeaderProps) => {
   const router = useRouter();
-  const logout = useStore((state) => state.logout);
-  const user = useStore((state) => state.user);
+  const adminLogout = useAdminStore((state) => state.adminLogout);
+  const user = useAdminStore((state) => state.adminUser);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -55,10 +55,7 @@ export const AdminHeader = ({ onMenuClick }: AdminHeaderProps) => {
     } catch (err) {
       console.error("Gagal logout admin di backend:", err);
     } finally {
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("userRole");
-      }
-      logout();
+      adminLogout();
       setIsLogoutModalOpen(false);
       router.push("/admin/login");
     }
